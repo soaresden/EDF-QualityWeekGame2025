@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🔍 Quality Inspector - EDF</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #1a1a1a;
+      color: #333;
+      overflow: hidden;
+    }
+
+    /* HEADER */
+    .header {
+      background: linear-gradient(135deg, #09367A 0%, #00A8E9 100%);
+      color: white;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+
+    .header-title {
+      flex: 1;
+      text-align: center;
+    }
+
+    .header-title h1 {
+      font-size: 1.3rem;
+      margin-bottom: 2px;
+    }
+
+    .header-title p {
+      font-size: 0.85rem;
+      opacity: 0.9;
+    }
+
+    .header-logo {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+    }
+
+    /* STATS BAR */
+    .stats-bar {
+      background: #2a2a2a;
+      color: white;
+      padding: 12px 20px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      font-size: 0.9rem;
+      border-bottom: 2px solid #00A8E9;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-label {
+      color: #aaa;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .stat-value {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #00A8E9;
+      font-family: 'Courier New', monospace;
+    }
+
+    .stat-value.money {
+      color: #10B981;
+    }
+
+    .stat-value.time {
+      color: #F59E0B;
+    }
+
+    /* MAIN CONTAINER */
+    .main-container {
+      display: flex;
+      height: calc(100vh - 120px);
+      gap: 0;
+    }
+
+    /* LEFT PANEL - QUEUE */
+    .left-panel {
+      width: 180px;
+      background: #2a2a2a;
+      border-right: 2px solid #00A8E9;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow-y: auto;
+    }
+
+    .panel-title {
+      color: #00A8E9;
+      font-weight: bold;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .product-card {
+      background: #1a1a1a;
+      border: 2px solid #555;
+      border-radius: 6px;
+      padding: 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: #ccc;
+      font-size: 0.85rem;
+    }
+
+    .product-card:hover {
+      border-color: #00A8E9;
+      transform: translateX(4px);
+    }
+
+    .product-card.active {
+      border-color: #00A8E9;
+      background: rgba(0, 168, 233, 0.1);
+    }
+
+    .product-icon {
+      font-size: 1.5rem;
+      margin-bottom: 6px;
+    }
+
+    .product-name {
+      font-weight: bold;
+      margin-bottom: 4px;
+      word-wrap: break-word;
+    }
+
+    .product-value {
+      color: #00A8E9;
+      font-size: 0.8rem;
+    }
+
+    /* CENTER PANEL - INSPECTION */
+    .center-panel {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #333 0%, #1a1a1a 100%);
+      padding: 40px;
+    }
+
+    .inspection-booth {
+      background: white;
+      border-radius: 12px;
+      padding: 40px;
+      width: 100%;
+      max-width: 500px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      text-align: center;
+    }
+
+    .product-display {
+      font-size: 5rem;
+      margin-bottom: 20px;
+      animation: popIn 0.3s ease-out;
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.5); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .product-name-display {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #09367A;
+      margin-bottom: 10px;
+    }
+
+    .product-info {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+      background: #f9fafb;
+      padding: 16px;
+      border-radius: 8px;
+    }
+
+    .info-box {
+      text-align: center;
+    }
+
+    .info-label {
+      font-size: 0.8rem;
+      color: #666;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .info-value {
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: #00A8E9;
+      font-family: 'Courier New', monospace;
+    }
+
+    /* SCANNING BAR */
+    .scanning-bar-container {
+      margin: 20px 0;
+    }
+
+    .scanning-label {
+      font-size: 0.85rem;
+      color: #666;
+      margin-bottom: 8px;
+      text-align: left;
+    }
+
+    .scanning-bar {
+      width: 100%;
+      height: 12px;
+      background: #ddd;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .scanning-progress {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #10B981, #00A8E9);
+      transition: width 0.1s linear;
+      box-shadow: 0 0 10px rgba(0, 168, 233, 0.5);
+    }
+
+    .scanning-info {
+      font-size: 0.8rem;
+      color: #666;
+      margin-top: 6px;
+    }
+
+    /* DEFECTS LIST */
+    .defects-found {
+      background: #fff3cd;
+      border: 2px solid #F59E0B;
+      border-radius: 6px;
+      padding: 12px;
+      margin: 16px 0;
+      display: none;
+    }
+
+    .defects-found.show {
+      display: block;
+    }
+
+    .defects-found h3 {
+      color: #F59E0B;
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+    }
+
+    .defect-item {
+      background: white;
+      padding: 8px;
+      margin-bottom: 6px;
+      border-left: 4px solid #F59E0B;
+      border-radius: 3px;
+      font-size: 0.85rem;
+      color: #333;
+    }
+
+    .defect-item.minor { border-left-color: #3b82f6; }
+    .defect-item.medium { border-left-color: #F59E0B; }
+    .defect-item.major { border-left-color: #EF4444; }
+
+    /* DECISION BUTTONS */
+    .decision-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .decision-btn {
+      flex: 1;
+      padding: 14px;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-transform: uppercase;
+    }
+
+    .decision-btn.approve {
+      background: #10B981;
+      color: white;
+    }
+
+    .decision-btn.approve:hover {
+      background: #059669;
+      transform: translateY(-2px);
+    }
+
+    .decision-btn.reject {
+      background: #EF4444;
+      color: white;
+    }
+
+    .decision-btn.reject:hover {
+      background: #DC2626;
+      transform: translateY(-2px);
+    }
+
+    .decision-btn.doubt {
+      background: #F59E0B;
+      color: white;
+    }
+
+    .decision-btn.doubt:hover {
+      background: #D97706;
+      transform: translateY(-2px);
+    }
+
+    /* RIGHT PANEL - STATS */
+    .right-panel {
+      width: 160px;
+      background: #2a2a2a;
+      border-left: 2px solid #00A8E9;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow-y: auto;
+    }
+
+    .stat-card {
+      background: #1a1a1a;
+      border-left: 4px solid #00A8E9;
+      padding: 12px;
+      border-radius: 4px;
+    }
+
+    .stat-card.approved {
+      border-left-color: #10B981;
+    }
+
+    .stat-card.rejected {
+      border-left-color: #EF4444;
+    }
+
+    .stat-card.accuracy {
+      border-left-color: #F59E0B;
+    }
+
+    .stat-card-label {
+      font-size: 0.7rem;
+      color: #888;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .stat-card-value {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #00A8E9;
+      font-family: 'Courier New', monospace;
+    }
+
+    .stat-card.approved .stat-card-value { color: #10B981; }
+    .stat-card.rejected .stat-card-value { color: #EF4444; }
+    .stat-card.accuracy .stat-card-value { color: #F59E0B; }
+
+    /* POPUP FEEDBACK */
+    .popup-feedback {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      z-index: 1000;
+      pointer-events: none;
+      animation: popupIn 0.3s ease-out;
+      display: none;
+    }
+
+    @keyframes popupIn {
+      0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+      100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    }
+
+    @keyframes popupOut {
+      0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+      100% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+    }
+
+    .popup-feedback.show {
+      display: block;
+    }
+
+    .popup-feedback.fadeout {
+      animation: popupOut 0.3s ease-in forwards;
+    }
+
+    .popup-text {
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .popup-feedback.correct {
+      background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+      color: white;
+    }
+
+    .popup-feedback.incorrect {
+      background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+      color: white;
+    }
+
+    /* MODAL */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+
+    .modal-overlay.hidden {
+      display: none;
+    }
+
+    .modal {
+      background: white;
+      border-radius: 12px;
+      padding: 40px;
+      max-width: 600px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .modal h1 {
+      color: #09367A;
+      margin-bottom: 20px;
+    }
+
+    .modal h2 {
+      color: #00A8E9;
+      margin-bottom: 16px;
+    }
+
+    .modal p {
+      line-height: 1.6;
+      margin-bottom: 16px;
+      color: #555;
+    }
+
+    .lang-selector {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 24px 0;
+    }
+
+    .lang-btn {
+      padding: 16px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-weight: bold;
+      font-size: 1rem;
+    }
+
+    .lang-btn:hover {
+      border-color: #00A8E9;
+      background: #f0f4ff;
+      transform: translateY(-2px);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #09367A 0%, #00A8E9 100%);
+      color: white;
+      border: none;
+      padding: 12px 32px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 16px;
+      width: 100%;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 168, 233, 0.4);
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #ddd;
+      border-radius: 6px;
+      font-size: 1rem;
+      margin-bottom: 16px;
+    }
+
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #00A8E9;
+      box-shadow: 0 0 0 3px rgba(0, 168, 233, 0.1);
+    }
+
+    .rules-list {
+      background: #f9fafb;
+      padding: 16px;
+      border-radius: 8px;
+      margin: 16px 0;
+    }
+
+    .rules-list p {
+      margin-bottom: 8px;
+    }
+
+    /* END DAY SCREEN */
+    .end-day-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin: 24px 0;
+    }
+
+    .end-day-stat {
+      background: #f9fafb;
+      padding: 16px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .end-day-stat-label {
+      font-size: 0.85rem;
+      color: #666;
+      margin-bottom: 8px;
+    }
+
+    .end-day-stat-value {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #09367A;
+    }
+  </style>
+</head>
+<body>
+  <!-- POPUP FEEDBACK -->
+  <div id="popupFeedback" class="popup-feedback">
+    <div class="popup-text" id="popupText">✅ BONNE DÉCISION!</div>
+  </div>
+
+  <!-- SCREEN: LANGUAGE -->
+  <div id="languageScreen" class="modal-overlay">
+    <div class="modal" style="max-width: 400px;">
+      <h1 style="text-align: center;">🌐 LANGUE / LANGUAGE</h1>
+      <p style="text-align: center;">Sélectionnez votre langue / Select your language</p>
+      <div class="lang-selector">
+        <button class="lang-btn" onclick="setLanguage('fr')">🇫🇷 Français</button>
+        <button class="lang-btn" onclick="setLanguage('en')">🇬🇧 English</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN: PLAYER NAME -->
+  <div id="playerNameScreen" class="modal-overlay hidden">
+    <div class="modal" style="max-width: 400px;">
+      <h1>👤 Your Name</h1>
+      <p>Enter your name for the records:</p>
+      <input type="text" id="playerNameInput" placeholder="Your name" maxlength="30">
+      <button class="btn-primary" onclick="confirmPlayerName()">START GAME →</button>
+    </div>
+  </div>
+
+  <!-- SCREEN: INTRO -->
+  <div id="introScreen" class="modal-overlay hidden">
+    <div class="modal">
+      <h1>🔍 QUALITY INSPECTOR</h1>
+      <h2>EDF Power Solutions - Quality Week 2025</h2>
+      
+      <p><strong>Your Mission:</strong> Inspect products and approve/reject them based on quality. You have 8 hours per day and need to reach 2000€ quota!</p>
+      
+      <div class="rules-list">
+        <p>📦 <strong>Products arrive</strong> - See them in the left queue</p>
+        <p>🔍 <strong>Scanning</strong> - Bar fills automatically</p>
+        <p>⚠️ <strong>Find defects</strong> - Minor/Medium/Major</p>
+        <p>✓ <strong>Make decision</strong> - Approve/Reject/Unsure</p>
+        <p>💰 <strong>Reach quota</strong> - 2000€ per day to survive</p>
+      </div>
+
+      <button class="btn-primary" onclick="startGame()">I UNDERSTAND →</button>
+    </div>
+  </div>
+
+  <!-- SCREEN: GAME -->
+  <div id="gameScreen" class="modal-overlay hidden" style="background: none; align-items: stretch; justify-content: stretch;">
+    <style>
+      #gameScreen { inset: 0; position: fixed; }
+      #gameScreen.hidden { display: none; }
+    </style>
+
+    <!-- HEADER -->
+    <div class="header">
+      <img src="./img/COU.png" alt="Logo" class="header-logo" onerror="this.style.display='none'">
+      <div class="header-title">
+        <h1>EDF POWER SOLUTIONS - QUALITY WEEK 2025</h1>
+        <p>The Quality Inspector Game</p>
+      </div>
+      <img src="./img/EDFPS.jfif" alt="EDF" class="header-logo" onerror="this.style.display='none'">
+    </div>
+
+    <!-- STATS BAR -->
+    <div class="stats-bar">
+      <div class="stat-item">
+        <div class="stat-label">DAY</div>
+        <div class="stat-value" id="dayDisplay">1</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">TIME</div>
+        <div class="stat-value time" id="timeDisplay">8:00</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">MONEY</div>
+        <div class="stat-value money" id="moneyDisplay">€2500</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">QUOTA</div>
+        <div class="stat-value" id="quotaDisplay">€2000</div>
+      </div>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <div class="main-container">
+      <!-- LEFT PANEL -->
+      <div class="left-panel">
+        <div class="panel-title">📦 QUEUE</div>
+        <div id="productQueue" style="display: flex; flex-direction: column; gap: 8px;"></div>
+      </div>
+
+      <!-- CENTER PANEL -->
+      <div class="center-panel">
+        <div class="inspection-booth">
+          <div class="product-display" id="productEmoji">📦</div>
+          <div class="product-name-display" id="productNameDisplay">Waiting...</div>
+          
+          <div class="product-info">
+            <div class="info-box">
+              <div class="info-label">Value</div>
+              <div class="info-value" id="productValue">€0</div>
+            </div>
+            <div class="info-box">
+              <div class="info-label">Defects</div>
+              <div class="info-value" id="defectCount">0/0</div>
+            </div>
+          </div>
+
+          <div class="scanning-bar-container">
+            <div class="scanning-label">SCANNING...</div>
+            <div class="scanning-bar">
+              <div class="scanning-progress" id="scanningProgress"></div>
+            </div>
+            <div class="scanning-info" id="scanningInfo">0% scanned</div>
+          </div>
+
+          <div class="defects-found" id="defectsFound">
+            <h3>⚠️ DEFECTS FOUND:</h3>
+            <div id="defectsList"></div>
+          </div>
+
+          <div class="decision-buttons">
+            <button class="decision-btn approve" onclick="makeDecision('good')">✓ APPROVE</button>
+            <button class="decision-btn reject" onclick="makeDecision('reject')">✗ REJECT</button>
+            <button class="decision-btn doubt" onclick="makeDecision('doubt')">? UNSURE</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT PANEL -->
+      <div class="right-panel">
+        <div class="panel-title">📊 STATS</div>
+        
+        <div class="stat-card approved">
+          <div class="stat-card-label">Approved</div>
+          <div class="stat-card-value" id="approvedCount">0</div>
+        </div>
+
+        <div class="stat-card rejected">
+          <div class="stat-card-label">Rejected</div>
+          <div class="stat-card-value" id="rejectedCount">0</div>
+        </div>
+
+        <div class="stat-card accuracy">
+          <div class="stat-card-label">Accuracy</div>
+          <div class="stat-card-value" id="accuracyCount">--%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN: END DAY -->
+  <div id="endDayScreen" class="modal-overlay hidden">
+    <div class="modal">
+      <h1>📊 END OF DAY REPORT</h1>
+      
+      <div class="end-day-stats">
+        <div class="end-day-stat">
+          <div class="end-day-stat-label">Products Approved</div>
+          <div class="end-day-stat-value" id="endApprovedCount">0</div>
+        </div>
+        <div class="end-day-stat">
+          <div class="end-day-stat-label">Products Rejected</div>
+          <div class="end-day-stat-value" id="endRejectedCount">0</div>
+        </div>
+        <div class="end-day-stat">
+          <div class="end-day-stat-label">Accuracy</div>
+          <div class="end-day-stat-value" id="endAccuracy">--%</div>
+        </div>
+        <div class="end-day-stat">
+          <div class="end-day-stat-label">Day Revenue</div>
+          <div class="end-day-stat-value" id="endRevenue">€0</div>
+        </div>
+      </div>
+
+      <div style="background: #f9fafb; padding: 16px; border-radius: 8px; margin: 20px 0; text-align: center;">
+        <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">Total Balance</div>
+        <div style="font-size: 2rem; font-weight: bold; color: #09367A;" id="totalBalance">€0</div>
+      </div>
+
+      <button class="btn-primary" onclick="nextDay()">NEXT DAY →</button>
+    </div>
+  </div>
+
+  <!-- SCREEN: GAME OVER -->
+  <div id="gameOverScreen" class="modal-overlay hidden">
+    <div class="modal" style="max-width: 500px; text-align: center;">
+      <h1 id="gameOverTitle">🏆 VICTORY!</h1>
+      <p id="gameOverMsg">You survived 5 days!</p>
+      
+      <div style="background: #f9fafb; padding: 20px; border-radius: 8px; margin: 24px 0;">
+        <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">Final Balance</div>
+        <div style="font-size: 2.5rem; font-weight: bold; color: #09367A;" id="finalBalance">€0</div>
+      </div>
+
+      <button class="btn-primary" onclick="location.reload()">PLAY AGAIN</button>
+    </div>
+  </div>
+
+  <script>
+    // ============================================
+    // GAME STATE
+    // ============================================
+    
+    let currentLanguage = 'fr';
+    let playerName = '';
+    let gameState = {
+      day: 1,
+      money: 2500,
+      timeLeft: 28800000,
+      products: [],
+      currentProductIndex: 0,
+      stats: {
+        approved: 0,
+        rejected: 0,
+        correct: 0,
+        total: 0
+      }
+    };
+
+    let gameRunning = false;
+    let timeInterval = null;
+    let scanningInterval = null;
+    let scanningProgress = 0;
+
+    const TEXTS = {
+      fr: {
+        cableName: 'Câble marin',
+        bladeName: 'Pale éolienne',
+        connectorName: 'Connecteur',
+        transformerName: 'Transformateur',
+        correctFeedback: '✅ BONNE DÉCISION!',
+        incorrectFeedback: '❌ MAUVAISE DÉCISION!'
+      },
+      en: {
+        cableName: 'Marine Cable',
+        bladeName: 'Wind Blade',
+        connectorName: 'Connector',
+        transformerName: 'Transformer',
+        correctFeedback: '✅ GOOD DECISION!',
+        incorrectFeedback: '❌ WRONG DECISION!'
+      }
+    };
+
+    // ============================================
+    // INITIALIZATION
+    // ============================================
+
+    function setLanguage(lang) {
+      currentLanguage = lang;
+      localStorage.setItem('gameLanguage', lang);
+      showScreen('playerNameScreen');
+    }
+
+    function confirmPlayerName() {
+      const input = document.getElementById('playerNameInput');
+      if (!input.value.trim()) {
+        alert('Please enter a name');
+        return;
+      }
+      playerName = input.value.trim();
+      localStorage.setItem('playerName', playerName);
+      showScreen('introScreen');
+    }
+
+    function startGame() {
+      showScreen('gameScreen');
+      initializeDay();
+      startGameLoop();
+    }
+
+    // ============================================
+    // SCREEN MANAGEMENT
+    // ============================================
+
+    function showScreen(screenId) {
+      document.querySelectorAll('.modal-overlay').forEach(s => {
+        s.classList.add('hidden');
+      });
+      const screen = document.getElementById(screenId);
+      if (screen) {
+        screen.classList.remove('hidden');
+      }
+    }
+
+    // ============================================
+    // DAY INITIALIZATION
+    // ============================================
+
+    function initializeDay() {
+      gameState.currentProductIndex = 0;
+      gameState.timeLeft = 28800000;
+      
+      generateProducts();
+      displayCurrentProduct();
+      updateStats();
+    }
+
+    function generateProducts() {
+      const productTypes = [
+        { name: TEXTS[currentLanguage].cableName, emoji: '🔌', value: 60 + Math.random() * 40, defectCount: 2 + gameState.day },
+        { name: TEXTS[currentLanguage].bladeName, emoji: '🪨', value: 80 + Math.random() * 40, defectCount: 3 + gameState.day },
+        { name: TEXTS[currentLanguage].connectorName, emoji: '🔗', value: 40 + Math.random() * 30, defectCount: 1 + gameState.day },
+        { name: TEXTS[currentLanguage].transformerName, emoji: '📦', value: 100 + Math.random() * 50, defectCount: 4 + gameState.day }
+      ];
+
+      gameState.products = [];
+      const productCount = 5 + (gameState.day * 2);
+
+      for (let i = 0; i < productCount; i++) {
+        const type = productTypes[Math.floor(Math.random() * productTypes.length)];
+        gameState.products.push({
+          id: i,
+          name: type.name,
+          emoji: type.emoji,
+          value: Math.round(type.value),
+          defects: generateDefects(type.defectCount),
+          inspected: false,
+          accepted: null
+        });
+      }
+    }
+
+    function generateDefects(count) {
+      const defectTypes = [
+        { name: 'Scratch', severity: 'minor' },
+        { name: 'Corrosion', severity: 'major' },
+        { name: 'Crack', severity: 'medium' },
+        { name: 'Leak', severity: 'major' },
+        { name: 'Misalignment', severity: 'medium' }
+      ];
+
+      let defects = [];
+      for (let i = 0; i < count; i++) {
+        const defect = defectTypes[Math.floor(Math.random() * defectTypes.length)];
+        defects.push({
+          name: defect.name,
+          severity: defect.severity,
+          revealed: false
+        });
+      }
+      return defects;
+    }
+
+    // ============================================
+    // PRODUCT DISPLAY
+    // ============================================
+
+    function displayCurrentProduct() {
+      const product = gameState.products[gameState.currentProductIndex];
+      
+      if (!product) {
+        endDay();
+        return;
+      }
+
+      document.getElementById('productEmoji').textContent = product.emoji;
+      document.getElementById('productNameDisplay').textContent = product.name;
+      document.getElementById('productValue').textContent = '€' + product.value;
+
+      const revealedCount = product.defects.filter(d => d.revealed).length;
+      const totalCount = product.defects.length;
+      document.getElementById('defectCount').textContent = revealedCount + '/' + totalCount;
+
+      scanningProgress = 0;
+      updateScanningBar();
+      updateQueueDisplay();
+      updateDefectsDisplay();
+
+      startScanning();
+    }
+
+    function startScanning() {
+      if (scanningInterval) clearInterval(scanningInterval);
+
+      const product = gameState.products[gameState.currentProductIndex];
+      
+      scanningInterval = setInterval(() => {
+        scanningProgress += Math.random() * 3;
+        if (scanningProgress >= 100) {
+          scanningProgress = 100;
+          clearInterval(scanningInterval);
+          revealAllDefects();
+        }
+        updateScanningBar();
+      }, 100);
+    }
+
+    function updateScanningBar() {
+      document.getElementById('scanningProgress').style.width = scanningProgress + '%';
+      document.getElementById('scanningInfo').textContent = Math.round(scanningProgress) + '% scanned';
+    }
+
+    function revealAllDefects() {
+      const product = gameState.products[gameState.currentProductIndex];
+      product.defects.forEach(d => d.revealed = true);
+      
+      const revealedCount = product.defects.length;
+      document.getElementById('defectCount').textContent = revealedCount + '/' + revealedCount;
+      updateDefectsDisplay();
+    }
+
+    function updateDefectsDisplay() {
+      const product = gameState.products[gameState.currentProductIndex];
+      const revealedDefects = product.defects.filter(d => d.revealed);
+
+      if (revealedDefects.length > 0) {
+        document.getElementById('defectsFound').classList.add('show');
+        const html = revealedDefects.map(d => `
+          <div class="defect-item ${d.severity}">
+            ${d.name}
+          </div>
+        `).join('');
+        document.getElementById('defectsList').innerHTML = html;
+      } else {
+        document.getElementById('defectsFound').classList.remove('show');
+      }
+    }
+
+    function updateQueueDisplay() {
+      const container = document.getElementById('productQueue');
+      container.innerHTML = '';
+
+      for (let i = gameState.currentProductIndex; i < Math.min(gameState.currentProductIndex + 5, gameState.products.length); i++) {
+        const product = gameState.products[i];
+        const isActive = i === gameState.currentProductIndex;
+        
+        const card = document.createElement('div');
+        card.className = 'product-card' + (isActive ? ' active' : '');
+        card.innerHTML = `
+          <div class="product-icon">${product.emoji}</div>
+          <div class="product-name">${product.name}</div>
+          <div class="product-value">€${product.value}</div>
+        `;
+        container.appendChild(card);
+      }
+    }
+
+    // ============================================
+    // DECISION MAKING
+    // ============================================
+
+    function makeDecision(decision) {
+      if (scanningInterval) clearInterval(scanningInterval);
+
+      const product = gameState.products[gameState.currentProductIndex];
+      const hasDefects = product.defects.some(d => d.revealed);
+
+      let isCorrect = false;
+      if (decision === 'good') {
+        isCorrect = !hasDefects;
+        product.accepted = true;
+      } else if (decision === 'reject') {
+        isCorrect = hasDefects;
+        product.accepted = false;
+      } else if (decision === 'doubt') {
+        isCorrect = hasDefects;
+        product.accepted = false;
+      }
+
+      gameState.stats.approved += (decision === 'good' && isCorrect) ? 1 : 0;
+      gameState.stats.rejected += (decision !== 'good') ? 1 : 0;
+      gameState.stats.total++;
+      gameState.stats.correct += isCorrect ? 1 : 0;
+
+      if (isCorrect && decision === 'good') {
+        gameState.money += product.value;
+      } else if (isCorrect && decision !== 'good') {
+        gameState.money += Math.round(product.value * 0.8);
+      }
+
+      product.inspected = true;
+
+      showFeedback(isCorrect);
+
+      gameState.currentProductIndex++;
+      setTimeout(() => {
+        if (gameState.currentProductIndex < gameState.products.length) {
+          displayCurrentProduct();
+          updateStats();
+        } else {
+          endDay();
+        }
+      }, 1000);
+    }
+
+    function showFeedback(isCorrect) {
+      const popup = document.getElementById('popupFeedback');
+      const text = document.getElementById('popupText');
+      
+      text.textContent = isCorrect 
+        ? TEXTS[currentLanguage].correctFeedback
+        : TEXTS[currentLanguage].incorrectFeedback;
+      
+      popup.className = 'popup-feedback show ' + (isCorrect ? 'correct' : 'incorrect');
+
+      setTimeout(() => {
+        popup.classList.add('fadeout');
+        setTimeout(() => {
+          popup.classList.remove('show', 'fadeout');
+        }, 300);
+      }, 1500);
+    }
+
+    // ============================================
+    // GAME LOOP
+    // ============================================
+
+    function startGameLoop() {
+      gameRunning = true;
+      const startTime = Date.now();
+      const dayDuration = 28800000;
+
+      timeInterval = setInterval(() => {
+        const elapsed = Date.now() - startTime;
+        gameState.timeLeft = Math.max(0, dayDuration - elapsed);
+
+        updateTimeDisplay();
+
+        if (gameState.timeLeft <= 0) {
+          clearInterval(timeInterval);
+          if (scanningInterval) clearInterval(scanningInterval);
+          endDay();
+        }
+      }, 100);
+    }
+
+    function updateTimeDisplay() {
+      const hours = Math.floor(gameState.timeLeft / 3600000);
+      const minutes = Math.floor((gameState.timeLeft % 3600000) / 60000);
+      const seconds = Math.floor((gameState.timeLeft % 60000) / 1000);
+      
+      document.getElementById('timeDisplay').textContent = 
+        `${hours}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+      document.getElementById('moneyDisplay').textContent = '€' + Math.round(gameState.money);
+    }
+
+    function updateStats() {
+      const accuracy = gameState.stats.total > 0 
+        ? Math.round((gameState.stats.correct / gameState.stats.total) * 100)
+        : 0;
+
+      document.getElementById('approvedCount').textContent = gameState.stats.approved;
+      document.getElementById('rejectedCount').textContent = gameState.stats.rejected;
+      document.getElementById('accuracyCount').textContent = accuracy + '%';
+    }
+
+    // ============================================
+    // END DAY
+    // ============================================
+
+    function endDay() {
+      gameRunning = false;
+      if (timeInterval) clearInterval(timeInterval);
+      if (scanningInterval) clearInterval(scanningInterval);
+
+      const revenue = gameState.products
+        .filter(p => p.inspected && p.accepted)
+        .reduce((sum, p) => sum + p.value, 0);
+
+      const salary = 150;
+      const charges = 400;
+      const dayBalance = revenue + salary - charges;
+      gameState.money += dayBalance;
+
+      if (gameState.money <= 0) {
+        gameOver(false);
+        return;
+      }
+
+      if (gameState.day >= 5) {
+        gameOver(true);
+        return;
+      }
+
+      document.getElementById('endApprovedCount').textContent = gameState.stats.approved;
+      document.getElementById('endRejectedCount').textContent = gameState.stats.rejected;
+      const accuracy = gameState.stats.total > 0 
+        ? Math.round((gameState.stats.correct / gameState.stats.total) * 100)
+        : 0;
+      document.getElementById('endAccuracy').textContent = accuracy + '%';
+      document.getElementById('endRevenue').textContent = '€' + dayBalance;
+      document.getElementById('totalBalance').textContent = '€' + Math.round(gameState.money);
+
+      showScreen('endDayScreen');
+    }
+
+    function nextDay() {
+      gameState.day++;
+      gameState.stats = { approved: 0, rejected: 0, correct: 0, total: 0 };
+      
+      document.getElementById('dayDisplay').textContent = gameState.day;
+      
+      showScreen('gameScreen');
+      initializeDay();
+      startGameLoop();
+    }
+
+    function gameOver(victory) {
+      document.getElementById('gameOverTitle').textContent = victory ? '🏆 VICTORY!' : '💸 BANKRUPT!';
+      document.getElementById('gameOverMsg').textContent = victory 
+        ? `Congratulations ${playerName}! You survived 5 days!`
+        : `Game Over ${playerName}. You ran out of money.`;
+      document.getElementById('finalBalance').textContent = '€' + Math.round(gameState.money);
+      
+      showScreen('gameOverScreen');
+    }
+
+    // ============================================
+    // STARTUP
+    // ============================================
+
+    window.addEventListener('load', () => {
+      const savedLang = localStorage.getItem('gameLanguage');
+      if (savedLang) {
+        currentLanguage = savedLang;
+        showScreen('playerNameScreen');
+      } else {
+        showScreen('languageScreen');
+      }
+    });
+  </script>
+</body>
+</html>
