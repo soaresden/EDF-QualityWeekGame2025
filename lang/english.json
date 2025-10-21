@@ -1,0 +1,114 @@
+{
+  "game.title": "Quality Control",
+  "game.subtitle": "Offshore Wind Systems",
+  "game.objective": "Goal: Reach 2000€/day",
+  
+  "screen.language.title": "🌐 LANGUAGE",
+  "screen.language.select": "Select your language",
+  
+  "screen.playerName.title": "👤 Your Name",
+  "screen.playerName.subtitle": "Enter your name for the leaderboard:",
+  "screen.playerName.placeholder": "Your name",
+  "screen.playerName.button": "START GAME →",
+  
+  "screen.intro.title": "🔍 QUALITY CONTROL",
+  "screen.intro.objective": "🎯 Goal: Meet the daily quota while maintaining company reputation!",
+  "screen.intro.rule1": "🔍 Find defects with the TINY magnifier",
+  "screen.intro.rule2": "⏱️ Stay 3+ seconds on a defect to reveal it",
+  "screen.intro.rule3": "✓ Validate your inspection (good/reject/doubtful)",
+  "screen.intro.rule4": "💰 Reach 2000€/day to progress",
+  "screen.intro.rule5": "🚀 Each day: more defects, less time!",
+  "screen.intro.button": "I UNDERSTAND →",
+  
+  "screen.game.dayTitle": "Day",
+  "screen.game.timeLeft": "Time left",
+  "screen.game.quota": "Quota",
+  "screen.game.money": "Money",
+  "screen.game.charges": "Charges",
+  "screen.game.balance": "Balance",
+  "screen.game.hours": "h",
+  "screen.game.minutes": "min",
+  "screen.game.seconds": "s",
+  
+  "screen.game.product.cable": "Marine Cable",
+  "screen.game.product.blade": "Wind Blade",
+  "screen.game.product.connector": "Sealed Connector",
+  "screen.game.product.transformer": "Transformer",
+  "screen.game.product.foundation": "Submarine Foundation",
+  
+  "defect.scratch": "Scratch",
+  "defect.wear": "Minor wear",
+  "defect.crack": "Crack",
+  "defect.misalignment": "Misalignment",
+  "defect.corrosion": "Corrosion",
+  "defect.leak": "Leak",
+  "defect.oxidation": "Oxidation",
+  "defect.deformation": "Deformation",
+  
+  "severity.minor": "Minor",
+  "severity.medium": "Medium",
+  "severity.major": "Major",
+  
+  "inspection.hover": "Hover to inspect",
+  "inspection.scanning": "Scanning...",
+  "inspection.defectFound": "Defect found!",
+  "inspection.keepHovering": "Keep hovering...",
+  
+  "decision.good": "✓ GOOD",
+  "decision.reject": "✗ REJECT",
+  "decision.doubt": "? DOUBTFUL",
+  
+  "feedback.correct": "✅ Good decision!",
+  "feedback.incorrect": "❌ Wrong decision!",
+  "feedback.missed": "⚠️ You missed a defect!",
+  "feedback.falseAlarm": "⚠️ False alarm, product OK!",
+  
+  "screen.dayEnd.title": "📊 END OF DAY",
+  "screen.dayEnd.revenue": "Revenue",
+  "screen.dayEnd.salary": "Salary",
+  "screen.dayEnd.charges": "Charges",
+  "screen.dayEnd.total": "Total",
+  "screen.dayEnd.dayBalance": "Day balance",
+  "screen.dayEnd.accuracy": "Inspection accuracy",
+  "screen.dayEnd.goodProducts": "Products accepted",
+  "screen.dayEnd.rejectedProducts": "Products rejected",
+  "screen.dayEnd.nextDay": "NEXT DAY →",
+  "screen.dayEnd.upgrade": "🛠️ UPGRADES",
+  
+  "upgrade.magnifier.name": "🔍 Better Magnifier",
+  "upgrade.magnifier.description": "Zoom +30%, detection +25%",
+  "upgrade.magnifier.cost": "200€",
+  
+  "upgrade.speedDetection.name": "⚡ Fast Detection",
+  "upgrade.speedDetection.description": "Inspection time -50%",
+  "upgrade.speedDetection.cost": "150€",
+  
+  "upgrade.caliper.name": "📏 Caliper",
+  "upgrade.caliper.description": "Precision +40%",
+  "upgrade.caliper.cost": "100€",
+  
+  "upgrade.multimeter.name": "📊 Multimeter",
+  "upgrade.multimeter.description": "Electrical detection +60%",
+  "upgrade.multimeter.cost": "120€",
+  
+  "upgrade.ultrasound.name": "🔬 Ultrasound",
+  "upgrade.ultrasound.description": "Hidden defects visible",
+  "upgrade.ultrasound.cost": "180€",
+  
+  "upgrade.purchased": "✓ Purchased",
+  "upgrade.tooExpensive": "Too expensive",
+  "upgrade.buy": "BUY",
+  
+  "screen.gameOver.title": "💸 BANKRUPT!",
+  "screen.gameOver.subtitle": "You didn't have enough...",
+  "screen.gameOver.balance": "Final balance:",
+  "screen.gameOver.restart": "RESTART",
+  
+  "screen.victory.title": "🏆 CONGRATULATIONS!",
+  "screen.victory.subtitle": "5 days completed!",
+  "screen.victory.finalBalance": "Final balance:",
+  "screen.victory.ranking": "Personal ranking:",
+  
+  "error.loading": "Error loading game",
+  "error.loadingLanguage": "Error loading language"
+}

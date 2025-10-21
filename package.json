@@ -1,0 +1,34 @@
+{
+  "name": "edf-quality-control-game",
+  "version": "1.0.0",
+  "description": "Jeu pédagogique interactif sur le contrôle qualité en production éolienne marine",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "serve": "http-server -p 8000",
+    "build": "echo 'No build needed - this is a static site'",
+    "deploy": "echo 'Deploy to GitHub Pages or similar'"
+  },
+  "keywords": [
+    "game",
+    "quality",
+    "control",
+    "education",
+    "edf",
+    "offshore",
+    "wind"
+  ],
+  "author": "EDF Quality Week Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/soaresden/EDF-QualityWeekGame2025"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  },
+  "browsers": {
+    "modern": "last 2 versions",
+    "legacy": "IE 11"
+  }
+}
