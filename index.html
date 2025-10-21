@@ -13,8 +13,25 @@
   <link rel="stylesheet" href="./css/animations.css">
 </head>
 <body>
+  <!-- HEADER AVEC LOGOS ET TITRE -->
+  <div style="position: fixed; top: 0; left: 0; right: 0; padding: 20px; background: linear-gradient(135deg, #09367A 0%, #00A8E9 100%); z-index: 1001; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+    <div style="max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 20px;">
+      <!-- Logo gauche -->
+      <img src="./assets/images/COU.png" alt="Logo" style="height: 50px; object-fit: contain;">
+      
+      <!-- Titre au centre -->
+      <div style="flex: 1; text-align: center; color: white;">
+        <h1 style="margin: 0; font-size: 1.5rem; font-weight: bold; letter-spacing: 1px;">EDF Power Solutions - Quality Week 2025</h1>
+        <p style="margin: 3px 0 0 0; font-size: 0.9rem; opacity: 0.95; font-style: italic;">The Quality Inspector Game</p>
+      </div>
+      
+      <!-- Logo droite -->
+      <img src="./assets/images/EDFPS.jfif" alt="EDF" style="height: 50px; object-fit: contain;">
+    </div>
+  </div>
+
   <!-- Conteneur principal -->
-  <div class="game-container">
+  <div class="game-container" style="margin-top: 110px;">
     <div id="gameRoot"></div>
   </div>
 

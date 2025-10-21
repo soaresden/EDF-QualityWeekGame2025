@@ -258,8 +258,21 @@
    PRODUITS
    ============================================ */
 
+#productContainer {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)) !important;
+  gap: 16px !important;
+  padding: 16px !important;
+}
+
 .product {
   animation: slideInRight 0.5s ease-out;
+  cursor: pointer;
+  transition: transform 0.2s ease-out;
+}
+
+.product:hover {
+  transform: translateY(-4px);
 }
 
 .product.defect-found {

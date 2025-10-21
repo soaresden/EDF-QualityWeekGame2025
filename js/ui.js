@@ -72,33 +72,68 @@ class UI {
    */
   updateTexts() {
     // Écran langue
-    document.getElementById('langTitle').textContent = i18n.get('screen.language.title');
-    document.getElementById('langSubtitle').textContent = i18n.get('screen.language.select');
+    if (document.getElementById('langTitle')) 
+      document.getElementById('langTitle').textContent = i18n.get('screen.language.title');
+    if (document.getElementById('langSubtitle'))
+      document.getElementById('langSubtitle').textContent = i18n.get('screen.language.select');
 
     // Écran nom du joueur
-    document.getElementById('nameTitle').textContent = i18n.get('screen.playerName.title');
-    document.getElementById('nameSubtitle').textContent = i18n.get('screen.playerName.subtitle');
-    document.getElementById('playerNameInput').placeholder = i18n.get('screen.playerName.placeholder');
+    if (document.getElementById('nameTitle'))
+      document.getElementById('nameTitle').textContent = i18n.get('screen.playerName.title');
+    if (document.getElementById('nameSubtitle'))
+      document.getElementById('nameSubtitle').textContent = i18n.get('screen.playerName.subtitle');
+    if (document.getElementById('playerNameInput'))
+      document.getElementById('playerNameInput').placeholder = i18n.get('screen.playerName.placeholder');
     
     // Écran intro
-    document.getElementById('introTitle').textContent = i18n.get('screen.intro.title');
-    document.getElementById('introSubtitle').textContent = i18n.get('game.subtitle');
-    document.getElementById('introObjective').textContent = i18n.get('screen.intro.objective');
-    document.getElementById('rule1').textContent = i18n.get('screen.intro.rule1');
-    document.getElementById('rule2').textContent = i18n.get('screen.intro.rule2');
-    document.getElementById('rule3').textContent = i18n.get('screen.intro.rule3');
-    document.getElementById('rule4').textContent = i18n.get('screen.intro.rule4');
-    document.getElementById('rule5').textContent = i18n.get('screen.intro.rule5');
+    if (document.getElementById('introTitle'))
+      document.getElementById('introTitle').textContent = i18n.get('screen.intro.title');
+    if (document.getElementById('introSubtitle'))
+      document.getElementById('introSubtitle').textContent = i18n.get('game.subtitle');
+    if (document.getElementById('introObjective'))
+      document.getElementById('introObjective').textContent = i18n.get('screen.intro.objective');
+    if (document.getElementById('rule1'))
+      document.getElementById('rule1').textContent = i18n.get('screen.intro.rule1');
+    if (document.getElementById('rule2'))
+      document.getElementById('rule2').textContent = i18n.get('screen.intro.rule2');
+    if (document.getElementById('rule3'))
+      document.getElementById('rule3').textContent = i18n.get('screen.intro.rule3');
+    if (document.getElementById('rule4'))
+      document.getElementById('rule4').textContent = i18n.get('screen.intro.rule4');
+    if (document.getElementById('rule5'))
+      document.getElementById('rule5').textContent = i18n.get('screen.intro.rule5');
 
-    // Écran jeu
-    document.getElementById('dayDisplay').textContent = game.state.day;
-    document.getElementById('dayEndTitle').textContent = i18n.get('screen.dayEnd.title');
+    // Écran jeu - labels
+    if (document.querySelector('[id^="dayTitle"]'))
+      document.querySelectorAll('.stat-label').forEach((el, idx) => {
+        if (idx === 0) el.textContent = i18n.get('screen.game.dayTitle');
+        else if (idx === 1) el.textContent = i18n.get('screen.game.timeLeft');
+        else if (idx === 2) el.textContent = i18n.get('screen.game.money');
+        else if (idx === 3) el.textContent = i18n.get('screen.game.quota');
+      });
+
+    if (document.getElementById('dayEndTitle'))
+      document.getElementById('dayEndTitle').textContent = i18n.get('screen.dayEnd.title');
 
     // Boutons décision
     const decisionBtns = document.querySelectorAll('.decision-btn');
     if (decisionBtns[0]) decisionBtns[0].textContent = i18n.get('decision.good');
     if (decisionBtns[1]) decisionBtns[1].textContent = i18n.get('decision.reject');
     if (decisionBtns[2]) decisionBtns[2].textContent = i18n.get('decision.doubt');
+
+    // Fin de journée
+    if (document.getElementById('dayRevenue')) {
+      // Vérifier les labels
+      const labels = document.querySelectorAll('.stat-label');
+      labels.forEach(label => {
+        if (label.textContent === 'Revenue') label.textContent = i18n.get('screen.dayEnd.revenue');
+        else if (label.textContent === 'Salary') label.textContent = i18n.get('screen.dayEnd.salary');
+        else if (label.textContent === 'Charges') label.textContent = i18n.get('screen.dayEnd.charges');
+        else if (label.textContent === 'Accuracy') label.textContent = i18n.get('screen.dayEnd.accuracy');
+        else if (label.textContent === 'Accepted') label.textContent = i18n.get('screen.dayEnd.goodProducts');
+        else if (label.textContent === 'Rejected') label.textContent = i18n.get('screen.dayEnd.rejectedProducts');
+      });
+    }
   }
 
   /**
@@ -147,6 +182,8 @@ class UI {
    */
   renderProducts() {
     const container = document.getElementById('productContainer');
+    if (!container) return;
+    
     container.innerHTML = '';
 
     game.state.products.forEach(product => {
@@ -162,16 +199,20 @@ class UI {
         : '#F59E0B';
 
       const revealedCount = product.defects.filter(d => d.revealed).length;
+      const totalDefects = product.defects.length;
       
-      productEl.innerHTML = `
-        <div style="text-align: center; cursor: pointer; padding: 16px; background: linear-gradient(135deg, rgba(9,54,122,0.1) 0%, rgba(0,168,233,0.1) 100%); border-radius: 8px; position: relative;">
-          <div style="font-size: 2rem; margin-bottom: 8px;">📦</div>
-          <div style="font-weight: bold; font-size: 0.9rem; margin-bottom: 4px;">${product.name}</div>
+      // Créer le HTML avec tous les infos
+      const html = `
+        <div style="text-align: center; cursor: pointer; padding: 16px; background: linear-gradient(135deg, rgba(9,54,122,0.1) 0%, rgba(0,168,233,0.1) 100%); border-radius: 8px; position: relative; min-height: 120px; display: flex; flex-direction: column; justify-content: space-between;">
+          <div style="font-size: 2.5rem; margin-bottom: 8px;">📦</div>
+          <div style="font-weight: bold; font-size: 0.95rem; margin-bottom: 4px; line-height: 1.3;">${product.name}</div>
           <div style="font-size: 0.8rem; color: #666; margin-bottom: 8px;">€${product.value}</div>
-          <div style="font-size: 1.5rem; color: ${statusColor}; font-weight: bold;">${statusIcon}</div>
-          ${revealedCount > 0 ? `<div style="font-size: 0.75rem; color: #EF4444; margin-top: 8px;">⚠️ ${revealedCount} defects</div>` : ''}
+          <div style="font-size: 1.8rem; color: ${statusColor}; font-weight: bold; margin-bottom: 4px;">${statusIcon}</div>
+          ${revealedCount > 0 ? `<div style="font-size: 0.75rem; color: #EF4444; background: rgba(239, 68, 68, 0.1); padding: 4px 8px; border-radius: 4px; margin-top: auto;">⚠️ ${revealedCount}/${totalDefects} défauts</div>` : ''}
         </div>
       `;
+      
+      productEl.innerHTML = html;
       
       productEl.addEventListener('mouseenter', () => this.onProductHover(product.id));
       productEl.addEventListener('mouseleave', () => this.onProductLeave(product.id));
@@ -388,7 +429,12 @@ window.ui = ui;
 
 function setLanguage(lang) {
   ui.setLanguage(lang);
-  ui.showScreen('playerName');
+  // Mettre à jour TOUS les textes immédiatement
+  ui.updateTexts();
+  // Puis montrer l'écran suivant
+  setTimeout(() => {
+    ui.showScreen('playerName');
+  }, 100);
 }
 
 function confirmPlayerName() {
