@@ -620,7 +620,7 @@
     // ⚠️ À CONFIGURER AVEC TES CREDENTIALS
     const SUPABASE_URL = 'https://tqwrsakylbyqmxwyhoar.supabase.co'; // Remplace par ton URL
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRxd3JzYWt5bGJ5cW14d3lob2FyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEwNjE4NTUsImV4cCI6MjA3NjYzNzg1NX0.WIo9YUtJnxfgsZmnPluGexBAztB7dJG6uYKnNe7o_6A'; // Remplace par ta clé publique
-    
+  
     // Initialise Supabase
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
   </script>
@@ -722,13 +722,13 @@
       totalInspectionTime: 0
     };
 
-    function setLanguage(lang) {
+    window.setLanguage = function(lang) {
       currentLanguage = lang;
       localStorage.setItem('gameLanguage', lang);
       showScreen('introScreen');
-    }
+    };
 
-    function startGame() {
+    window.startGame = function() {
       gameActive = true;
       gameStartTime = Date.now();
       correctCombo = 0;
@@ -737,7 +737,7 @@
       showScreen('gameScreen');
       loadNextProduct();
       startGameLoop();
-    }
+    };
 
     function generateProducts() {
       const productList = PRODUCTS_DATA[currentLanguage];
@@ -995,7 +995,7 @@
 
 
 
-    function makeDecision(decision) {
+    window.makeDecision = function(decision) {
       if (!gameActive) return;
       const hasDefects = foundDefects.length > 0;
       let isCorrect = false;
@@ -1283,7 +1283,7 @@
       else return { letter: 'E', code: 'e' };
     }
 
-    function endGame() {
+    window.endGame = function() {
       gameActive = false;
       mouseOverCanvas = false;
       document.getElementById('magnifier').style.display = 'none';
@@ -1309,7 +1309,7 @@
       showScreen('endGameScreen');
     }
 
-    async function submitScore() {
+    window.submitScore = async function() {
       const name = document.getElementById('playerNameInput').value.trim();
       if (!name) { alert('Enter a name!'); return; }
       
