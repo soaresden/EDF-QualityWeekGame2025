@@ -2,11 +2,18 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
   <title>Quality Inspector - EDF</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Courier New', monospace; background: #0a0e27; color: #ccc; overflow: hidden; height: 100vh; }
+    body { font-family: 'Courier New', monospace; background: #0a0e27; color: #ccc; overflow: hidden; height: 100vh; touch-action: manipulation; }
+    
+    canvas { 
+      touch-action: none;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
 
     .header {
       background: linear-gradient(90deg, #09367A 0%, #00A8E9 100%);
@@ -230,34 +237,38 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      padding: 30px 50px;
-      border-radius: 12px;
-      font-size: 1.5rem;
+      padding: 50px 80px;
+      border-radius: 20px;
+      font-size: 2.2rem;
       font-weight: bold;
       text-align: center;
       display: none;
-      z-index: 150;
+      z-index: 300;
       animation: feedbackAnim 3s ease-in-out;
-      box-shadow: 0 15px 50px rgba(0,0,0,0.9);
-      border: 3px solid;
+      box-shadow: 0 0 100px rgba(0,0,0,0.95), inset 0 0 40px rgba(0,0,0,0.5);
+      border: 4px solid;
+      letter-spacing: 2px;
     }
 
     .feedback-message.good {
-      background: linear-gradient(135deg, #10B981, #059669);
+      background: linear-gradient(135deg, #10B981, #059669, #047857);
       border-color: #10B981;
       color: white;
+      text-shadow: 0 0 20px rgba(16, 185, 129, 0.8);
     }
 
     .feedback-message.bad {
-      background: linear-gradient(135deg, #EF4444, #DC2626);
+      background: linear-gradient(135deg, #EF4444, #DC2626, #991B1B);
       border-color: #EF4444;
       color: white;
+      text-shadow: 0 0 20px rgba(239, 68, 68, 0.8);
     }
 
     .feedback-message.combo {
-      background: linear-gradient(135deg, #F59E0B, #ff9500);
+      background: linear-gradient(135deg, #F59E0B, #D97706, #B45309);
       border-color: #F59E0B;
       color: white;
+      text-shadow: 0 0 20px rgba(245, 158, 11, 0.8);
     }
 
     @keyframes feedbackAnim {
@@ -541,6 +552,8 @@
   <!-- END SCREEN -->
   <div id="endGameScreen" class="modal-overlay hidden">
     <div class="modal" style="max-width: 700px; max-height: 95vh;">
+      <p style="text-align: center; color: #00A8E9; font-size: 1.3rem; font-weight: bold; margin-bottom: 20px;" id="finalName"></p>
+      
       <h1 style="text-align: center; margin-bottom: 30px;">📊 INSPECTION COMPLETE</h1>
 
       <div class="rank-timeline">
@@ -558,29 +571,21 @@
       </div>
 
       <div class="stats-grid">
+        <div class="stat-box" style="grid-column: 1 / -1; background: rgba(0, 168, 233, 0.2); padding: 20px; border-radius: 8px;">
+          <div class="stat-box-label">FINAL SCORE</div>
+          <div style="font-size: 3rem; font-weight: bold; color: #10B981; text-shadow: 0 0 20px rgba(16, 185, 129, 0.8);" id="finalScore">0</div>
+        </div>
         <div class="stat-box">
           <div class="stat-box-label">Quality Ratio</div>
-          <div class="stat-box-value" id="finalRatio">0/0</div>
+          <div class="stat-box-value" id="finalRatio">0/0 = 0%</div>
         </div>
-        <div class="stat-box">
-          <div class="stat-box-label">Quality %</div>
-          <div class="stat-box-value" id="finalQualityPercent">0%</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-box-label">Final Score</div>
-          <div class="stat-box-value" id="finalScore">0</div>
+        <div class="stat-box" style="background: rgba(245, 158, 11, 0.15); padding: 15px; border-radius: 8px;">
+          <div class="stat-box-label">🔥 MAX COMBO</div>
+          <div style="font-size: 2rem; font-weight: bold; color: #F59E0B; text-shadow: 0 0 15px rgba(245, 158, 11, 0.8);" id="maxComboDisplay">0</div>
         </div>
         <div class="stat-box">
           <div class="stat-box-label">Avg Time/Product</div>
           <div class="stat-box-value" id="avgTime">0s</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-box-label">Max Combo</div>
-          <div class="stat-box-value" id="maxComboDisplay">0</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-box-label">Total Products</div>
-          <div class="stat-box-value" id="finalProducts">0</div>
         </div>
       </div>
 
@@ -610,7 +615,15 @@
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
+    // ⚠️ À CONFIGURER AVEC TES CREDENTIALS
+    const SUPABASE_URL = 'https://supabase.com/dashboard/project/tqwrsakylbyqmxwyhoar'; // Remplace par ton URL
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRxd3JzYWt5bGJ5cW14d3lob2FyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEwNjE4NTUsImV4cCI6MjA3NjYzNzg1NX0.WIo9YUtJnxfgsZmnPluGexBAztB7dJG6uYKnNe7o_6A'; // Remplace par ta clé publique
+    
+    // Initialise Supabase
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  </script>
     const PRODUCTS_DATA = {
       fr: [
         { name: 'Pale', id: 'blade', value: 150, emoji: '🪨' },
@@ -814,20 +827,28 @@
       document.getElementById('inspectionZone').style.display = 'none';
     });
 
-    canvas.addEventListener('mousemove', (e) => {
-      const magnifier = document.getElementById('magnifier');
-      const zone = document.getElementById('inspectionZone');
-      magnifier.style.left = e.clientX + 'px';
-      magnifier.style.top = e.clientY + 'px';
-      zone.style.left = e.clientX + 'px';
-      zone.style.top = e.clientY + 'px';
+    let lastMouseX = 0;
+    let lastMouseY = 0;
+    let isTouching = false;
 
-      // SIMPLE: souris sur canvas = check defects
+    function handleMouseMove(e) {
+      lastMouseX = e.clientX;
+      lastMouseY = e.clientY;
+
+      // SIMPLE: souris/doigt sur canvas = check defects
       const canvasRect = canvas.getBoundingClientRect();
       
       // Position relative sur le canvas (0 à 1)
       const relX = (e.clientX - canvasRect.left) / canvasRect.width;
       const relY = (e.clientY - canvasRect.top) / canvasRect.height;
+      
+      // Check si on est sur le canvas
+      if (relX < 0 || relX > 1 || relY < 0 || relY > 1) return;
+      
+      // Redessine tout avec la zone
+      redrawCanvas();
+      drawZoneAround(relX, relY);
+      drawAllEmojis();
       
       // Check each defect position
       defectPositions.forEach((def, idx) => {
@@ -836,8 +857,8 @@
         // Distance entre souris et défaut (en % du canvas)
         const dist = Math.sqrt(Math.pow(relX - def.x, 2) + Math.pow(relY - def.y, 2));
         
-        // Si proche (0.15 = 15% du canvas)
-        if (dist < 0.15) {
+        // Si proche (0.08 = 8% du canvas au lieu de 15%)
+        if (dist < 0.08) {
           def.found = true;
           foundDefects.push(def.defect);
           
@@ -847,7 +868,88 @@
           updateDefectsList();
         }
       });
-    });
+    }
+
+    // SOURIS - Desktop
+    canvas.addEventListener('mousemove', handleMouseMove);
+
+    // TOUCH - Mobile (doigt appuyé)
+    canvas.addEventListener('touchstart', (e) => {
+      isTouching = true;
+      const touch = e.touches[0];
+      const mouseEvent = new MouseEvent('mousemove', {
+        clientX: touch.clientX,
+        clientY: touch.clientY
+      });
+      handleMouseMove(mouseEvent);
+    }, { passive: true });
+
+    canvas.addEventListener('touchmove', (e) => {
+      if (!isTouching) return;
+      e.preventDefault();
+      const touch = e.touches[0];
+      const mouseEvent = new MouseEvent('mousemove', {
+        clientX: touch.clientX,
+        clientY: touch.clientY
+      });
+      handleMouseMove(mouseEvent);
+    }, { passive: false });
+
+    canvas.addEventListener('touchend', () => {
+      isTouching = false;
+      // Redessine sans la zone après relâchement
+      redrawCanvas();
+      drawAllEmojis();
+    }, { passive: true });
+
+    function drawZoneAround(relX, relY) {
+      const ctx = canvas.getContext('2d');
+      const x = relX * canvas.width;
+      const y = relY * canvas.height;
+      const radius = 25;
+      
+      // Glow extérieur violet
+      ctx.shadowColor = 'rgba(168, 85, 247, 0.8)';
+      ctx.shadowBlur = 30;
+      
+      // Cercle principal violet
+      ctx.strokeStyle = '#A855F7';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(x, y, radius, 0, Math.PI * 2);
+      ctx.stroke();
+      
+      // Cercle intérieur (doublé pour plus d'épaisseur)
+      ctx.strokeStyle = '#D8B4FE';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.arc(x, y, radius - 2, 0, Math.PI * 2);
+      ctx.stroke();
+      
+      // Glow intérieur subtle
+      ctx.shadowColor = 'rgba(168, 85, 247, 0.5)';
+      ctx.shadowBlur = 15;
+      ctx.fillStyle = 'rgba(168, 85, 247, 0.08)';
+      ctx.beginPath();
+      ctx.arc(x, y, radius, 0, Math.PI * 2);
+      ctx.fill();
+      
+      // Crosshair violet
+      ctx.shadowColor = 'rgba(168, 85, 247, 0.8)';
+      ctx.shadowBlur = 10;
+      ctx.strokeStyle = '#D8B4FE';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(x - 12, y);
+      ctx.lineTo(x + 12, y);
+      ctx.moveTo(x, y - 12);
+      ctx.lineTo(x, y + 12);
+      ctx.stroke();
+      
+      // Reset shadow
+      ctx.shadowColor = 'transparent';
+      ctx.shadowBlur = 0;
+    }
 
     let revealedEmojis = []; // Stocke les emojis révélés
 
@@ -867,19 +969,19 @@
       const ctx = canvas.getContext('2d');
       
       revealedEmojis.forEach(item => {
-        // Fond circulaire jaune
+        // Fond circulaire jaune - PLUS PETIT
         ctx.fillStyle = 'rgba(255, 215, 0, 0.9)';
         ctx.beginPath();
-        ctx.arc(item.x, item.y, 35, 0, Math.PI * 2);
+        ctx.arc(item.x, item.y, 20, 0, Math.PI * 2); // Réduit de 35 à 20
         ctx.fill();
         
         // Bordure
         ctx.strokeStyle = '#F59E0B';
-        ctx.lineWidth = 3;
+        ctx.lineWidth = 2;
         ctx.stroke();
         
-        // Emoji
-        ctx.font = 'bold 45px Arial';
+        // Emoji - PLUS PETIT
+        ctx.font = 'bold 28px Arial'; // Réduit de 45px à 28px
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(item.emoji, item.x, item.y);
@@ -1149,11 +1251,11 @@
       setInterval(() => {
         if (!gameActive) return;
         const elapsed = (Date.now() - gameStartTime) / 1000;
-        const remaining = Math.max(0, 300 - elapsed);
+        const remaining = Math.max(0, 120 - elapsed); // 120 secondes = 2 minutes
         const minutes = Math.floor(remaining / 60);
         const seconds = Math.floor(remaining % 60);
         document.getElementById('timeDisplay').textContent = `${minutes}:${String(seconds).padStart(2, '0')}`;
-        const timerPercent = (remaining / 300) * 100;
+        const timerPercent = (remaining / 120) * 100;
         document.getElementById('timerFill').style.width = timerPercent + '%';
         gameStats.quality = gameStats.productsInspected > 0
           ? Math.round((gameStats.productsGood / gameStats.productsInspected) * 100)
@@ -1198,43 +1300,111 @@
       document.getElementById('performanceEmoji').textContent = rankMessages.emoji;
       document.getElementById('performanceText').innerHTML = `<strong style="font-size: 1.3rem; color: #00A8E9;">${randomMessage}</strong>`;
 
-      document.getElementById('finalRatio').textContent = `${gameStats.productsGood}/${gameStats.productsInspected}`;
-      document.getElementById('finalQualityPercent').textContent = gameStats.quality + '%';
+      document.getElementById('finalName').textContent = ''; // Vide, sera rempli au submit
+      document.getElementById('finalRatio').textContent = `${gameStats.productsGood}/${gameStats.productsInspected} = ${gameStats.quality}%`;
       document.getElementById('finalScore').textContent = gameStats.totalScore;
       document.getElementById('avgTime').textContent = avgTime + 's';
       document.getElementById('maxComboDisplay').textContent = gameStats.maxCombo;
-      document.getElementById('finalProducts').textContent = gameStats.productsInspected;
 
       showScreen('endGameScreen');
     }
 
-    function submitScore() {
+    async function submitScore() {
       const name = document.getElementById('playerNameInput').value.trim();
       if (!name) { alert('Enter a name!'); return; }
-      let leaderboard = JSON.parse(localStorage.getItem('leaderboard') || '[]');
+      
+      // Affiche le nom en haut
+      document.getElementById('finalName').textContent = `🏆 ${name}`;
+      
       const avgTime = gameStats.productsInspected > 0 ? (gameStats.totalInspectionTime / gameStats.productsInspected).toFixed(1) : 0;
-      leaderboard.push({ 
+      
+      const newScore = {
         name: name, 
         score: gameStats.totalScore, 
-        goodCount: gameStats.productsGood,
-        totalCount: gameStats.productsInspected,
-        avgTime: avgTime
-      });
+        good_count: gameStats.productsGood,
+        total_count: gameStats.productsInspected,
+        quality: gameStats.quality,
+        avg_time: parseFloat(avgTime)
+      };
+      
+      try {
+        // Essaie de sauvegarder dans Supabase
+        if (supabase && SUPABASE_URL !== 'https://xxxxx.supabase.co') {
+          const { data, error } = await supabase
+            .from('scores')
+            .insert([newScore]);
+          
+          if (error) {
+            console.error('Supabase error:', error);
+            // Fallback: localStorage
+            saveToLocalStorage(newScore);
+          } else {
+            console.log('✅ Score saved to cloud!');
+          }
+        } else {
+          console.log('⚠️ Supabase not configured, using localStorage');
+          saveToLocalStorage(newScore);
+        }
+      } catch (err) {
+        console.error('Error:', err);
+        saveToLocalStorage(newScore);
+      }
+      
+      showLeaderboard();
+    }
+    
+    function saveToLocalStorage(score) {
+      let leaderboard = JSON.parse(localStorage.getItem('leaderboard') || '[]');
+      leaderboard.push(score);
       leaderboard.sort((a, b) => b.score - a.score);
       leaderboard = leaderboard.slice(0, 20);
       localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
-      showLeaderboard();
     }
 
-    function showLeaderboard() {
-      const leaderboard = JSON.parse(localStorage.getItem('leaderboard') || '[]');
+    async function showLeaderboard() {
       const tbody = document.getElementById('leaderboardBody');
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #888;">Loading...</td></tr>';
+      
+      let leaderboard = [];
+      
+      try {
+        // Essaie de charger depuis Supabase
+        if (supabase && SUPABASE_URL !== 'https://xxxxx.supabase.co') {
+          const { data, error } = await supabase
+            .from('scores')
+            .select('*')
+            .order('score', { ascending: false })
+            .limit(20);
+          
+          if (data && !error) {
+            leaderboard = data;
+            console.log('✅ Leaderboard loaded from cloud!');
+          } else {
+            console.log('Using localStorage fallback');
+            leaderboard = JSON.parse(localStorage.getItem('leaderboard') || '[]');
+          }
+        } else {
+          console.log('⚠️ Supabase not configured, using localStorage');
+          leaderboard = JSON.parse(localStorage.getItem('leaderboard') || '[]');
+        }
+      } catch (err) {
+        console.error('Error loading leaderboard:', err);
+        leaderboard = JSON.parse(localStorage.getItem('leaderboard') || '[]');
+      }
+      
       tbody.innerHTML = '';
+      if (leaderboard.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #888;">No scores yet...</td></tr>';
+        return;
+      }
+      
       leaderboard.forEach((entry, index) => {
         const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${index + 1}</td><td><strong>${entry.name}</strong></td><td><strong style="color: #10B981;">${entry.score}</strong></td><td>${entry.goodCount}/${entry.totalCount}</td><td>${entry.avgTime}s</td>`;
+        const quality = entry.quality || Math.round((entry.good_count / entry.total_count) * 100);
+        tr.innerHTML = `<td>${index + 1}</td><td><strong>${entry.name}</strong></td><td><strong style="color: #10B981; font-size: 1.2rem;">${entry.score}</strong></td><td>${entry.good_count}/${entry.total_count} = ${quality}%</td><td>${entry.avg_time}s</td>`;
         tbody.appendChild(tr);
       });
+      
       showScreen('leaderboardScreen');
     }
 
