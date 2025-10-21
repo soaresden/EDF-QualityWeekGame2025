@@ -17,7 +17,7 @@
   <div style="position: fixed; top: 0; left: 0; right: 0; padding: 20px; background: linear-gradient(135deg, #09367A 0%, #00A8E9 100%); z-index: 1001; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
     <div style="max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 20px;">
       <!-- Logo gauche -->
-      <img src="./assets/images/COU.png" alt="Logo" style="height: 50px; object-fit: contain;">
+      <img src="./img/COU.png" alt="Logo" style="height: 50px; object-fit: contain;">
       
       <!-- Titre au centre -->
       <div style="flex: 1; text-align: center; color: white;">
@@ -26,7 +26,7 @@
       </div>
       
       <!-- Logo droite -->
-      <img src="./assets/images/EDFPS.jfif" alt="EDF" style="height: 50px; object-fit: contain;">
+      <img src="./img/EDFPS.jfif" alt="EDF" style="height: 50px; object-fit: contain;">
     </div>
   </div>
 
@@ -108,10 +108,10 @@
 
   <!-- ÉCRAN JEU PRINCIPAL -->
   <div id="gameScreen" class="modal-overlay hidden">
-    <div class="modal" style="width: 95vw; max-width: 1000px; height: 90vh; display: flex; flex-direction: column;">
+    <div class="modal" style="width: 95vw; max-width: 1100px; height: 90vh; display: flex; flex-direction: column; padding: 0;">
       
       <!-- En-tête du jeu -->
-      <div class="screen-header" style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+      <div class="screen-header" style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; margin: 0; border-radius: 0; padding: 16px;">
         <div>
           <div class="stat-label">Day</div>
           <div class="stat-value" id="dayDisplay">1</div>
@@ -130,22 +130,59 @@
         </div>
       </div>
 
-      <!-- Zone de jeu (produits) -->
-      <div id="gameArea" style="flex: 1; overflow-y: auto; padding: 16px; background: #f9fafb; border-radius: 12px; margin-bottom: 24px;">
-        <div id="productContainer" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px;">
-          <!-- Les produits seront générés ici -->
+      <!-- Zone de jeu - STYLE TETRIS -->
+      <div style="flex: 1; display: flex; gap: 16px; padding: 16px; background: #f9fafb;">
+        
+        <!-- RÉSERVE (gauche) - 3 produits à venir -->
+        <div style="width: 120px; display: flex; flex-direction: column; gap: 12px;">
+          <h4 style="margin: 0; color: #666; font-size: 0.85rem; text-transform: uppercase;">NEXT</h4>
+          <div id="reserveProducts" style="display: flex; flex-direction: column; gap: 12px; flex: 1;">
+            <!-- Produits de réserve générés ici -->
+          </div>
         </div>
-      </div>
 
-      <!-- Panneau d'inspection (produit courant) -->
-      <div id="inspectionPanel" style="background: white; border: 2px solid #00A8E9; border-radius: 12px; padding: 16px; display: none;">
-        <h3 id="currentProductName">Produit</h3>
-        <p id="defectStatus">Défauts: 0</p>
-        <div id="decisionButtons" style="display: flex; gap: 12px; margin-top: 16px;">
-          <button class="decision-btn good" onclick="makeDecision('good')">✓ GOOD</button>
-          <button class="decision-btn reject" onclick="makeDecision('reject')">✗ REJECT</button>
-          <button class="decision-btn doubt" onclick="makeDecision('doubt')">? DOUBTFUL</button>
+        <!-- INSPECTION (milieu) - Le produit courant -->
+        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+          <div id="currentProductCard" style="width: 100%; max-width: 300px; background: white; border: 3px solid #00A8E9; border-radius: 16px; padding: 24px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+            <div style="font-size: 4rem; margin-bottom: 16px;">📦</div>
+            <h3 id="currentProductName" style="margin: 0 0 12px 0; font-size: 1.3rem; color: #09367A;">Product Name</h3>
+            <p id="currentProductValue" style="margin: 0 0 16px 0; font-size: 1.2rem; color: #00A8E9; font-weight: bold;">€100</p>
+            <p id="defectStatus" style="margin: 0 0 24px 0; color: #666; font-size: 0.95rem;">Scanning... (0/3)</p>
+            
+            <!-- Barre de scanning -->
+            <div style="width: 100%; height: 6px; background: #ddd; border-radius: 10px; overflow: hidden; margin-bottom: 24px;">
+              <div id="scanningBar" style="height: 100%; width: 0%; background: linear-gradient(90deg, #10B981, #00A8E9); transition: width 0.2s ease-out;"></div>
+            </div>
+
+            <!-- Boutons décision -->
+            <div id="decisionButtons" style="display: flex; gap: 8px; margin-top: 16px;">
+              <button class="decision-btn good" onclick="makeDecision('good')" style="flex: 1;">✓ GOOD</button>
+              <button class="decision-btn reject" onclick="makeDecision('reject')" style="flex: 1;">✗ REJECT</button>
+              <button class="decision-btn doubt" onclick="makeDecision('doubt')" style="flex: 1;">? DOUBTFUL</button>
+            </div>
+          </div>
         </div>
+
+        <!-- STATS (droite) - Statistiques -->
+        <div style="width: 120px; display: flex; flex-direction: column; gap: 12px;">
+          <h4 style="margin: 0; color: #666; font-size: 0.85rem; text-transform: uppercase;">STATS</h4>
+          
+          <div style="background: white; padding: 12px; border-radius: 8px; border-left: 4px solid #10B981;">
+            <div style="font-size: 0.75rem; color: #999; margin-bottom: 4px;">Accepted</div>
+            <div style="font-size: 1.5rem; font-weight: bold; color: #10B981;" id="acceptedCount">0</div>
+          </div>
+
+          <div style="background: white; padding: 12px; border-radius: 8px; border-left: 4px solid #EF4444;">
+            <div style="font-size: 0.75rem; color: #999; margin-bottom: 4px;">Rejected</div>
+            <div style="font-size: 1.5rem; font-weight: bold; color: #EF4444;" id="rejectedCount">0</div>
+          </div>
+
+          <div style="background: white; padding: 12px; border-radius: 8px; border-left: 4px solid #F59E0B;">
+            <div style="font-size: 0.75rem; color: #999; margin-bottom: 4px;">Accuracy</div>
+            <div style="font-size: 1.5rem; font-weight: bold; color: #F59E0B;" id="accuracyCount">--%</div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>

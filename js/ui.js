@@ -1,6 +1,6 @@
 /**
  * ui.js
- * Gestion de l'interface utilisateur
+ * Gestion de l'interface utilisateur - Système TETRIS simplifié
  */
 
 class UI {
@@ -16,8 +16,9 @@ class UI {
     
     this.currentScreen = 'language';
     this.playerName = '';
-    this.hoveredProductId = null;
-    this.hoverStartTime = null;
+    this.currentProductIndex = 0;
+    this.inspectionProgress = 0;
+    this.inspectionInterval = null;
   }
 
   /**
@@ -26,30 +27,23 @@ class UI {
   init() {
     console.log('🎨 Initializing UI...');
     
-    // Charger la langue sauvegardée
     const savedLang = localStorage.getItem('gameLanguage');
     if (savedLang) {
       this.setLanguage(savedLang);
     }
     
-    // Écouter les changements d'état du jeu
     window.addEventListener('gameStateChanged', () => this.updateGameScreen());
     window.addEventListener('gameOver', (e) => this.showGameOverScreen(e.detail));
     
     this.updateTexts();
   }
 
-  /**
-   * Afficher un écran
-   */
   showScreen(screenName) {
-    // Masquer tous les écrans
     Object.values(this.screens).forEach(screen => {
       const el = document.getElementById(screen);
       if (el) el.classList.add('hidden');
     });
 
-    // Afficher l'écran sélectionné
     const screenEl = document.getElementById(this.screens[screenName]);
     if (screenEl) {
       screenEl.classList.remove('hidden');
@@ -58,26 +52,18 @@ class UI {
     }
   }
 
-  /**
-   * Définir la langue
-   */
   setLanguage(lang) {
     i18n.setLanguage(lang);
     this.updateTexts();
     console.log(`🌍 Language changed to ${lang}`);
   }
 
-  /**
-   * Mettre à jour tous les textes selon la langue
-   */
   updateTexts() {
-    // Écran langue
     if (document.getElementById('langTitle')) 
       document.getElementById('langTitle').textContent = i18n.get('screen.language.title');
     if (document.getElementById('langSubtitle'))
       document.getElementById('langSubtitle').textContent = i18n.get('screen.language.select');
 
-    // Écran nom du joueur
     if (document.getElementById('nameTitle'))
       document.getElementById('nameTitle').textContent = i18n.get('screen.playerName.title');
     if (document.getElementById('nameSubtitle'))
@@ -85,7 +71,6 @@ class UI {
     if (document.getElementById('playerNameInput'))
       document.getElementById('playerNameInput').placeholder = i18n.get('screen.playerName.placeholder');
     
-    // Écran intro
     if (document.getElementById('introTitle'))
       document.getElementById('introTitle').textContent = i18n.get('screen.intro.title');
     if (document.getElementById('introSubtitle'))
@@ -103,69 +88,114 @@ class UI {
     if (document.getElementById('rule5'))
       document.getElementById('rule5').textContent = i18n.get('screen.intro.rule5');
 
-    // Écran jeu - labels
-    if (document.querySelector('[id^="dayTitle"]'))
-      document.querySelectorAll('.stat-label').forEach((el, idx) => {
-        if (idx === 0) el.textContent = i18n.get('screen.game.dayTitle');
-        else if (idx === 1) el.textContent = i18n.get('screen.game.timeLeft');
-        else if (idx === 2) el.textContent = i18n.get('screen.game.money');
-        else if (idx === 3) el.textContent = i18n.get('screen.game.quota');
-      });
-
-    if (document.getElementById('dayEndTitle'))
-      document.getElementById('dayEndTitle').textContent = i18n.get('screen.dayEnd.title');
-
-    // Boutons décision
     const decisionBtns = document.querySelectorAll('.decision-btn');
     if (decisionBtns[0]) decisionBtns[0].textContent = i18n.get('decision.good');
     if (decisionBtns[1]) decisionBtns[1].textContent = i18n.get('decision.reject');
     if (decisionBtns[2]) decisionBtns[2].textContent = i18n.get('decision.doubt');
 
-    // Fin de journée
-    if (document.getElementById('dayRevenue')) {
-      // Vérifier les labels
-      const labels = document.querySelectorAll('.stat-label');
-      labels.forEach(label => {
-        if (label.textContent === 'Revenue') label.textContent = i18n.get('screen.dayEnd.revenue');
-        else if (label.textContent === 'Salary') label.textContent = i18n.get('screen.dayEnd.salary');
-        else if (label.textContent === 'Charges') label.textContent = i18n.get('screen.dayEnd.charges');
-        else if (label.textContent === 'Accuracy') label.textContent = i18n.get('screen.dayEnd.accuracy');
-        else if (label.textContent === 'Accepted') label.textContent = i18n.get('screen.dayEnd.goodProducts');
-        else if (label.textContent === 'Rejected') label.textContent = i18n.get('screen.dayEnd.rejectedProducts');
-      });
-    }
+    if (document.getElementById('dayEndTitle'))
+      document.getElementById('dayEndTitle').textContent = i18n.get('screen.dayEnd.title');
   }
 
-  /**
-   * Afficher le prochain produit à inspecter
-   */
-  showNextProduct() {
-    const uninspestedProduct = game.state.products.find(p => !p.inspected);
+  showCurrentProduct() {
+    const product = game.state.products[this.currentProductIndex];
     
-    if (!uninspestedProduct) {
+    if (!product) {
+      console.log('🏁 Tous les produits inspectés');
       game.endDay();
       return;
     }
 
-    const panel = document.getElementById('inspectionPanel');
-    panel.style.display = 'block';
+    document.getElementById('currentProductName').textContent = product.name;
+    document.getElementById('currentProductValue').textContent = `€${product.value}`;
     
-    document.getElementById('currentProductName').textContent = uninspestedProduct.name;
-    
-    const revealedDefectsCount = uninspestedProduct.defects.filter(d => d.revealed).length;
-    const totalDefectsCount = uninspestedProduct.defects.length;
-    
-    document.getElementById('defectStatus').textContent = 
-      `${i18n.get('inspection.scanning')} (${revealedDefectsCount}/${totalDefectsCount})`;
+    const revealedCount = product.defects.filter(d => d.revealed).length;
+    const totalDefects = product.defects.length;
+    document.getElementById('defectStatus').textContent = `Scanning... (${revealedCount}/${totalDefects})`;
 
-    game.state.currentProduct = uninspestedProduct;
+    this.updateReserve();
+    
+    this.inspectionProgress = 0;
+    this.updateScanningBar();
+    
+    this.startScanning();
   }
 
-  /**
-   * Mettre à jour l'écran de jeu
-   */
+  updateReserve() {
+    const container = document.getElementById('reserveProducts');
+    container.innerHTML = '';
+
+    for (let i = 1; i <= 3; i++) {
+      const product = game.state.products[this.currentProductIndex + i];
+      if (!product) break;
+
+      const el = document.createElement('div');
+      el.style.cssText = `
+        background: white;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        padding: 12px;
+        text-align: center;
+        font-size: 0.8rem;
+      `;
+      el.innerHTML = `
+        <div style="font-size: 1.5rem; margin-bottom: 4px;">📦</div>
+        <div style="font-weight: bold; margin-bottom: 4px; line-height: 1.2; min-height: 30px;">${product.name}</div>
+        <div style="color: #666; font-size: 0.75rem;">€${product.value}</div>
+      `;
+      container.appendChild(el);
+    }
+  }
+
+  startScanning() {
+    if (this.inspectionInterval) clearInterval(this.inspectionInterval);
+
+    const product = game.state.products[this.currentProductIndex];
+    if (!product) return;
+
+    this.inspectionInterval = setInterval(() => {
+      this.inspectionProgress += 2;
+      this.updateScanningBar();
+
+      if (this.inspectionProgress >= 100) {
+        this.inspectionProgress = 100;
+        clearInterval(this.inspectionInterval);
+        
+        game.inspectProduct(product.id, 10000);
+        this.showCurrentProduct();
+      }
+    }, 50);
+  }
+
+  updateScanningBar() {
+    const bar = document.getElementById('scanningBar');
+    if (bar) {
+      bar.style.width = this.inspectionProgress + '%';
+    }
+  }
+
+  makeDecision(decision) {
+    const product = game.state.products[this.currentProductIndex];
+    if (!product) return;
+
+    if (this.inspectionInterval) clearInterval(this.inspectionInterval);
+
+    const result = game.validateDecision(product.id, decision);
+    
+    this.updateStats();
+
+    this.currentProductIndex++;
+    
+    setTimeout(() => {
+      if (this.currentProductIndex < game.state.products.length) {
+        this.showCurrentProduct();
+      } else {
+        game.endDay();
+      }
+    }, 500);
+  }
+
   updateGameScreen() {
-    // Mettre à jour les statistiques
     const hours = Math.floor(game.state.timeLeft / 3600000);
     const minutes = Math.floor((game.state.timeLeft % 3600000) / 60000);
     
@@ -173,134 +203,19 @@ class UI {
     document.getElementById('timeDisplay').textContent = `${hours}h ${minutes}m`;
     document.getElementById('moneyDisplay').textContent = `${Math.round(game.state.money)}€`;
 
-    // Afficher les produits
-    this.renderProducts();
+    this.updateStats();
   }
 
-  /**
-   * Afficher les produits
-   */
-  renderProducts() {
-    const container = document.getElementById('productContainer');
-    if (!container) return;
-    
-    container.innerHTML = '';
+  updateStats() {
+    const accepted = game.state.products.filter(p => p.inspected && p.accepted).length;
+    const rejected = game.state.products.filter(p => p.inspected && !p.accepted).length;
+    const accuracy = game.state.stats.accuracy || 0;
 
-    game.state.products.forEach(product => {
-      const productEl = document.createElement('div');
-      productEl.className = 'card product';
-      
-      const statusIcon = product.inspected 
-        ? (product.accepted ? '✓' : '✗')
-        : '?';
-      
-      const statusColor = product.inspected
-        ? (product.accepted ? '#10B981' : '#EF4444')
-        : '#F59E0B';
-
-      const revealedCount = product.defects.filter(d => d.revealed).length;
-      const totalDefects = product.defects.length;
-      
-      // Créer le HTML avec tous les infos
-      const html = `
-        <div style="text-align: center; cursor: pointer; padding: 16px; background: linear-gradient(135deg, rgba(9,54,122,0.1) 0%, rgba(0,168,233,0.1) 100%); border-radius: 8px; position: relative; min-height: 120px; display: flex; flex-direction: column; justify-content: space-between;">
-          <div style="font-size: 2.5rem; margin-bottom: 8px;">📦</div>
-          <div style="font-weight: bold; font-size: 0.95rem; margin-bottom: 4px; line-height: 1.3;">${product.name}</div>
-          <div style="font-size: 0.8rem; color: #666; margin-bottom: 8px;">€${product.value}</div>
-          <div style="font-size: 1.8rem; color: ${statusColor}; font-weight: bold; margin-bottom: 4px;">${statusIcon}</div>
-          ${revealedCount > 0 ? `<div style="font-size: 0.75rem; color: #EF4444; background: rgba(239, 68, 68, 0.1); padding: 4px 8px; border-radius: 4px; margin-top: auto;">⚠️ ${revealedCount}/${totalDefects} défauts</div>` : ''}
-        </div>
-      `;
-      
-      productEl.innerHTML = html;
-      
-      productEl.addEventListener('mouseenter', () => this.onProductHover(product.id));
-      productEl.addEventListener('mouseleave', () => this.onProductLeave(product.id));
-      productEl.addEventListener('click', () => this.selectProduct(product.id));
-      
-      container.appendChild(productEl);
-    });
+    document.getElementById('acceptedCount').textContent = accepted;
+    document.getElementById('rejectedCount').textContent = rejected;
+    document.getElementById('accuracyCount').textContent = accuracy + '%';
   }
 
-  /**
-   * Gérer le survol d'un produit
-   */
-  onProductHover(productId) {
-    this.hoveredProductId = productId;
-    this.hoverStartTime = Date.now();
-
-    // Simuler l'inspection progressive
-    const checkInterval = setInterval(() => {
-      if (this.hoveredProductId !== productId) {
-        clearInterval(checkInterval);
-        return;
-      }
-
-      const hoverTime = Date.now() - this.hoverStartTime;
-      game.inspectProduct(productId, hoverTime);
-      this.renderProducts();
-
-      // Afficher un indicateur de scanning
-      const product = game.state.products.find(p => p.id === productId);
-      if (product) {
-        const revealedCount = product.defects.filter(d => d.revealed).length;
-        if (revealedCount > 0) {
-          console.log(`🔍 ${revealedCount} defects revealed in ${product.name}`);
-        }
-      }
-    }, 200);
-  }
-
-  /**
-   * Gérer la fin du survol
-   */
-  onProductLeave(productId) {
-    if (this.hoveredProductId === productId) {
-      this.hoveredProductId = null;
-      this.hoverStartTime = null;
-    }
-  }
-
-  /**
-   * Sélectionner un produit pour l'inspecter
-   */
-  selectProduct(productId) {
-    const product = game.state.products.find(p => p.id === productId);
-    if (!product || product.inspected) return;
-
-    game.state.currentProduct = product;
-    this.showNextProduct();
-  }
-
-  /**
-   * Rendre une décision
-   */
-  makeDecision(decision) {
-    const product = game.state.currentProduct;
-    if (!product) return;
-
-    const result = game.validateDecision(product.id, decision);
-    
-    // Le feedback est montré via le popup (déjà dans game.validateDecision)
-    // L'inspection continue donc on continue sans blocage
-    
-    setTimeout(() => {
-      this.renderProducts();
-      
-      // Vérifier s'il y a d'autres produits
-      const uninspestedProduct = game.state.products.find(p => !p.inspected);
-      if (!uninspestedProduct) {
-        // Fin du jour
-        game.endDay();
-      } else {
-        this.showNextProduct();
-      }
-    }, 100);
-  }
-
-  /**
-   * Afficher l'écran de fin de journée
-   */
   showDayEndScreen() {
     const revenue = game.state.products
       .filter(p => p.inspected && p.accepted)
@@ -323,38 +238,15 @@ class UI {
     this.showScreen('dayEnd');
   }
 
-  /**
-   * Afficher les upgrades disponibles
-   */
   renderUpgrades() {
     const container = document.getElementById('upgradesContainer');
     container.innerHTML = '';
 
     const upgrades = [
-      {
-        id: 'magnifier',
-        name: i18n.get('upgrade.magnifier.name'),
-        description: i18n.get('upgrade.magnifier.description'),
-        cost: 200
-      },
-      {
-        id: 'speedDetection',
-        name: i18n.get('upgrade.speedDetection.name'),
-        description: i18n.get('upgrade.speedDetection.description'),
-        cost: 150
-      },
-      {
-        id: 'caliper',
-        name: i18n.get('upgrade.caliper.name'),
-        description: i18n.get('upgrade.caliper.description'),
-        cost: 100
-      },
-      {
-        id: 'ultrasound',
-        name: i18n.get('upgrade.ultrasound.name'),
-        description: i18n.get('upgrade.ultrasound.description'),
-        cost: 180
-      }
+      { id: 'magnifier', name: i18n.get('upgrade.magnifier.name'), description: i18n.get('upgrade.magnifier.description'), cost: 200 },
+      { id: 'speedDetection', name: i18n.get('upgrade.speedDetection.name'), description: i18n.get('upgrade.speedDetection.description'), cost: 150 },
+      { id: 'caliper', name: i18n.get('upgrade.caliper.name'), description: i18n.get('upgrade.caliper.description'), cost: 100 },
+      { id: 'ultrasound', name: i18n.get('upgrade.ultrasound.name'), description: i18n.get('upgrade.ultrasound.description'), cost: 180 }
     ];
 
     upgrades.forEach(upgrade => {
@@ -381,9 +273,6 @@ class UI {
     });
   }
 
-  /**
-   * Afficher l'écran de fin du jeu
-   */
   showGameOverScreen(detail) {
     const { victory, finalBalance } = detail;
 
@@ -397,7 +286,6 @@ class UI {
 
     document.getElementById('finalBalance').textContent = `${Math.round(finalBalance)}€`;
 
-    // Afficher le classement
     const scores = game.getScores();
     const leaderboardEl = document.getElementById('leaderboardDisplay');
     
@@ -419,19 +307,12 @@ class UI {
   }
 }
 
-// Instance globale
 const ui = new UI();
 window.ui = ui;
 
-// ============================================
-// FONCTIONS GLOBALES POUR HTML
-// ============================================
-
 function setLanguage(lang) {
   ui.setLanguage(lang);
-  // Mettre à jour TOUS les textes immédiatement
   ui.updateTexts();
-  // Puis montrer l'écran suivant
   setTimeout(() => {
     ui.showScreen('playerName');
   }, 100);
@@ -440,12 +321,7 @@ function setLanguage(lang) {
 function confirmPlayerName() {
   const nameInput = document.getElementById('playerNameInput');
   const name = nameInput.value.trim();
-
-  if (!name) {
-    alert('Please enter a name');
-    return;
-  }
-
+  if (!name) { alert('Please enter a name'); return; }
   ui.playerName = name;
   localStorage.setItem('playerName', name);
   ui.showScreen('intro');
@@ -453,8 +329,9 @@ function confirmPlayerName() {
 
 function startGameplay() {
   ui.showScreen('game');
+  ui.currentProductIndex = 0;
   game.startDay();
-  ui.showNextProduct();
+  ui.showCurrentProduct();
   ui.updateGameScreen();
 }
 
@@ -470,15 +347,14 @@ function buyUpgrade(upgradeId) {
 
 function nextDay() {
   ui.showScreen('game');
+  ui.currentProductIndex = 0;
   game.startDay();
-  ui.showNextProduct();
+  ui.showCurrentProduct();
   ui.updateGameScreen();
 }
 
-// Écouter la fin du jour
 window.addEventListener('gameStateChanged', () => {
   if (!game.state.gameRunning && game.state.day <= 5) {
-    // Afficher l'écran de fin de journée
     setTimeout(() => ui.showDayEndScreen(), 500);
   }
 });
