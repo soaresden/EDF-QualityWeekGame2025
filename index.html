@@ -1618,14 +1618,32 @@
       list.innerHTML = '';
       leaderboard.slice(0, 10).forEach((score, idx) => {
         const now = new Date(score.timestamp || Date.now());
-        const dateStr = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        const dateStr = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
         const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-        const quality = score.quality || 0;
-        let grade = 'D'; if (quality >= 90) grade = 'A'; else if (quality >= 75) grade = 'B'; else if (quality >= 60) grade = 'C';
+        
+        const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : '✨';
+        const borderColor = idx === 0 ? '#FFD700' : idx === 1 ? '#C0C0C0' : idx === 2 ? '#CD7F32' : '#FF5716';
         
         const item = document.createElement('div');
-        item.style.cssText = `padding: 12px; margin: 6px 0; background: linear-gradient(90deg, rgba(2,84,160,0.2) 0%, rgba(0,168,233,0.1) 100%); border-radius: 8px; border-left: 3px solid ${idx === 0 ? '#FFD700' : '#FF5716'};`;
-        item.innerHTML = `<div style="display: flex; justify-content: space-between; align-items: center; gap: 10px;"><div style="flex: 1;"><div style="font-weight: 900; color: white; font-size: 1rem;">${score.name}</div><div style="color: #888; font-size: 0.8rem;">${dateStr} ${timeStr}</div></div><div style="text-align: right;"><div style="font-size: 1.1rem; font-weight: 900; color: ${grade === 'A' ? '#00FF00' : grade === 'B' ? '#FFD700' : '#FF8C00'};">${grade}</div><div style="color: #FF5716; font-weight: bold;">${score.score}pts</div></div></div><div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 8px; font-size: 0.75rem;"><div style="background: rgba(0,168,233,0.2); padding: 4px; border-radius: 3px; text-align: center;"><div style="color: #00A8E9;">${score.total_count || 30}</div><div style="color: #888;">Inspected</div></div><div style="background: rgba(0,255,0,0.2); padding: 4px; border-radius: 3px; text-align: center;"><div style="color: #00FF00;">${score.good_count || 0}</div><div style="color: #888;">Good</div></div><div style="background: rgba(255,215,0,0.2); padding: 4px; border-radius: 3px; text-align: center;"><div style="color: #FFD700;">${quality}%</div><div style="color: #888;">Ratio</div></div></div>`;
+        item.style.cssText = `padding: 15px; margin: 8px 0; background: linear-gradient(90deg, rgba(2,84,160,0.15) 0%, rgba(0,168,233,0.08) 100%); border-radius: 10px; border-left: 4px solid ${borderColor}; box-shadow: 0 4px 15px rgba(0,0,0,0.2);`;
+        
+        item.innerHTML = `
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 15px; flex: 1;">
+              <div style="font-size: 2rem; font-weight: 900; color: ${borderColor}; width: 50px; text-align: center;">#${idx + 1}</div>
+              <div>
+                <div style="font-weight: 900; color: white; font-size: 1.1rem;">${score.name}</div>
+                <div style="color: #888; font-size: 0.85rem;">${dateStr} at ${timeStr}</div>
+              </div>
+            </div>
+            <div style="text-align: right; margin-right: 15px;">
+              <div style="font-size: 2rem; font-weight: 900; color: #FF5716; text-shadow: 0 0 10px rgba(255,87,22,0.5);">${score.score}</div>
+              <div style="color: #00A8E9; font-size: 0.9rem;">${score.quality}% ratio</div>
+            </div>
+            <div style="font-size: 3rem;">${medal}</div>
+          </div>
+        `;
+        
         list.appendChild(item);
       });
     }
