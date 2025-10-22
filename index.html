@@ -624,6 +624,149 @@
     // Initialise Supabase
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
   </script>
+    // ⚠️ Définir TOUTES les fonctions globales AVANT les données
+    window.setLanguage = function(lang) {
+      currentLanguage = lang;
+      localStorage.setItem('gameLanguage', lang);
+      showScreen('introScreen');
+    };
+    
+    window.startGame = function() {
+      gameActive = true;
+      gameStartTime = Date.now();
+      correctCombo = 0;
+      gameStats = { productsInspected: 0, productsGood: 0, productsBad: 0, totalScore: 0, quality: 0, maxCombo: 0, totalInspectionTime: 0 };
+      generateProducts();
+      showScreen('gameScreen');
+      loadNextProduct();
+      startGameLoop();
+    };
+    
+    window.makeDecision = function(decision) {
+      if (!gameActive) return;
+      const hasDefects = foundDefects.length > 0;
+      let isCorrect = false;
+      if (decision === 'good') isCorrect = !hasDefects;
+      else if (decision === 'reject') isCorrect = hasDefects;
+
+      gameStats.productsInspected++;
+      const productTime = (Date.now() - productStartTime) / 1000;
+      gameStats.totalInspectionTime += productTime;
+      
+      let scoreChange = 0;
+      let feedbackMsg = '';
+      let statusMsg = '';
+      
+      if (isCorrect) {
+        correctCombo++;
+        if (correctCombo > gameStats.maxCombo) gameStats.maxCombo = correctCombo;
+        
+        if (decision === 'good') {
+          gameStats.productsGood++;
+          scoreChange = currentProduct.value;
+          gameStats.totalScore += scoreChange;
+          feedbackMsg = `✅ CORRECT! +${scoreChange} pts`;
+          statusMsg = currentLanguage === 'fr' ? `✅ Bien joué! +${scoreChange}` : `✅ Well done! +${scoreChange}`;
+        } else {
+          gameStats.productsBad++;
+          scoreChange = currentProduct.value;
+          gameStats.totalScore += scoreChange;
+          feedbackMsg = `✅ CORRECT! +${scoreChange} pts`;
+          statusMsg = currentLanguage === 'fr' ? `✅ Bien joué! +${scoreChange}` : `✅ Well done! +${scoreChange}`;
+        }
+
+        if (correctCombo === 5) {
+          gameStats.totalScore += 50;
+          correctCombo = 0;
+          feedbackMsg = '🔥 COMBO x5! +50 PTS!';
+          statusMsg = '🔥 COMBO x5! +50';
+          showFeedback(feedbackMsg, true);
+        } else {
+          showFeedback(feedbackMsg, true);
+        }
+      } else {
+        correctCombo = 0;
+        scoreChange = -50;
+        gameStats.totalScore = Math.max(0, gameStats.totalScore + scoreChange);
+        feedbackMsg = `❌ WRONG! ${scoreChange} pts`;
+        statusMsg = currentLanguage === 'fr' ? `❌ Arf! ${scoreChange}` : `❌ Wrong! ${scoreChange}`;
+        showFeedback(feedbackMsg, false);
+      }
+
+      document.getElementById('statusMessage').textContent = statusMsg;
+      document.getElementById('statusScore').textContent = '';
+
+      currentProductIndex++;
+      setTimeout(() => loadNextProduct(), 800);
+    };
+    
+    window.endGame = function() {
+      gameActive = false;
+      mouseOverCanvas = false;
+      document.getElementById('magnifier').style.display = 'none';
+      document.getElementById('inspectionZone').style.display = 'none';
+
+      const rank = getRankInfo(gameStats.totalScore, gameStats.quality, gameStats.maxCombo);
+      const rankMessages = RANK_MESSAGES[currentLanguage][rank.letter];
+      const randomMessage = rankMessages.messages[Math.floor(Math.random() * rankMessages.messages.length)];
+      const avgTime = gameStats.productsInspected > 0 ? (gameStats.totalInspectionTime / gameStats.productsInspected).toFixed(1) : 0;
+
+      document.querySelectorAll('.rank-node').forEach(node => node.classList.remove('active'));
+      document.querySelector(`.rank-node.${rank.code}`).classList.add('active');
+
+      document.getElementById('performanceEmoji').textContent = rankMessages.emoji;
+      document.getElementById('performanceText').innerHTML = `<strong style="font-size: 1.3rem; color: #00A8E9;">${randomMessage}</strong>`;
+
+      document.getElementById('finalName').textContent = '';
+      document.getElementById('finalRatio').textContent = `${gameStats.productsGood}/${gameStats.productsInspected} = ${gameStats.quality}%`;
+      document.getElementById('finalScore').textContent = gameStats.totalScore;
+      document.getElementById('avgTime').textContent = avgTime + 's';
+      document.getElementById('maxComboDisplay').textContent = gameStats.maxCombo;
+
+      showScreen('endGameScreen');
+    };
+    
+    window.submitScore = async function() {
+      const name = document.getElementById('playerNameInput').value.trim();
+      if (!name) { alert('Enter a name!'); return; }
+      
+      document.getElementById('finalName').textContent = `🏆 ${name}`;
+      
+      const avgTime = gameStats.productsInspected > 0 ? (gameStats.totalInspectionTime / gameStats.productsInspected).toFixed(1) : 0;
+      
+      const newScore = {
+        name: name, 
+        score: gameStats.totalScore, 
+        good_count: gameStats.productsGood,
+        total_count: gameStats.productsInspected,
+        quality: gameStats.quality,
+        avg_time: parseFloat(avgTime)
+      };
+      
+      try {
+        if (supabase && SUPABASE_URL !== 'https://xxxxx.supabase.co') {
+          const { data, error } = await supabase
+            .from('scores')
+            .insert([newScore]);
+          
+          if (error) {
+            console.error('Supabase error:', error);
+            saveToLocalStorage(newScore);
+          } else {
+            console.log('✅ Score saved to cloud!');
+          }
+        } else {
+          console.log('⚠️ Supabase not configured, using localStorage');
+          saveToLocalStorage(newScore);
+        }
+      } catch (err) {
+        console.error('Error:', err);
+        saveToLocalStorage(newScore);
+      }
+      
+      showLeaderboard();
+    };
+    
     const PRODUCTS_DATA = {
       fr: [
         { name: 'Pale', id: 'blade', value: 150, emoji: '🪨' },
@@ -699,7 +842,7 @@
       }
     };
 
-    let currentLanguage = 'fr';
+    let currentLanguage = 'en';
     let gameActive = false;
     let gameStartTime = 0;
     let currentProduct = null;
@@ -720,23 +863,6 @@
       quality: 0,
       maxCombo: 0,
       totalInspectionTime: 0
-    };
-
-    window.setLanguage = function(lang) {
-      currentLanguage = lang;
-      localStorage.setItem('gameLanguage', lang);
-      showScreen('introScreen');
-    };
-
-    window.startGame = function() {
-      gameActive = true;
-      gameStartTime = Date.now();
-      correctCombo = 0;
-      gameStats = { productsInspected: 0, productsGood: 0, productsBad: 0, totalScore: 0, quality: 0, maxCombo: 0, totalInspectionTime: 0 };
-      generateProducts();
-      showScreen('gameScreen');
-      loadNextProduct();
-      startGameLoop();
     };
 
     function generateProducts() {
