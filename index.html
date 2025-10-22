@@ -447,20 +447,8 @@
   <!-- FEEDBACK MESSAGE -->
   <div class="feedback-message" id="feedbackMessage"></div>
 
-  <!-- LANGUAGE SCREEN -->
-  <div id="languageScreen" class="modal-overlay">
-    <div class="modal" style="max-width: 400px; text-align: center;">
-      <h1>🌐 SELECT LANGUAGE</h1>
-      <p>Sélectionnez votre langue / Select your language</p>
-      <div class="lang-selector">
-        <button class="lang-btn" onclick="setLanguage('fr')">🇫🇷 Français</button>
-        <button class="lang-btn" onclick="setLanguage('en')">🇬🇧 English</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- INTRO SCREEN -->
-  <div id="introScreen" class="modal-overlay hidden">
+  <!-- INTRO SCREEN - Shown immediately (English only) -->
+  <div id="introScreen" class="modal-overlay">
     <div class="modal">
       <h1>🔍 QUALITY INSPECTOR</h1>
       <p>You are a quality inspector for EDF. You have <strong>5 minutes</strong> to inspect as many products as possible.</p>
@@ -618,9 +606,9 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     // ⚠️ À CONFIGURER AVEC TES CREDENTIALS
-    const SUPABASE_URL = 'https://tqwrsakylbyqmxwyhoar.supabase.co'; // Remplace par ton URL
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRxd3JzYWt5bGJ5cW14d3lob2FyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEwNjE4NTUsImV4cCI6MjA3NjYzNzg1NX0.WIo9YUtJnxfgsZmnPluGexBAztB7dJG6uYKnNe7o_6A'; // Remplace par ta clé publique
-  
+    const SUPABASE_URL = 'https://xxxxx.supabase.co'; // Remplace par ton URL
+    const SUPABASE_KEY = 'eyJ...'; // Remplace par ta clé publique
+    
     // Initialise Supabase
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
   </script>
@@ -1541,9 +1529,8 @@
     }
 
     window.addEventListener('load', () => {
-      const savedLang = localStorage.getItem('gameLanguage') || 'fr';
-      currentLanguage = savedLang;
-      showScreen('languageScreen');
+      // Start with intro screen (English only)
+      showScreen('introScreen');
     });
   </script>
 </body>
