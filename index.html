@@ -2,11 +2,11 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.25, viewport-fit=cover, user-scalable=yes">
   <title>Quality Inspector - EDF</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Courier New', monospace; background: #0a0e27; color: #ccc; overflow: hidden; height: 100vh; touch-action: manipulation; }
+    body { font-family: 'Courier New', monospace; background: #0a0e27; color: #ccc; overflow: hidden; height: 100vh; touch-action: manipulation; zoom: 1.25; }
     
     canvas { 
       touch-action: none;
@@ -641,6 +641,19 @@
       </div>
     </div>
 
+    <style>
+      @media (max-width: 1024px) {
+        #introScreenAnimated > div {
+          flex-direction: column !important;
+          max-width: 100% !important;
+          gap: 20px !important;
+        }
+        #introScreenAnimated > div > div:nth-child(2) {
+          display: none;
+        }
+      }
+    </style>
+
     <button onclick="startGame()" style="margin-top: 30px; padding: 20px 60px; font-size: 1.5rem; font-weight: 900; color: white; background: linear-gradient(135deg, #FF5716 0%, #E84E0F 100%); border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 10px 40px rgba(255,87,22,0.4); animation: pulse 2s infinite; text-transform: uppercase; letter-spacing: 2px; transition: all 0.3s;">▶ START GAME</button>
   </div>
 
@@ -676,7 +689,6 @@
     const SUPABASE_URL = 'https://tqwrsakylbyqmxwyhoar.supabase.co'; // Remplace par ton URL
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRxd3JzYWt5bGJ5cW14d3lob2FyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEwNjE4NTUsImV4cCI6MjA3NjYzNzg1NX0.WIo9YUtJnxfgsZmnPluGexBAztB7dJG6uYKnNe7o_6A'; // Remplace par ta clé publique
   
-    
     // Initialise Supabase
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     
@@ -1515,17 +1527,21 @@
       
       try {
         // Essaie de sauvegarder dans Supabase
-        if (supabase && SUPABASE_URL !== 'https://xxxxx.supabase.co') {
-          const { data, error } = await supabase
-            .from('scores')
-            .insert([newScore]);
-          
-          if (error) {
-            console.error('Supabase error:', error);
-            // Fallback: localStorage
+        if (supabase && SUPABASE_URL && SUPABASE_URL !== 'https://xxxxx.supabase.co') {
+          try {
+            const { data, error } = await supabase
+              .from('scores')
+              .insert([newScore]);
+            
+            if (error) {
+              console.warn('⚠️ Supabase table not found, using localStorage');
+              saveToLocalStorage(newScore);
+            } else {
+              console.log('✅ Score saved to cloud!');
+            }
+          } catch (e) {
+            console.warn('⚠️ Supabase error, using localStorage:', e);
             saveToLocalStorage(newScore);
-          } else {
-            console.log('✅ Score saved to cloud!');
           }
         } else {
           console.log('⚠️ Supabase not configured, using localStorage');
