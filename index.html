@@ -4,9 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.25, viewport-fit=cover, user-scalable=yes">
   <title>Quality Inspector - EDF</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Courier New', monospace; background: #0a0e27; color: #ccc; overflow: hidden; height: 100vh; touch-action: manipulation; }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+    body { font-family: 'Poppins', sans-serif; background: #0a0e27; color: #ccc; overflow: hidden; height: 100vh; touch-action: manipulation; }
     
     canvas { 
       touch-action: none;
@@ -619,7 +620,7 @@
       }
     </style>
     
-    <h1 style="font-size: 4rem; font-weight: 900; color: white; text-shadow: 0 0 20px rgba(255,255,255,0.3); margin-bottom: 30px; animation: bounce 2s infinite;">⚡ QUALITY INSPECTOR</h1>
+    <h1 style="font-size: 4rem; font-weight: 900; color: white; text-shadow: 0 0 20px rgba(255,255,255,0.3); margin-bottom: 30px; animation: bounce 2s infinite;">🔍 Quality Week 2025 - Be a Quality Inspector ! 🔎</h1>
     
     <div style="display: flex; gap: 40px; width: 100%; max-width: 1400px; min-height: 500px;">
       <div style="flex: 1; background: rgba(255,255,255,0.95); border-radius: 20px; padding: 30px; overflow-y: auto; animation: slideLeft 0.8s ease-out;">
@@ -636,7 +637,15 @@
       <div style="width: 3px; background: linear-gradient(180deg, transparent 0%, white 50%, transparent 100%); border-radius: 10px;"></div>
       <div style="flex: 1; background: rgba(255,255,255,0.95); border-radius: 20px; padding: 30px; overflow-y: auto; animation: slideRight 0.8s ease-out;">
         <h2 style="font-size: 2rem; color: #FF5716; margin-bottom: 20px; cursor: pointer; user-select: none;" id="leaderboardTitle">🏆 HALL OF FAME</h2>
-        <div id="introLeaderboardList" style="display: flex; flex-direction: column; gap: 10px;">
+        <div id="introLeaderboardList" style="
+          display: flex;
+          flex-direction: column;
+          gap: 0;
+          background: transparent;
+          border-radius: 12px;
+          border: none;
+          overflow: hidden;
+        ">
           <div style="text-align: center; color: #999;"><p>⭐ No scores yet!</p><p>Be the first!</p></div>
         </div>
       </div>
@@ -645,12 +654,48 @@
   </div>
 
   <!-- EASTER EGG -->
-  <div id="easterOverlay" style="position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: none; z-index: 9999; align-items: center; justify-content: center; flex-direction: column;">
-    <div style="position: relative; display: flex; align-items: center; justify-content: center;">
-      <img src="easter.jpg" style="max-width: 80%; max-height: 70%; border: 3px solid #FF5716; border-radius: 10px; position: relative; z-index: 1;">
+  <div id="easterOverlay" style="position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: none; z-index: 9999; align-items: center; justify-content: center; flex-direction: column;">
+    <style>
+      @keyframes heartbeat {
+        0%, 100% { transform: scale(1); }
+        25% { transform: scale(1.1); }
+        50% { transform: scale(1.2); }
+      }
+      @keyframes firework {
+        0% { transform: translate(0, 0) scale(1); opacity: 1; }
+        100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+      }
+      .firework {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        pointer-events: none;
+      }
+    </style>
+    
+    <div style="position: relative; display: flex; align-items: center; justify-content: center; margin-bottom: 40px;">
+      <!-- Photo -->
+      <img src="easter.jpg" style="max-width: 65%; max-height: 60%; border: 4px solid #FF5716; border-radius: 15px; position: relative; z-index: 1; box-shadow: 0 20px 60px rgba(255, 87, 22, 0.6);">
+      
+      <!-- Fireworks Container -->
       <div id="fireworksContainer" style="position: absolute; width: 100%; height: 100%; pointer-events: none;"></div>
+      
+      <!-- Floating Heart with Glow -->
+      <div style="
+        position: absolute;
+        top: -20px;
+        right: 20px;
+        font-size: 4rem;
+        animation: heartbeat 1.5s ease-in-out infinite;
+        filter: drop-shadow(0 0 15px #FF1493) drop-shadow(0 0 30px #FF69B4);
+        z-index: 2;
+      ">💗</div>
     </div>
-    <div style="font-size: 1.5rem; font-weight: bold; color: #FF5716; text-align: center; margin-top: 20px;">Made with Love ♥ Quali-Team</div>
+    
+    <div style="font-size: 1.8rem; font-weight: bold; color: #FF5716; text-align: center; letter-spacing: 2px;">
+      Made with Love ♥ Quali-Team
+    </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -1483,18 +1528,29 @@
       
       document.getElementById('finalName').textContent = `🏆 ${name}`;
       
-      // Supabase only gets: name, score, quality
+      // Calculer la note (A/B/C/D)
+      const quality = gameStats.quality || 0;
+      let grade = 'D';
+      if (quality >= 90) grade = 'A';
+      else if (quality >= 75) grade = 'B';
+      else if (quality >= 60) grade = 'C';
+      
+      // Supabase gets all data
       const scoreForCloud = {
         name: name, 
-        score: gameStats.totalScore, 
-        quality: gameStats.quality
+        score: gameStats.totalScore,
+        grade: grade,
+        quality: quality,
+        products_inspected: gameStats.productsInspected,
+        products_good: gameStats.productsGood
       };
       
       // Local storage gets all data for leaderboard display
       const scoreForLocal = {
         name: name,
         score: gameStats.totalScore,
-        quality: gameStats.quality,
+        quality: quality,
+        grade: grade,
         total_count: gameStats.productsInspected,
         good_count: gameStats.productsGood,
         timestamp: Date.now()
@@ -1613,37 +1669,113 @@
       const list = document.getElementById('introLeaderboardList');
       if (!list) return;
       const leaderboard = JSON.parse(localStorage.getItem('leaderboard') || '[]');
-      if (leaderboard.length === 0) return;
+      if (leaderboard.length === 0) {
+        list.innerHTML = '<div style="text-align: center; padding: 40px; color: #999;"><div style="font-size: 3rem; margin-bottom: 20px;">🏆</div><div style="font-size: 1.2rem; color: #000;">No scores yet...</div><div style="color: #666; margin-top: 10px;">Be the first to enter!</div></div>';
+        return;
+      }
       
       list.innerHTML = '';
       leaderboard.slice(0, 10).forEach((score, idx) => {
-        const now = new Date(score.timestamp || Date.now());
-        const dateStr = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-        const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-        
         const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : '✨';
-        const borderColor = idx === 0 ? '#FFD700' : idx === 1 ? '#C0C0C0' : idx === 2 ? '#CD7F32' : '#FF5716';
+        const grade = score.grade || 'D';
+        const gradeInfo = {
+          'A': { color: '#4ADE80', bg: 'rgba(74, 222, 128, 0.1)' },
+          'B': { color: '#FBBF24', bg: 'rgba(251, 191, 36, 0.1)' },
+          'C': { color: '#FB923C', bg: 'rgba(251, 147, 60, 0.1)' },
+          'D': { color: '#EF4444', bg: 'rgba(239, 68, 68, 0.1)' }
+        };
+        const info = gradeInfo[grade];
+        
+        const now = new Date(score.timestamp || Date.now());
+        const date = now.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit' });
+        const time = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
         
         const item = document.createElement('div');
-        item.style.cssText = `padding: 15px; margin: 8px 0; background: linear-gradient(90deg, rgba(2,84,160,0.15) 0%, rgba(0,168,233,0.08) 100%); border-radius: 10px; border-left: 4px solid ${borderColor}; box-shadow: 0 4px 15px rgba(0,0,0,0.2);`;
-        
         item.innerHTML = `
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <div style="display: flex; align-items: center; gap: 15px; flex: 1;">
-              <div style="font-size: 2rem; font-weight: 900; color: ${borderColor}; width: 50px; text-align: center;">#${idx + 1}</div>
-              <div>
-                <div style="font-weight: 900; color: white; font-size: 1.1rem;">${score.name}</div>
-                <div style="color: #888; font-size: 0.85rem;">${dateStr} at ${timeStr}</div>
+          <div style="
+            display: grid;
+            grid-template-columns: 50px 160px 80px 70px 70px 90px 70px 1fr;
+            gap: 10px;
+            align-items: center;
+            padding: 14px 16px;
+            background: transparent;
+            border-bottom: 1px solid rgba(255, 87, 22, 0.15);
+            transition: all 0.3s ease;
+          " onmouseover="this.style.background = 'rgba(2, 84, 160, 0.1)'; this.style.paddingLeft = '20px';" onmouseout="this.style.background = 'transparent'; this.style.paddingLeft = '16px';">
+            
+            <!-- Medal -->
+            <div style="text-align: center; font-size: 2rem;">
+              ${medal}
+            </div>
+            
+            <!-- Name + Date/Time -->
+            <div>
+              <div style="font-weight: 900; color: #000000; font-size: 0.95rem; letter-spacing: 0.5px; margin-bottom: 3px;">
+                ${score.name}
+              </div>
+              <div style="font-size: 0.7rem; color: #333;">
+                ${date} • ${time}
               </div>
             </div>
-            <div style="text-align: right; margin-right: 15px;">
-              <div style="font-size: 2rem; font-weight: 900; color: #FF5716; text-shadow: 0 0 10px rgba(255,87,22,0.5);">${score.score}</div>
-              <div style="color: #00A8E9; font-size: 0.9rem;">${score.quality}% ratio</div>
+            
+            <!-- Grade -->
+            <div style="
+              background: ${info.bg};
+              border: 2px solid ${info.color};
+              border-radius: 6px;
+              padding: 6px;
+              text-align: center;
+              font-size: 1.4rem;
+              font-weight: 900;
+              color: ${info.color};
+            ">
+              ${grade}
             </div>
-            <div style="font-size: 3rem;">${medal}</div>
+            
+            <!-- Score -->
+            <div style="text-align: center;">
+              <div style="font-size: 1.5rem; font-weight: 900; color: #FF5716;">
+                ${score.score}
+              </div>
+              <div style="font-size: 0.65rem; color: #000; font-weight: bold;">
+                pts
+              </div>
+            </div>
+            
+            <!-- Inspected -->
+            <div style="text-align: center;">
+              <div style="font-size: 1.3rem; font-weight: 900; color: #00A8E9;">
+                ${score.total_count || 30}
+              </div>
+              <div style="font-size: 0.65rem; color: #000; font-weight: bold;">
+                insp
+              </div>
+            </div>
+            
+            <!-- Good -->
+            <div style="text-align: center;">
+              <div style="font-size: 1.3rem; font-weight: 900; color: #00FF00;">
+                ${score.good_count || 0}
+              </div>
+              <div style="font-size: 0.65rem; color: #000; font-weight: bold;">
+                good
+              </div>
+            </div>
+            
+            <!-- Ratio -->
+            <div style="text-align: center;">
+              <div style="font-size: 1.3rem; font-weight: 900; color: #FFD700;">
+                ${score.quality}%
+              </div>
+              <div style="font-size: 0.65rem; color: #000; font-weight: bold;">
+                ratio
+              </div>
+            </div>
+
+            <!-- Spacer -->
+            <div></div>
           </div>
         `;
-        
         list.appendChild(item);
       });
     }
@@ -1661,19 +1793,35 @@
       const container = document.getElementById('fireworksContainer');
       if (!container) return;
       container.innerHTML = '';
-      const colors = ['#FF5716', '#FFD700', '#00A8E9', '#0254A0', '#FF1493', '#00FF00'];
-      for (let i = 0; i < 50; i++) {
+      
+      const colors = ['#FF5716', '#FFD700', '#00A8E9', '#0254A0', '#FF1493', '#FF69B4', '#00FF00', '#FFFF00'];
+      
+      for (let i = 0; i < 80; i++) {
         setTimeout(() => {
           const fw = document.createElement('div');
           fw.className = 'firework';
-          fw.style.background = colors[Math.floor(Math.random() * colors.length)];
-          fw.style.left = (40 + Math.random() * 20) + '%';
-          fw.style.top = (40 + Math.random() * 20) + '%';
-          fw.style.setProperty('--tx', (Math.random() - 0.5) * 400 + 'px');
-          fw.style.setProperty('--ty', (Math.random() - 0.5) * 400 + 'px');
-          fw.style.animation = `firework ${0.8 + Math.random() * 0.4}s ease-out forwards`;
+          
+          const color = colors[Math.floor(Math.random() * colors.length)];
+          fw.style.background = color;
+          fw.style.boxShadow = `0 0 15px ${color}`;
+          
+          const angle = (Math.PI * 2 * i) / 80;
+          const distance = 150 + Math.random() * 100;
+          const startX = Math.cos(angle) * 30;
+          const startY = Math.sin(angle) * 30;
+          const endX = Math.cos(angle) * distance;
+          const endY = Math.sin(angle) * distance;
+          
+          fw.style.left = (50 + startX) + '%';
+          fw.style.top = (50 + startY) + '%';
+          fw.style.setProperty('--tx', (endX - startX) + 'px');
+          fw.style.setProperty('--ty', (endY - startY) + 'px');
+          
+          const duration = 1.2 + Math.random() * 0.6;
+          fw.style.animation = `firework ${duration}s ease-out forwards`;
+          
           container.appendChild(fw);
-        }, i * 30);
+        }, i * 20);
       }
     }
 
