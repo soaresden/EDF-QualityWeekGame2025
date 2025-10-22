@@ -16,7 +16,7 @@
     }
 
     .header {
-      background: linear-gradient(90deg, #09367A 0%, #00A8E9 100%);
+      background: linear-gradient(90deg, #0254A0 0%, #00A8E9 100%);
       color: white;
       padding: 8px 20px;
       display: flex;
@@ -32,7 +32,7 @@
 
     .timer-bar-full {
       background: #1a1f2e;
-      border-bottom: 2px solid #F59E0B;
+      border-bottom: 2px solid #FF5716;
       padding: 8px 20px;
       display: flex;
       justify-content: center;
@@ -43,7 +43,7 @@
     .timer-display { 
       font-size: 1.8rem; 
       font-weight: bold; 
-      color: #F59E0B; 
+      color: #FF5716; 
       min-width: 90px;
       text-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
     }
@@ -54,13 +54,13 @@
       background: #0f1419; 
       border-radius: 4px; 
       overflow: hidden; 
-      border: 2px solid #F59E0B;
+      border: 2px solid #FF5716;
     }
 
     .timer-fill { 
       height: 100%; 
       width: 100%; 
-      background: linear-gradient(90deg, #10B981, #00A8E9, #F59E0B); 
+      background: linear-gradient(90deg, #10B981, #00A8E9, #FF5716); 
       transition: width 0.1s linear;
     }
 
@@ -82,7 +82,7 @@
       color: #10B981;
       text-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
     }
-    .stat-val.warning { color: #F59E0B; text-shadow: 0 0 8px rgba(245, 158, 11, 0.5); }
+    .stat-val.warning { color: #FF5716; text-shadow: 0 0 8px rgba(245, 158, 11, 0.5); }
     .stat-val.danger { color: #EF4444; text-shadow: 0 0 8px rgba(239, 68, 68, 0.5); }
 
     .main-container {
@@ -142,12 +142,12 @@
       position: fixed;
       width: 150px;
       height: 150px;
-      border: 4px solid #F59E0B;
+      border: 4px solid #FF5716;
       border-radius: 50%;
       background: radial-gradient(circle, rgba(245, 158, 11, 0.4), rgba(245, 158, 11, 0.1));
       pointer-events: none;
       z-index: 99;
-      box-shadow: 0 0 50px #F59E0B, inset 0 0 50px rgba(245, 158, 11, 0.6);
+      box-shadow: 0 0 50px #FF5716, inset 0 0 50px rgba(245, 158, 11, 0.6);
       transform: translate(-50%, -50%);
       display: none;
     }
@@ -156,7 +156,7 @@
       position: fixed;
       width: 150px;
       height: 150px;
-      border: 3px solid #F59E0B;
+      border: 3px solid #FF5716;
       border-radius: 50%;
       background: transparent;
       pointer-events: none;
@@ -170,7 +170,7 @@
       position: absolute;
       width: 3px;
       height: 50px;
-      background: #F59E0B;
+      background: #FF5716;
       left: 50%;
       top: 50%;
       transform: translate(-50%, -50%);
@@ -181,7 +181,7 @@
       position: absolute;
       width: 50px;
       height: 3px;
-      background: #F59E0B;
+      background: #FF5716;
       left: 50%;
       top: 50%;
       transform: translate(-50%, -50%);
@@ -265,8 +265,8 @@
     }
 
     .feedback-message.combo {
-      background: linear-gradient(135deg, #F59E0B, #D97706, #B45309);
-      border-color: #F59E0B;
+      background: linear-gradient(135deg, #FF5716, #D97706, #B45309);
+      border-color: #FF5716;
       color: white;
       text-shadow: 0 0 20px rgba(245, 158, 11, 0.8);
     }
@@ -291,7 +291,7 @@
     .right-panel h3 { color: #EF4444; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 2px; border-bottom: 1px solid #EF4444; padding-bottom: 2px; }
     .defects-list { flex: 1; display: flex; flex-direction: column; gap: 3px; overflow-y: auto; }
     .defect-item { background: rgba(239, 68, 68, 0.1); padding: 5px; border-radius: 3px; border-left: 2px solid #EF4444; font-size: 0.7rem; animation: slideIn 0.3s ease-out; }
-    .defect-name { color: #F59E0B; font-weight: bold; margin-bottom: 1px; }
+    .defect-name { color: #FF5716; font-weight: bold; margin-bottom: 1px; }
     .defect-severity { color: #999; font-size: 0.6rem; }
     .no-defects { color: #666; text-align: center; padding: 15px 0; font-style: italic; font-size: 0.7rem; }
 
@@ -377,7 +377,7 @@
     .rank-node.e { border-color: #EF4444; background: rgba(239, 68, 68, 0.1); }
     .rank-node.d { border-color: #00A8E9; background: rgba(0, 168, 233, 0.1); }
     .rank-node.c { border-color: #10B981; background: rgba(16, 185, 129, 0.1); }
-    .rank-node.b { border-color: #F59E0B; background: rgba(245, 158, 11, 0.1); }
+    .rank-node.b { border-color: #FF5716; background: rgba(245, 158, 11, 0.1); }
     .rank-node.a { border-color: #FF6B00; background: rgba(255, 107, 0, 0.1); }
     .rank-node.s { border-color: #FFD700; background: rgba(255, 215, 0, 0.1); }
 
@@ -390,7 +390,7 @@
     .rank-node.active.e { color: #EF4444; }
     .rank-node.active.d { color: #00A8E9; }
     .rank-node.active.c { color: #10B981; }
-    .rank-node.active.b { color: #F59E0B; }
+    .rank-node.active.b { color: #FF5716; }
     .rank-node.active.a { color: #FF6B00; }
     .rank-node.active.s { color: #FFD700; }
 
@@ -417,7 +417,7 @@
 
     .leaderboard-table { width: 100%; margin-top: 20px; border-collapse: collapse; }
     .leaderboard-table th, .leaderboard-table td { padding: 12px; text-align: left; border-bottom: 1px solid #333; color: #ccc; }
-    .leaderboard-table th { background: #09367A; color: white; }
+    .leaderboard-table th { background: #0254A0; color: white; }
     .leaderboard-table tr:hover { background: rgba(0, 168, 233, 0.1); }
 
     .stats-grid {
@@ -569,7 +569,7 @@
         </div>
         <div class="stat-box" style="background: rgba(245, 158, 11, 0.15); padding: 15px; border-radius: 8px;">
           <div class="stat-box-label">🔥 MAX COMBO</div>
-          <div style="font-size: 2rem; font-weight: bold; color: #F59E0B; text-shadow: 0 0 15px rgba(245, 158, 11, 0.8);" id="maxComboDisplay">0</div>
+          <div style="font-size: 2rem; font-weight: bold; color: #FF5716; text-shadow: 0 0 15px rgba(245, 158, 11, 0.8);" id="maxComboDisplay">0</div>
         </div>
         <div class="stat-box">
           <div class="stat-box-label">Avg Time/Product</div>
@@ -588,7 +588,7 @@
     <div class="modal" style="max-width: 800px; max-height: 90vh; display: flex; flex-direction: column;">
       <h1 style="margin-bottom: 20px;">🏆 LEADERBOARD - TOP 20</h1>
       <table class="leaderboard-table" style="flex: 1; overflow-y: auto; max-height: 500px;">
-        <thead style="position: sticky; top: 0; background: #09367A;">
+        <thead style="position: sticky; top: 0; background: #0254A0;">
           <tr>
             <th>#</th>
             <th>NAME</th>
@@ -599,7 +599,74 @@
         </thead>
         <tbody id="leaderboardBody"></tbody>
       </table>
-      <button class="btn-primary" style="margin-top: 20px;" onclick="location.reload()">PLAY AGAIN</button>
+      <button class="btn-primary" style="margin-top: 20px;" onclick="showIntroScreen()">PLAY AGAIN</button>
+    </div>
+  </div>
+
+  <!-- INTRO SCREEN PARC D'ATTRACTIONS -->
+  <div id="introScreenAnimated" style="position: fixed; inset: 0; background: linear-gradient(135deg, #0254A0 0%, #00A8E9 100%); display: none; z-index: 2000; align-items: center; justify-content: center; flex-direction: column; padding: 40px; overflow-y: auto;">
+    <style>
+      @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+      @keyframes slideLeft { from { opacity: 0; transform: translateX(-50px); } to { opacity: 1; transform: translateX(0); } }
+      @keyframes slideRight { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0); } }
+      @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+      @keyframes pulse { 0%, 100% { box-shadow: 0 10px 40px rgba(255,87,22,0.4); transform: scale(1); } 50% { box-shadow: 0 15px 60px rgba(255,87,22,0.7); transform: scale(1.05); } }
+    </style>
+    
+    <h1 style="font-size: 4rem; font-weight: 900; color: white; text-shadow: 0 0 20px rgba(255,255,255,0.3); margin-bottom: 30px; animation: bounce 2s infinite;">⚡ QUALITY INSPECTOR</h1>
+    
+    <div style="display: flex; gap: 40px; width: 100%; max-width: 1400px; min-height: 500px;">
+      <!-- RULES -->
+      <div style="flex: 1; background: rgba(255,255,255,0.95); border-radius: 20px; padding: 30px; overflow-y: auto; animation: slideLeft 0.8s ease-out;">
+        <h2 style="font-size: 2rem; color: #0254A0; margin-bottom: 20px; cursor: pointer; user-select: none;" id="rulesTrigger">📋 HOW TO PLAY</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+          <div style="background: rgba(2,84,160,0.1); border: 2px solid #0254A0; border-radius: 10px; padding: 15px; text-align: center;"><div style="font-size: 2rem; margin-bottom: 5px;">🔍</div><strong style="color: #0254A0;">SCAN</strong><p style="color: #666; font-size: 0.9rem;">Move magnifier over product</p></div>
+          <div style="background: rgba(2,84,160,0.1); border: 2px solid #0254A0; border-radius: 10px; padding: 15px; text-align: center;"><div style="font-size: 2rem; margin-bottom: 5px;">⚠️</div><strong style="color: #0254A0;">FIND</strong><p style="color: #666; font-size: 0.9rem;">Find defects that appear</p></div>
+          <div style="background: rgba(2,84,160,0.1); border: 2px solid #0254A0; border-radius: 10px; padding: 15px; text-align: center;"><div style="font-size: 2rem; margin-bottom: 5px;">✅</div><strong style="color: #0254A0;">DECIDE</strong><p style="color: #666; font-size: 0.9rem;">Approve or reject</p></div>
+          <div style="background: rgba(2,84,160,0.1); border: 2px solid #0254A0; border-radius: 10px; padding: 15px; text-align: center;"><div style="font-size: 2rem; margin-bottom: 5px;">🔥</div><strong style="color: #0254A0;">COMBO</strong><p style="color: #666; font-size: 0.9rem;">5 correct = +50 pts</p></div>
+          <div style="background: rgba(2,84,160,0.1); border: 2px solid #0254A0; border-radius: 10px; padding: 15px; text-align: center;"><div style="font-size: 2rem; margin-bottom: 5px;">⏱️</div><strong style="color: #0254A0;">TIME</strong><p style="color: #666; font-size: 0.9rem;">2 minutes challenge</p></div>
+          <div style="background: rgba(2,84,160,0.1); border: 2px solid #0254A0; border-radius: 10px; padding: 15px; text-align: center;"><div style="font-size: 2rem; margin-bottom: 5px;">💰</div><strong style="color: #0254A0;">EARN</strong><p style="color: #666; font-size: 0.9rem;">Good = money, bad = loss</p></div>
+        </div>
+      </div>
+
+      <!-- SEPARATOR -->
+      <div style="width: 3px; background: linear-gradient(180deg, transparent 0%, white 50%, transparent 100%); border-radius: 10px;"></div>
+
+      <!-- LEADERBOARD HALL OF FAME -->
+      <div style="flex: 1; background: rgba(255,255,255,0.95); border-radius: 20px; padding: 30px; overflow-y: auto; animation: slideRight 0.8s ease-out;">
+        <h2 style="font-size: 2rem; color: #FF5716; margin-bottom: 20px; cursor: pointer; user-select: none;" id="leaderboardTitle">🏆 HALL OF FAME</h2>
+        <div id="introLeaderboardList" style="display: flex; flex-direction: column; gap: 10px;">
+          <div style="text-align: center; color: #999;"><p>⭐ No scores yet!</p><p>Be the first to enter the Hall of Fame!</p></div>
+        </div>
+      </div>
+    </div>
+
+    <button onclick="startGame()" style="margin-top: 30px; padding: 20px 60px; font-size: 1.5rem; font-weight: 900; color: white; background: linear-gradient(135deg, #FF5716 0%, #E84E0F 100%); border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 10px 40px rgba(255,87,22,0.4); animation: pulse 2s infinite; text-transform: uppercase; letter-spacing: 2px; transition: all 0.3s;">▶ START GAME</button>
+  </div>
+
+  <!-- EASTER EGG - IMAGE EASTER.JPG -->
+  <div id="easterOverlay" style="position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: none; z-index: 9999; align-items: center; justify-content: center; flex-direction: column;">
+    <img src="easter.jpg" style="max-width: 80%; max-height: 70%; border: 3px solid #FF5716; border-radius: 10px; margin-bottom: 20px;">
+    <div style="font-size: 1.5rem; font-weight: bold; color: #FF5716; text-align: center;">Made with Love ♥ Quali-Team</div>
+  </div>
+
+  <!-- ADMIN PANEL -->
+  <div id="adminPanel" style="position: fixed; bottom: 20px; right: 20px; background: rgba(0,0,0,0.95); border: 2px solid #FF5716; border-radius: 10px; padding: 20px; color: white; z-index: 5000; max-width: 450px; max-height: 600px; overflow-y: auto; display: none;">
+    <button onclick="toggleAdminPanel()" style="position: absolute; top: 10px; right: 10px; background: none; border: none; color: #FF5716; font-size: 1.5rem; cursor: pointer;">✕</button>
+    <h3 style="color: #FF5716; margin-bottom: 15px; text-align: center;">⚙️ ADMIN PANEL</h3>
+    
+    <div>
+      <h4 style="color: #FF5716; margin: 15px 0 10px 0; font-size: 0.9rem;">ADD NEW SCORE</h4>
+      <input id="adminName" type="text" placeholder="Player name" style="width: 100%; padding: 8px; margin: 5px 0; background: #0f1419; border: 1px solid #FF5716; color: white; border-radius: 3px;">
+      <input id="adminScore" type="number" placeholder="Score" min="0" style="width: 100%; padding: 8px; margin: 5px 0; background: #0f1419; border: 1px solid #FF5716; color: white; border-radius: 3px;">
+      <input id="adminGood" type="number" placeholder="Good count" min="0" style="width: 100%; padding: 8px; margin: 5px 0; background: #0f1419; border: 1px solid #FF5716; color: white; border-radius: 3px;">
+      <input id="adminTotal" type="number" placeholder="Total inspected" min="1" style="width: 100%; padding: 8px; margin: 5px 0; background: #0f1419; border: 1px solid #FF5716; color: white; border-radius: 3px;">
+      <button onclick="addScoreAdmin()" style="width: 100%; padding: 10px; background: #FF5716; color: white; border: none; border-radius: 3px; cursor: pointer; margin-top: 10px; font-weight: bold;">+ ADD SCORE</button>
+    </div>
+
+    <div style="margin-top: 20px; border-top: 1px solid #FF5716; padding-top: 15px;">
+      <h4 style="color: #FF5716; margin: 0 0 10px 0; font-size: 0.9rem;">MANAGE SCORES</h4>
+      <div id="adminScoresList"></div>
     </div>
   </div>
 
@@ -621,6 +688,10 @@
     };
     
     window.startGame = function() {
+      // Hide our intro screen
+      const introScreen = document.getElementById('introScreenAnimated');
+      if (introScreen) introScreen.style.display = 'none';
+      
       gameActive = true;
       gameStartTime = Date.now();
       correctCombo = 0;
@@ -1091,7 +1162,7 @@
         ctx.fill();
         
         // Bordure
-        ctx.strokeStyle = '#F59E0B';
+        ctx.strokeStyle = '#FF5716';
         ctx.lineWidth = 2;
         ctx.stroke();
         
@@ -1539,9 +1610,172 @@
       if (screen) screen.classList.remove('hidden');
     }
 
+    // ===== EASTER EGGS & EXTRAS =====
+    let rulesClickCount = 0;
+    let leaderboardClickCount = 0;
+
+    function showIntroScreen() {
+      const introScreen = document.getElementById('introScreenAnimated');
+      const gameScreen = document.getElementById('gameScreen');
+      const leaderboardScreen = document.getElementById('leaderboardScreen');
+      
+      if (introScreen) introScreen.style.display = 'flex';
+      if (gameScreen) gameScreen.classList.add('hidden');
+      if (leaderboardScreen) leaderboardScreen.classList.add('hidden');
+      
+      document.querySelectorAll('.modal-overlay').forEach(s => s.classList.add('hidden'));
+      loadIntroLeaderboard();
+    }
+
+    function setupEasterEggs() {
+      // Easter egg: 10 clics on 📋 emoji
+      const rulesTrigger = document.getElementById('rulesTrigger');
+      if (rulesTrigger) {
+        rulesTrigger.style.cursor = 'pointer';
+        rulesTrigger.addEventListener('click', () => {
+          rulesClickCount++;
+          if (rulesClickCount === 10) {
+            triggerEasterEgg();
+            rulesClickCount = 0;
+          }
+        });
+      }
+
+      // Admin panel: 10 clics on leaderboard title
+      const lbTitle = document.getElementById('leaderboardTitle');
+      if (lbTitle) {
+        lbTitle.style.cursor = 'pointer';
+        lbTitle.addEventListener('click', () => {
+          leaderboardClickCount++;
+          if (leaderboardClickCount === 10) {
+            toggleAdminPanel();
+            leaderboardClickCount = 0;
+          }
+        });
+      }
+    }
+
+    function loadIntroLeaderboard() {
+      const list = document.getElementById('introLeaderboardList');
+      if (!list) return;
+      const leaderboard = JSON.parse(localStorage.getItem('leaderboard') || '[]');
+      
+      if (leaderboard.length === 0) {
+        list.innerHTML = '<div style="text-align: center; color: #999;"><p>⭐ No scores yet!</p><p>Be the first to enter the Hall of Fame!</p></div>';
+        return;
+      }
+      
+      list.innerHTML = '';
+      leaderboard.slice(0, 10).forEach((score, idx) => {
+        const now = new Date(score.timestamp || Date.now());
+        const dateStr = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+        
+        const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : '✨';
+        
+        const item = document.createElement('div');
+        item.style.cssText = `padding: 15px; margin: 8px 0; background: linear-gradient(90deg, rgba(2,84,160,0.2) 0%, rgba(0,168,233,0.1) 100%); border-radius: 10px; border-left: 4px solid ${idx === 0 ? '#FFD700' : idx === 1 ? '#C0C0C0' : idx === 2 ? '#CD7F32' : '#FF5716'}; box-shadow: 0 4px 15px rgba(0,0,0,0.3);`;
+        item.innerHTML = `<div style="display: flex; justify-content: space-between; align-items: center;"><div style="display: flex; align-items: center; gap: 15px; flex: 1;"><div style="font-size: 2rem; font-weight: 900; color: ${idx === 0 ? '#FFD700' : idx === 1 ? '#C0C0C0' : idx === 2 ? '#CD7F32' : '#FF5716'}; width: 50px; text-align: center;">#${idx + 1}</div><div><div style="font-weight: 900; color: white; font-size: 1.2rem;">${score.name}</div><div style="color: #888; font-size: 0.85rem;">${dateStr} at ${timeStr}</div></div></div><div style="text-align: right; margin-right: 15px;"><div style="font-size: 2rem; font-weight: 900; color: #FF5716; text-shadow: 0 0 10px rgba(255,87,22,0.5);">${score.score}</div><div style="color: #00A8E9; font-size: 0.9rem;">${score.quality}% quality</div></div><div style="font-size: 3rem;">${medal}</div></div>`;
+        list.appendChild(item);
+      });
+    }
+
+    function triggerEasterEgg() {
+      const overlay = document.getElementById('easterOverlay');
+      if (overlay) {
+        overlay.style.display = 'flex';
+        setTimeout(() => {
+          overlay.style.display = 'none';
+        }, 5000);
+      }
+    }
+
+    function toggleAdminPanel() {
+      const panel = document.getElementById('adminPanel');
+      if (panel) {
+        panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+        if (panel.style.display === 'block') {
+          updateAdminScoresList();
+        }
+      }
+    }
+
+    function updateAdminScoresList() {
+      const list = document.getElementById('adminScoresList');
+      if (!list) return;
+      const leaderboard = JSON.parse(localStorage.getItem('leaderboard') || '[]');
+      
+      list.innerHTML = '';
+      leaderboard.forEach((score, idx) => {
+        const entry = document.createElement('div');
+        entry.style.cssText = 'background: rgba(255,87,22,0.1); padding: 10px; margin: 10px 0; border-radius: 5px; border-left: 3px solid #FF5716;';
+        entry.innerHTML = `<div style="margin-bottom: 8px;"><strong>${score.name}</strong> - ${score.score}pts</div><div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-bottom: 5px;"><input type="text" id="name-${idx}" value="${score.name}" style="background: #0f1419; border: 1px solid #FF5716; color: white; padding: 4px; border-radius: 3px; font-size: 0.8rem;"><input type="number" id="score-${idx}" value="${score.score}" style="background: #0f1419; border: 1px solid #FF5716; color: white; padding: 4px; border-radius: 3px; font-size: 0.8rem;"></div><div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-bottom: 5px;"><input type="number" id="good-${idx}" value="${score.good_count}" style="background: #0f1419; border: 1px solid #FF5716; color: white; padding: 4px; border-radius: 3px; font-size: 0.8rem;"><input type="number" id="total-${idx}" value="${score.total_count}" style="background: #0f1419; border: 1px solid #FF5716; color: white; padding: 4px; border-radius: 3px; font-size: 0.8rem;"></div><div style="display: flex; gap: 5px;"><button onclick="updateScoreAdmin(${idx})" style="flex: 1; background: #FF5716; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer; font-size: 0.75rem; font-weight: bold;">SAVE</button><button onclick="deleteScoreAdmin(${idx})" style="flex: 1; background: #EF4444; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer; font-size: 0.75rem; font-weight: bold;">DELETE</button></div>`;
+        list.appendChild(entry);
+      });
+    }
+
+    function addScoreAdmin() {
+      const name = document.getElementById('adminName').value.trim();
+      const score = parseInt(document.getElementById('adminScore').value);
+      const good = parseInt(document.getElementById('adminGood').value);
+      const total = parseInt(document.getElementById('adminTotal').value);
+      if (!name || !score || !good || !total) { alert('Fill all fields!'); return; }
+      let leaderboard = JSON.parse(localStorage.getItem('leaderboard') || '[]');
+      leaderboard.push({name, score, good_count: good, total_count: total, quality: Math.round((good/total)*100), avg_time: 2.5, timestamp: Date.now()});
+      leaderboard.sort((a, b) => b.score - a.score);
+      localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+      document.getElementById('adminName').value = '';
+      document.getElementById('adminScore').value = '';
+      document.getElementById('adminGood').value = '';
+      document.getElementById('adminTotal').value = '';
+      updateAdminScoresList();
+      loadIntroLeaderboard();
+    }
+
+    function updateScoreAdmin(idx) {
+      let leaderboard = JSON.parse(localStorage.getItem('leaderboard') || '[]');
+      const name = document.getElementById(`name-${idx}`).value.trim();
+      const score = parseInt(document.getElementById(`score-${idx}`).value);
+      const good = parseInt(document.getElementById(`good-${idx}`).value);
+      const total = parseInt(document.getElementById(`total-${idx}`).value);
+      if (!name || !score || !good || !total) { alert('Fill all fields!'); return; }
+      leaderboard[idx] = {name, score, good_count: good, total_count: total, quality: Math.round((good/total)*100), avg_time: 2.5, timestamp: leaderboard[idx].timestamp || Date.now()};
+      leaderboard.sort((a, b) => b.score - a.score);
+      localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+      updateAdminScoresList();
+      loadIntroLeaderboard();
+    }
+
+    function deleteScoreAdmin(idx) {
+      if (confirm('Delete this score?')) {
+        let leaderboard = JSON.parse(localStorage.getItem('leaderboard') || '[]');
+        leaderboard.splice(idx, 1);
+        localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+        updateAdminScoresList();
+        loadIntroLeaderboard();
+      }
+    }
+
     window.addEventListener('load', () => {
-      // Start with intro screen (English only)
-      showScreen('introScreen');
+      // Show our amazing intro screen first!
+      const introScreen = document.getElementById('introScreenAnimated');
+      if (introScreen) {
+        introScreen.style.display = 'flex';
+        loadIntroLeaderboard();
+      }
+      setupEasterEggs();
+    });
+
+    // Backup: also trigger on DOMContentLoaded
+    document.addEventListener('DOMContentLoaded', () => {
+      const introScreen = document.getElementById('introScreenAnimated');
+      if (introScreen && introScreen.style.display === 'none') {
+        setTimeout(() => {
+          introScreen.style.display = 'flex';
+          loadIntroLeaderboard();
+          setupEasterEggs();
+        }, 100);
+      }
     });
   </script>
 </body>
