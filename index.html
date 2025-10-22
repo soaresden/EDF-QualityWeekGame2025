@@ -6,7 +6,7 @@
   <title>Quality Inspector - EDF</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Courier New', monospace; background: #0a0e27; color: #ccc; overflow: hidden; height: 100vh; touch-action: manipulation; zoom: 1.25; }
+    body { font-family: 'Courier New', monospace; background: #0a0e27; color: #ccc; overflow: hidden; height: 100vh; touch-action: manipulation; }
     
     canvas { 
       touch-action: none;
@@ -564,7 +564,7 @@
           <div style="font-size: 3rem; font-weight: bold; color: #10B981; text-shadow: 0 0 20px rgba(16, 185, 129, 0.8);" id="finalScore">0</div>
         </div>
         <div class="stat-box">
-          <div class="stat-box-label">Quality Ratio</div>
+          <div class="stat-box-label">Player Ratio</div>
           <div class="stat-box-value" id="finalRatio">0/0 = 0%</div>
         </div>
         <div class="stat-box" style="background: rgba(245, 158, 11, 0.15); padding: 15px; border-radius: 8px;">
@@ -611,12 +611,17 @@
       @keyframes slideRight { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0); } }
       @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
       @keyframes pulse { 0%, 100% { box-shadow: 0 10px 40px rgba(255,87,22,0.4); transform: scale(1); } 50% { box-shadow: 0 15px 60px rgba(255,87,22,0.7); transform: scale(1.05); } }
+      @keyframes firework { 0% { transform: translate(0, 0) scale(1); opacity: 1; } 100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; } }
+      .firework { position: absolute; width: 10px; height: 10px; border-radius: 50%; pointer-events: none; }
+      @media (max-width: 1024px) {
+        #introScreenAnimated > div:first-of-type { flex-direction: column !important; gap: 20px !important; }
+        #introScreenAnimated > div:first-of-type > div:nth-child(2) { display: none; }
+      }
     </style>
     
     <h1 style="font-size: 4rem; font-weight: 900; color: white; text-shadow: 0 0 20px rgba(255,255,255,0.3); margin-bottom: 30px; animation: bounce 2s infinite;">⚡ QUALITY INSPECTOR</h1>
     
     <div style="display: flex; gap: 40px; width: 100%; max-width: 1400px; min-height: 500px;">
-      <!-- RULES -->
       <div style="flex: 1; background: rgba(255,255,255,0.95); border-radius: 20px; padding: 30px; overflow-y: auto; animation: slideLeft 0.8s ease-out;">
         <h2 style="font-size: 2rem; color: #0254A0; margin-bottom: 20px; cursor: pointer; user-select: none;" id="rulesTrigger">📋 HOW TO PLAY</h2>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
@@ -628,59 +633,24 @@
           <div style="background: rgba(2,84,160,0.1); border: 2px solid #0254A0; border-radius: 10px; padding: 15px; text-align: center;"><div style="font-size: 2rem; margin-bottom: 5px;">💰</div><strong style="color: #0254A0;">EARN</strong><p style="color: #666; font-size: 0.9rem;">Good = money, bad = loss</p></div>
         </div>
       </div>
-
-      <!-- SEPARATOR -->
       <div style="width: 3px; background: linear-gradient(180deg, transparent 0%, white 50%, transparent 100%); border-radius: 10px;"></div>
-
-      <!-- LEADERBOARD HALL OF FAME -->
       <div style="flex: 1; background: rgba(255,255,255,0.95); border-radius: 20px; padding: 30px; overflow-y: auto; animation: slideRight 0.8s ease-out;">
         <h2 style="font-size: 2rem; color: #FF5716; margin-bottom: 20px; cursor: pointer; user-select: none;" id="leaderboardTitle">🏆 HALL OF FAME</h2>
         <div id="introLeaderboardList" style="display: flex; flex-direction: column; gap: 10px;">
-          <div style="text-align: center; color: #999;"><p>⭐ No scores yet!</p><p>Be the first to enter the Hall of Fame!</p></div>
+          <div style="text-align: center; color: #999;"><p>⭐ No scores yet!</p><p>Be the first!</p></div>
         </div>
       </div>
     </div>
-
-    <style>
-      @media (max-width: 1024px) {
-        #introScreenAnimated > div {
-          flex-direction: column !important;
-          max-width: 100% !important;
-          gap: 20px !important;
-        }
-        #introScreenAnimated > div > div:nth-child(2) {
-          display: none;
-        }
-      }
-    </style>
-
-    <button onclick="startGame()" style="margin-top: 30px; padding: 20px 60px; font-size: 1.5rem; font-weight: 900; color: white; background: linear-gradient(135deg, #FF5716 0%, #E84E0F 100%); border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 10px 40px rgba(255,87,22,0.4); animation: pulse 2s infinite; text-transform: uppercase; letter-spacing: 2px; transition: all 0.3s;">▶ START GAME</button>
+    <button onclick="startGame()" style="margin-top: 30px; padding: 20px 60px; font-size: 1.5rem; font-weight: 900; color: white; background: linear-gradient(135deg, #FF5716 0%, #E84E0F 100%); border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 10px 40px rgba(255,87,22,0.4); animation: pulse 2s infinite; text-transform: uppercase; letter-spacing: 2px;">▶ START GAME</button>
   </div>
 
-  <!-- EASTER EGG - IMAGE EASTER.JPG -->
+  <!-- EASTER EGG -->
   <div id="easterOverlay" style="position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: none; z-index: 9999; align-items: center; justify-content: center; flex-direction: column;">
-    <img src="easter.jpg" style="max-width: 80%; max-height: 70%; border: 3px solid #FF5716; border-radius: 10px; margin-bottom: 20px;">
-    <div style="font-size: 1.5rem; font-weight: bold; color: #FF5716; text-align: center;">Made with Love ♥ Quali-Team</div>
-  </div>
-
-  <!-- ADMIN PANEL -->
-  <div id="adminPanel" style="position: fixed; bottom: 20px; right: 20px; background: rgba(0,0,0,0.95); border: 2px solid #FF5716; border-radius: 10px; padding: 20px; color: white; z-index: 5000; max-width: 450px; max-height: 600px; overflow-y: auto; display: none;">
-    <button onclick="toggleAdminPanel()" style="position: absolute; top: 10px; right: 10px; background: none; border: none; color: #FF5716; font-size: 1.5rem; cursor: pointer;">✕</button>
-    <h3 style="color: #FF5716; margin-bottom: 15px; text-align: center;">⚙️ ADMIN PANEL</h3>
-    
-    <div>
-      <h4 style="color: #FF5716; margin: 15px 0 10px 0; font-size: 0.9rem;">ADD NEW SCORE</h4>
-      <input id="adminName" type="text" placeholder="Player name" style="width: 100%; padding: 8px; margin: 5px 0; background: #0f1419; border: 1px solid #FF5716; color: white; border-radius: 3px;">
-      <input id="adminScore" type="number" placeholder="Score" min="0" style="width: 100%; padding: 8px; margin: 5px 0; background: #0f1419; border: 1px solid #FF5716; color: white; border-radius: 3px;">
-      <input id="adminGood" type="number" placeholder="Good count" min="0" style="width: 100%; padding: 8px; margin: 5px 0; background: #0f1419; border: 1px solid #FF5716; color: white; border-radius: 3px;">
-      <input id="adminTotal" type="number" placeholder="Total inspected" min="1" style="width: 100%; padding: 8px; margin: 5px 0; background: #0f1419; border: 1px solid #FF5716; color: white; border-radius: 3px;">
-      <button onclick="addScoreAdmin()" style="width: 100%; padding: 10px; background: #FF5716; color: white; border: none; border-radius: 3px; cursor: pointer; margin-top: 10px; font-weight: bold;">+ ADD SCORE</button>
+    <div style="position: relative; display: flex; align-items: center; justify-content: center;">
+      <img src="easter.jpg" style="max-width: 80%; max-height: 70%; border: 3px solid #FF5716; border-radius: 10px; position: relative; z-index: 1;">
+      <div id="fireworksContainer" style="position: absolute; width: 100%; height: 100%; pointer-events: none;"></div>
     </div>
-
-    <div style="margin-top: 20px; border-top: 1px solid #FF5716; padding-top: 15px;">
-      <h4 style="color: #FF5716; margin: 0 0 10px 0; font-size: 0.9rem;">MANAGE SCORES</h4>
-      <div id="adminScoresList"></div>
-    </div>
+    <div style="font-size: 1.5rem; font-weight: bold; color: #FF5716; text-align: center; margin-top: 20px;">Made with Love ♥ Quali-Team</div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -689,6 +659,7 @@
     const SUPABASE_URL = 'https://tqwrsakylbyqmxwyhoar.supabase.co'; // Remplace par ton URL
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRxd3JzYWt5bGJ5cW14d3lob2FyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEwNjE4NTUsImV4cCI6MjA3NjYzNzg1NX0.WIo9YUtJnxfgsZmnPluGexBAztB7dJG6uYKnNe7o_6A'; // Remplace par ta clé publique
   
+    
     // Initialise Supabase
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     
@@ -700,7 +671,6 @@
     };
     
     window.startGame = function() {
-      // Hide our intro screen
       const introScreen = document.getElementById('introScreenAnimated');
       if (introScreen) introScreen.style.display = 'none';
       
@@ -1511,45 +1481,47 @@
       const name = document.getElementById('playerNameInput').value.trim();
       if (!name) { alert('Enter a name!'); return; }
       
-      // Affiche le nom en haut
       document.getElementById('finalName').textContent = `🏆 ${name}`;
       
-      const avgTime = gameStats.productsInspected > 0 ? (gameStats.totalInspectionTime / gameStats.productsInspected).toFixed(1) : 0;
-      
-      const newScore = {
+      // Supabase only gets: name, score, quality
+      const scoreForCloud = {
         name: name, 
         score: gameStats.totalScore, 
-        good_count: gameStats.productsGood,
-        total_count: gameStats.productsInspected,
+        quality: gameStats.quality
+      };
+      
+      // Local storage gets all data for leaderboard display
+      const scoreForLocal = {
+        name: name,
+        score: gameStats.totalScore,
         quality: gameStats.quality,
-        avg_time: parseFloat(avgTime)
+        total_count: gameStats.productsInspected,
+        good_count: gameStats.productsGood,
+        timestamp: Date.now()
       };
       
       try {
-        // Essaie de sauvegarder dans Supabase
         if (supabase && SUPABASE_URL && SUPABASE_URL !== 'https://xxxxx.supabase.co') {
           try {
-            const { data, error } = await supabase
-              .from('scores')
-              .insert([newScore]);
-            
+            const { error } = await supabase.from('scores').insert([scoreForCloud]);
             if (error) {
-              console.warn('⚠️ Supabase table not found, using localStorage');
-              saveToLocalStorage(newScore);
+              console.warn('⚠️ Supabase error, using localStorage:', error);
+              saveToLocalStorage(scoreForLocal);
             } else {
               console.log('✅ Score saved to cloud!');
+              saveToLocalStorage(scoreForLocal);
             }
           } catch (e) {
-            console.warn('⚠️ Supabase error, using localStorage:', e);
-            saveToLocalStorage(newScore);
+            console.warn('⚠️ Supabase exception:', e);
+            saveToLocalStorage(scoreForLocal);
           }
         } else {
-          console.log('⚠️ Supabase not configured, using localStorage');
-          saveToLocalStorage(newScore);
+          console.log('⚠️ Supabase not configured');
+          saveToLocalStorage(scoreForLocal);
         }
       } catch (err) {
         console.error('Error:', err);
-        saveToLocalStorage(newScore);
+        saveToLocalStorage(scoreForLocal);
       }
       
       showLeaderboard();
@@ -1626,48 +1598,14 @@
       if (screen) screen.classList.remove('hidden');
     }
 
-    // ===== EASTER EGGS & EXTRAS =====
+    // ===== EASTER EGGS & INTRO SCREEN =====
     let rulesClickCount = 0;
-    let leaderboardClickCount = 0;
 
     function showIntroScreen() {
       const introScreen = document.getElementById('introScreenAnimated');
-      const gameScreen = document.getElementById('gameScreen');
-      const leaderboardScreen = document.getElementById('leaderboardScreen');
-      
-      if (introScreen) introScreen.style.display = 'flex';
-      if (gameScreen) gameScreen.classList.add('hidden');
-      if (leaderboardScreen) leaderboardScreen.classList.add('hidden');
-      
-      document.querySelectorAll('.modal-overlay').forEach(s => s.classList.add('hidden'));
-      loadIntroLeaderboard();
-    }
-
-    function setupEasterEggs() {
-      // Easter egg: 10 clics on 📋 emoji
-      const rulesTrigger = document.getElementById('rulesTrigger');
-      if (rulesTrigger) {
-        rulesTrigger.style.cursor = 'pointer';
-        rulesTrigger.addEventListener('click', () => {
-          rulesClickCount++;
-          if (rulesClickCount === 10) {
-            triggerEasterEgg();
-            rulesClickCount = 0;
-          }
-        });
-      }
-
-      // Admin panel: 10 clics on leaderboard title
-      const lbTitle = document.getElementById('leaderboardTitle');
-      if (lbTitle) {
-        lbTitle.style.cursor = 'pointer';
-        lbTitle.addEventListener('click', () => {
-          leaderboardClickCount++;
-          if (leaderboardClickCount === 10) {
-            toggleAdminPanel();
-            leaderboardClickCount = 0;
-          }
-        });
+      if (introScreen) {
+        introScreen.style.display = 'flex';
+        loadIntroLeaderboard();
       }
     }
 
@@ -1675,23 +1613,19 @@
       const list = document.getElementById('introLeaderboardList');
       if (!list) return;
       const leaderboard = JSON.parse(localStorage.getItem('leaderboard') || '[]');
-      
-      if (leaderboard.length === 0) {
-        list.innerHTML = '<div style="text-align: center; color: #999;"><p>⭐ No scores yet!</p><p>Be the first to enter the Hall of Fame!</p></div>';
-        return;
-      }
+      if (leaderboard.length === 0) return;
       
       list.innerHTML = '';
       leaderboard.slice(0, 10).forEach((score, idx) => {
         const now = new Date(score.timestamp || Date.now());
-        const dateStr = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        const dateStr = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
         const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-        
-        const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : '✨';
+        const quality = score.quality || 0;
+        let grade = 'D'; if (quality >= 90) grade = 'A'; else if (quality >= 75) grade = 'B'; else if (quality >= 60) grade = 'C';
         
         const item = document.createElement('div');
-        item.style.cssText = `padding: 15px; margin: 8px 0; background: linear-gradient(90deg, rgba(2,84,160,0.2) 0%, rgba(0,168,233,0.1) 100%); border-radius: 10px; border-left: 4px solid ${idx === 0 ? '#FFD700' : idx === 1 ? '#C0C0C0' : idx === 2 ? '#CD7F32' : '#FF5716'}; box-shadow: 0 4px 15px rgba(0,0,0,0.3);`;
-        item.innerHTML = `<div style="display: flex; justify-content: space-between; align-items: center;"><div style="display: flex; align-items: center; gap: 15px; flex: 1;"><div style="font-size: 2rem; font-weight: 900; color: ${idx === 0 ? '#FFD700' : idx === 1 ? '#C0C0C0' : idx === 2 ? '#CD7F32' : '#FF5716'}; width: 50px; text-align: center;">#${idx + 1}</div><div><div style="font-weight: 900; color: white; font-size: 1.2rem;">${score.name}</div><div style="color: #888; font-size: 0.85rem;">${dateStr} at ${timeStr}</div></div></div><div style="text-align: right; margin-right: 15px;"><div style="font-size: 2rem; font-weight: 900; color: #FF5716; text-shadow: 0 0 10px rgba(255,87,22,0.5);">${score.score}</div><div style="color: #00A8E9; font-size: 0.9rem;">${score.quality}% quality</div></div><div style="font-size: 3rem;">${medal}</div></div>`;
+        item.style.cssText = `padding: 12px; margin: 6px 0; background: linear-gradient(90deg, rgba(2,84,160,0.2) 0%, rgba(0,168,233,0.1) 100%); border-radius: 8px; border-left: 3px solid ${idx === 0 ? '#FFD700' : '#FF5716'};`;
+        item.innerHTML = `<div style="display: flex; justify-content: space-between; align-items: center; gap: 10px;"><div style="flex: 1;"><div style="font-weight: 900; color: white; font-size: 1rem;">${score.name}</div><div style="color: #888; font-size: 0.8rem;">${dateStr} ${timeStr}</div></div><div style="text-align: right;"><div style="font-size: 1.1rem; font-weight: 900; color: ${grade === 'A' ? '#00FF00' : grade === 'B' ? '#FFD700' : '#FF8C00'};">${grade}</div><div style="color: #FF5716; font-weight: bold;">${score.score}pts</div></div></div><div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 8px; font-size: 0.75rem;"><div style="background: rgba(0,168,233,0.2); padding: 4px; border-radius: 3px; text-align: center;"><div style="color: #00A8E9;">${score.total_count || 30}</div><div style="color: #888;">Inspected</div></div><div style="background: rgba(0,255,0,0.2); padding: 4px; border-radius: 3px; text-align: center;"><div style="color: #00FF00;">${score.good_count || 0}</div><div style="color: #888;">Good</div></div><div style="background: rgba(255,215,0,0.2); padding: 4px; border-radius: 3px; text-align: center;"><div style="color: #FFD700;">${quality}%</div><div style="color: #888;">Ratio</div></div></div>`;
         list.appendChild(item);
       });
     }
@@ -1700,97 +1634,39 @@
       const overlay = document.getElementById('easterOverlay');
       if (overlay) {
         overlay.style.display = 'flex';
+        createFireworks();
+        setTimeout(() => { overlay.style.display = 'none'; }, 5000);
+      }
+    }
+
+    function createFireworks() {
+      const container = document.getElementById('fireworksContainer');
+      if (!container) return;
+      container.innerHTML = '';
+      const colors = ['#FF5716', '#FFD700', '#00A8E9', '#0254A0', '#FF1493', '#00FF00'];
+      for (let i = 0; i < 50; i++) {
         setTimeout(() => {
-          overlay.style.display = 'none';
-        }, 5000);
-      }
-    }
-
-    function toggleAdminPanel() {
-      const panel = document.getElementById('adminPanel');
-      if (panel) {
-        panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
-        if (panel.style.display === 'block') {
-          updateAdminScoresList();
-        }
-      }
-    }
-
-    function updateAdminScoresList() {
-      const list = document.getElementById('adminScoresList');
-      if (!list) return;
-      const leaderboard = JSON.parse(localStorage.getItem('leaderboard') || '[]');
-      
-      list.innerHTML = '';
-      leaderboard.forEach((score, idx) => {
-        const entry = document.createElement('div');
-        entry.style.cssText = 'background: rgba(255,87,22,0.1); padding: 10px; margin: 10px 0; border-radius: 5px; border-left: 3px solid #FF5716;';
-        entry.innerHTML = `<div style="margin-bottom: 8px;"><strong>${score.name}</strong> - ${score.score}pts</div><div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-bottom: 5px;"><input type="text" id="name-${idx}" value="${score.name}" style="background: #0f1419; border: 1px solid #FF5716; color: white; padding: 4px; border-radius: 3px; font-size: 0.8rem;"><input type="number" id="score-${idx}" value="${score.score}" style="background: #0f1419; border: 1px solid #FF5716; color: white; padding: 4px; border-radius: 3px; font-size: 0.8rem;"></div><div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-bottom: 5px;"><input type="number" id="good-${idx}" value="${score.good_count}" style="background: #0f1419; border: 1px solid #FF5716; color: white; padding: 4px; border-radius: 3px; font-size: 0.8rem;"><input type="number" id="total-${idx}" value="${score.total_count}" style="background: #0f1419; border: 1px solid #FF5716; color: white; padding: 4px; border-radius: 3px; font-size: 0.8rem;"></div><div style="display: flex; gap: 5px;"><button onclick="updateScoreAdmin(${idx})" style="flex: 1; background: #FF5716; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer; font-size: 0.75rem; font-weight: bold;">SAVE</button><button onclick="deleteScoreAdmin(${idx})" style="flex: 1; background: #EF4444; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer; font-size: 0.75rem; font-weight: bold;">DELETE</button></div>`;
-        list.appendChild(entry);
-      });
-    }
-
-    function addScoreAdmin() {
-      const name = document.getElementById('adminName').value.trim();
-      const score = parseInt(document.getElementById('adminScore').value);
-      const good = parseInt(document.getElementById('adminGood').value);
-      const total = parseInt(document.getElementById('adminTotal').value);
-      if (!name || !score || !good || !total) { alert('Fill all fields!'); return; }
-      let leaderboard = JSON.parse(localStorage.getItem('leaderboard') || '[]');
-      leaderboard.push({name, score, good_count: good, total_count: total, quality: Math.round((good/total)*100), avg_time: 2.5, timestamp: Date.now()});
-      leaderboard.sort((a, b) => b.score - a.score);
-      localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
-      document.getElementById('adminName').value = '';
-      document.getElementById('adminScore').value = '';
-      document.getElementById('adminGood').value = '';
-      document.getElementById('adminTotal').value = '';
-      updateAdminScoresList();
-      loadIntroLeaderboard();
-    }
-
-    function updateScoreAdmin(idx) {
-      let leaderboard = JSON.parse(localStorage.getItem('leaderboard') || '[]');
-      const name = document.getElementById(`name-${idx}`).value.trim();
-      const score = parseInt(document.getElementById(`score-${idx}`).value);
-      const good = parseInt(document.getElementById(`good-${idx}`).value);
-      const total = parseInt(document.getElementById(`total-${idx}`).value);
-      if (!name || !score || !good || !total) { alert('Fill all fields!'); return; }
-      leaderboard[idx] = {name, score, good_count: good, total_count: total, quality: Math.round((good/total)*100), avg_time: 2.5, timestamp: leaderboard[idx].timestamp || Date.now()};
-      leaderboard.sort((a, b) => b.score - a.score);
-      localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
-      updateAdminScoresList();
-      loadIntroLeaderboard();
-    }
-
-    function deleteScoreAdmin(idx) {
-      if (confirm('Delete this score?')) {
-        let leaderboard = JSON.parse(localStorage.getItem('leaderboard') || '[]');
-        leaderboard.splice(idx, 1);
-        localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
-        updateAdminScoresList();
-        loadIntroLeaderboard();
+          const fw = document.createElement('div');
+          fw.className = 'firework';
+          fw.style.background = colors[Math.floor(Math.random() * colors.length)];
+          fw.style.left = (40 + Math.random() * 20) + '%';
+          fw.style.top = (40 + Math.random() * 20) + '%';
+          fw.style.setProperty('--tx', (Math.random() - 0.5) * 400 + 'px');
+          fw.style.setProperty('--ty', (Math.random() - 0.5) * 400 + 'px');
+          fw.style.animation = `firework ${0.8 + Math.random() * 0.4}s ease-out forwards`;
+          container.appendChild(fw);
+        }, i * 30);
       }
     }
 
     window.addEventListener('load', () => {
-      // Show our amazing intro screen first!
-      const introScreen = document.getElementById('introScreenAnimated');
-      if (introScreen) {
-        introScreen.style.display = 'flex';
-        loadIntroLeaderboard();
-      }
-      setupEasterEggs();
-    });
-
-    // Backup: also trigger on DOMContentLoaded
-    document.addEventListener('DOMContentLoaded', () => {
-      const introScreen = document.getElementById('introScreenAnimated');
-      if (introScreen && introScreen.style.display === 'none') {
-        setTimeout(() => {
-          introScreen.style.display = 'flex';
-          loadIntroLeaderboard();
-          setupEasterEggs();
-        }, 100);
+      showIntroScreen();
+      const rulesTrigger = document.getElementById('rulesTrigger');
+      if (rulesTrigger) {
+        rulesTrigger.addEventListener('click', () => {
+          rulesClickCount++;
+          if (rulesClickCount === 10) { triggerEasterEgg(); rulesClickCount = 0; }
+        });
       }
     });
   </script>
