@@ -606,12 +606,13 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     // ⚠️ À CONFIGURER AVEC TES CREDENTIALS
-    const SUPABASE_URL = 'https://xxxxx.supabase.co'; // Remplace par ton URL
-    const SUPABASE_KEY = 'eyJ...'; // Remplace par ta clé publique
+    const SUPABASE_URL = 'https://tqwrsakylbyqmxwyhoar.supabase.co'; // Remplace par ton URL
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRxd3JzYWt5bGJ5cW14d3lob2FyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEwNjE4NTUsImV4cCI6MjA3NjYzNzg1NX0.WIo9YUtJnxfgsZmnPluGexBAztB7dJG6uYKnNe7o_6A'; // Remplace par ta clé publique
+  
     
     // Initialise Supabase
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-  </script>
+    
     // ⚠️ Définir TOUTES les fonctions globales AVANT les données
     window.setLanguage = function(lang) {
       currentLanguage = lang;
@@ -1518,6 +1519,16 @@
         tr.innerHTML = `<td>${index + 1}</td><td><strong>${entry.name}</strong></td><td><strong style="color: #10B981; font-size: 1.2rem;">${entry.score}</strong></td><td>${entry.good_count}/${entry.total_count} = ${quality}%</td><td>${entry.avg_time}s</td>`;
         tbody.appendChild(tr);
       });
+      
+      // Ajouter source de données en bas
+      const sourceRow = document.createElement('tr');
+      sourceRow.style.background = 'rgba(168, 85, 247, 0.1)';
+      let source = 'LOCAL (localStorage)';
+      if (supabase && SUPABASE_URL !== 'https://xxxxx.supabase.co') {
+        source = '☁️ CLOUD (Supabase)';
+      }
+      sourceRow.innerHTML = `<td colspan="5" style="text-align: center; font-size: 0.85rem; color: #888; padding: 10px;">📊 Data from: ${source}</td>`;
+      tbody.appendChild(sourceRow);
       
       showScreen('leaderboardScreen');
     }
