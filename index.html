@@ -594,8 +594,10 @@
             <th>#</th>
             <th>NAME</th>
             <th>SCORE</th>
+            <th>INSP.</th>
+            <th>GOOD</th>
             <th>RATIO</th>
-            <th>AVG TIME</th>
+            <th>GRADE</th>
           </tr>
         </thead>
         <tbody id="leaderboardBody"></tbody>
@@ -1593,13 +1595,13 @@
 
     async function showLeaderboard() {
       const tbody = document.getElementById('leaderboardBody');
-      tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #888;">Loading...</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #888;">Loading...</td></tr>';
       
       let leaderboard = [];
       
       try {
         // Essaie de charger depuis Supabase
-        if (supabase && SUPABASE_URL !== 'https://xxxxx.supabase.co') {
+        if (supabase && SUPABASE_URL && SUPABASE_URL !== 'https://xxxxx.supabase.co') {
           const { data, error } = await supabase
             .from('scores')
             .select('*')
@@ -1624,26 +1626,25 @@
       
       tbody.innerHTML = '';
       if (leaderboard.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #888;">No scores yet...</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #888;">No scores yet...</td></tr>';
         return;
       }
       
       leaderboard.forEach((entry, index) => {
         const tr = document.createElement('tr');
-        const quality = entry.quality || Math.round((entry.good_count / entry.total_count) * 100);
-        tr.innerHTML = `<td>${index + 1}</td><td><strong>${entry.name}</strong></td><td><strong style="color: #10B981; font-size: 1.2rem;">${entry.score}</strong></td><td>${entry.good_count}/${entry.total_count} = ${quality}%</td><td>${entry.avg_time}s</td>`;
+        const quality = entry.quality || 0;
+        const grade = entry.grade || 'D';
+        tr.innerHTML = `
+          <td>#${index + 1}</td>
+          <td><strong>${entry.name}</strong></td>
+          <td><strong style="color: #FF5716;">${entry.score}</strong></td>
+          <td style="color: #00A8E9;">${entry.products_inspected || 0}</td>
+          <td style="color: #00FF00;">${entry.products_good || 0}</td>
+          <td style="color: #FFD700;">${quality}%</td>
+          <td style="color: #4ADE80; font-weight: bold; font-size: 1.1rem;">${grade}</td>
+        `;
         tbody.appendChild(tr);
       });
-      
-      // Ajouter source de données en bas
-      const sourceRow = document.createElement('tr');
-      sourceRow.style.background = 'rgba(168, 85, 247, 0.1)';
-      let source = 'LOCAL (localStorage)';
-      if (supabase && SUPABASE_URL !== 'https://xxxxx.supabase.co') {
-        source = '☁️ CLOUD (Supabase)';
-      }
-      sourceRow.innerHTML = `<td colspan="5" style="text-align: center; font-size: 0.85rem; color: #888; padding: 10px;">📊 Data from: ${source}</td>`;
-      tbody.appendChild(sourceRow);
       
       showScreen('leaderboardScreen');
     }
@@ -1826,6 +1827,15 @@
     }
 
     window.addEventListener('load', () => {
+      // Vérifier la connexion Supabase
+      if (supabase && SUPABASE_URL && SUPABASE_URL !== 'https://xxxxx.supabase.co') {
+        console.log('✅ Supabase Connected!');
+        document.title = 'Quality Inspector - ☁️ CLOUD';
+      } else {
+        console.log('⚠️ Supabase Not Configured - Using Local Storage');
+        document.title = 'Quality Inspector - 💾 LOCAL';
+      }
+      
       showIntroScreen();
       const rulesTrigger = document.getElementById('rulesTrigger');
       if (rulesTrigger) {
