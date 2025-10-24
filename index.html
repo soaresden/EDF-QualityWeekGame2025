@@ -2120,9 +2120,29 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
+    // Configuration Supabase
     const SUPABASE_URL = 'https://tqwrsakylbyqmxwyhoar.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRxd3JzYWt5bGJ5cW14d3lob2FyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEwNjE4NTUsImV4cCI6MjA3NjYzNzg1NX0.WIo5YUtJnxfgsZmnPluGexBAztB7dJG6uYKnNe7o_6A';
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRxd3JzYWt5bGJ5cW14d3lob2FyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEwNjE4NTUsImV4cCI6MjA3NjYzNzg1NX0.WIo9YUtJnxfgsZmnPluGexBAztB7dJG6uYKnNe7o_6A';
+    
+    console.log('🔌 Initialisation Supabase...');
+    console.log('📍 URL:', SUPABASE_URL);
+    
+    let supabase = null;
+    try {
+      supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      console.log('✅ Client Supabase créé avec succès');
+      
+      // Test de connexion
+      supabase.from('leaderboard').select('*', { count: 'exact', head: true }).then(({ error, count }) => {
+        if (error) {
+          console.error('❌ Erreur de connexion Supabase:', error.message);
+        } else {
+          console.log(`✅ Connexion Supabase OK - ${count || 0} entrées dans la table`);
+        }
+      });
+    } catch (err) {
+      console.error('❌ Erreur lors de la création du client Supabase:', err);
+    }
 
     let currentLanguage = 'en';
     let gameTimer = null;
@@ -4210,10 +4230,10 @@ TYPE html>
       <div class="rulesSection">
         <div class="rulesSectionTitle">🏆 WIN CONDITIONS</div>
         <div class="rulesContent">
-          <div class="rulesStat">✓ Correct = <strong>+Points</strong></div>
+          <div class="rulesStat">✓ Correct = <strong>More Points !</strong></div>
           <div class="rulesStat">✗ Wrong = <strong>-50 Pts</strong></div>
           <div class="rulesStat">🔥 Combo = <strong>Boost</strong></div>
-          <div class="rulesStat">🎯 Goal: <strong>≥75% Quality</strong></div>
+          <div class="rulesStat">🎯 Goal: <strong>Aim 100% Quality !</strong></div>
         </div>
       </div>
 
@@ -4889,7 +4909,9 @@ TYPE html>
     async function saveGameScoreAndShowLeaderboard(good, total, quality) {
       const grade = calculateGrade(quality);
       const score = Math.round(quality * 100);
-      const playerName = 'DenisSOARES';
+      const playerName = FIRST_playerName || 'Anonymous';
+      
+      console.log(`💾 Sauvegarde du score: ${playerName} - ${score} pts (${grade})`);
       
       // Objet de score à sauvegarder
       const gameScore = {
@@ -5454,22 +5476,19 @@ TYPE html>
 
                     <!-- SCORE BOX -->
                     <div class="ranks-score-box">
-                        <span class="player-name-score" id="playerNameScore">DenisSOARES</span>
-                        <span class="score-emoji">👑</span>
-                        <span class="score-label" id="scoreGrade">STYLISH!</span>
-                        <span class="score-value" id="scoreValue">1500</span>
-                        <span class="score-ratio" id="scoreRatio">18/20 = 90%</span>
+                        <span class="player-name-score" id="playerNameScore">-</span>
+                        <span class="score-emoji"></span>
+                        <span class="score-label" id="scoreGrade"></span>
+                        <span class="score-value" id="scoreValue"></span>
+                        <span class="score-ratio" id="scoreRatio"></span>
                     </div>
                 </div>
 
                 <!-- RESULTS BOX -->
                 <div class="ranks-results-box">
-                    <div class="results-title">RESULTS: <span id="resultsTotal">18/20</span></div>
+                    <div class="results-title">RESULTS: <span id="resultsTotal">0/0</span></div>
                     <div class="results-list" id="resultsEmojis">
-                        <div class="result-group"><span class="result-emoji success">✔</span><span class="result-emoji success">✔</span><span class="result-emoji success">✔</span><span class="result-emoji success">✔</span><span class="result-emoji success">✔</span></div>
-                        <div class="result-group"><span class="result-emoji success">✔</span><span class="result-emoji success">✔</span><span class="result-emoji success">✔</span><span class="result-emoji success">✔</span><span class="result-emoji error">✖</span></div>
-                        <div class="result-group"><span class="result-emoji success">✔</span><span class="result-emoji success">✔</span><span class="result-emoji success">✔</span><span class="result-emoji success">✔</span><span class="result-emoji success">✔</span></div>
-                        <div class="result-group"><span class="result-emoji success">✔</span><span class="result-emoji success">✔</span><span class="result-emoji success">✔</span><span class="result-emoji success">✔</span></div>
+                        <!-- Will be filled by JavaScript -->
                     </div>
                 </div>
             </div>
@@ -5477,100 +5496,12 @@ TYPE html>
             <!-- RIGHT PANEL: LEADERBOARD -->
             <div class="right-panel">
                 <div class="leaderboard-row top-3">
-                    <div class="leaderboard-rank">#1</div>
-                    <div class="leaderboard-medal">🥇</div>
-                    <div class="leaderboard-name">DenisSOARES</div>
-                    <div class="leaderboard-score">1500</div>
-                    <div class="leaderboard-grade">S</div>
-                    <div class="leaderboard-date">24/10/25 14:32</div>
-                </div>
-                <div class="leaderboard-row top-3">
-                    <div class="leaderboard-rank">#2</div>
-                    <div class="leaderboard-medal">🥈</div>
-                    <div class="leaderboard-name">Alexandre</div>
-                    <div class="leaderboard-score">1350</div>
-                    <div class="leaderboard-grade">A</div>
-                    <div class="leaderboard-date">24/10/25 14:28</div>
-                </div>
-                <div class="leaderboard-row top-3">
-                    <div class="leaderboard-rank">#3</div>
-                    <div class="leaderboard-medal">🥉</div>
-                    <div class="leaderboard-name">Sophie</div>
-                    <div class="leaderboard-score">1200</div>
-                    <div class="leaderboard-grade">A</div>
-                    <div class="leaderboard-date">24/10/25 14:25</div>
-                </div>
-                <div class="leaderboard-row">
-                    <div class="leaderboard-rank">#4</div>
-                    <div class="leaderboard-medal">🎖️</div>
-                    <div class="leaderboard-name">Michel</div>
-                    <div class="leaderboard-score">1050</div>
-                    <div class="leaderboard-grade">B</div>
-                    <div class="leaderboard-date">24/10/25 14:20</div>
-                </div>
-                <div class="leaderboard-row">
-                    <div class="leaderboard-rank">#5</div>
-                    <div class="leaderboard-medal">🎖️</div>
-                    <div class="leaderboard-name">Claire</div>
-                    <div class="leaderboard-score">950</div>
-                    <div class="leaderboard-grade">B</div>
-                    <div class="leaderboard-date">24/10/25 14:18</div>
-                </div>
-                <div class="leaderboard-row">
-                    <div class="leaderboard-rank">#6</div>
-                    <div class="leaderboard-medal">🎖️</div>
-                    <div class="leaderboard-name">Pierre</div>
-                    <div class="leaderboard-score">850</div>
-                    <div class="leaderboard-grade">C</div>
-                    <div class="leaderboard-date">24/10/25 14:15</div>
-                </div>
-                <div class="leaderboard-row">
-                    <div class="leaderboard-rank">#7</div>
-                    <div class="leaderboard-medal">🎖️</div>
-                    <div class="leaderboard-name">Isabelle</div>
-                    <div class="leaderboard-score">750</div>
-                    <div class="leaderboard-grade">C</div>
-                    <div class="leaderboard-date">24/10/25 14:10</div>
-                </div>
-                <div class="leaderboard-row">
-                    <div class="leaderboard-rank">#8</div>
-                    <div class="leaderboard-medal">🎖️</div>
-                    <div class="leaderboard-name">Francois</div>
-                    <div class="leaderboard-score">650</div>
-                    <div class="leaderboard-grade">D</div>
-                    <div class="leaderboard-date">24/10/25 14:08</div>
-                </div>
-                <div class="leaderboard-row">
-                    <div class="leaderboard-rank">#9</div>
-                    <div class="leaderboard-medal">🎖️</div>
-                    <div class="leaderboard-name">Marie</div>
-                    <div class="leaderboard-score">550</div>
-                    <div class="leaderboard-grade">D</div>
-                    <div class="leaderboard-date">24/10/25 14:05</div>
-                </div>
-                <div class="leaderboard-row">
-                    <div class="leaderboard-rank">#10</div>
-                    <div class="leaderboard-medal">🎖️</div>
-                    <div class="leaderboard-name">Jean</div>
-                    <div class="leaderboard-score">450</div>
-                    <div class="leaderboard-grade">E</div>
-                    <div class="leaderboard-date">24/10/25 14:02</div>
-                </div>
-                <div class="leaderboard-row">
-                    <div class="leaderboard-rank">#11</div>
-                    <div class="leaderboard-medal">🎖️</div>
-                    <div class="leaderboard-name">Luc</div>
-                    <div class="leaderboard-score">400</div>
-                    <div class="leaderboard-grade">E</div>
-                    <div class="leaderboard-date">24/10/25 13:58</div>
-                </div>
-                <div class="leaderboard-row">
-                    <div class="leaderboard-rank">#12</div>
-                    <div class="leaderboard-medal">🎖️</div>
-                    <div class="leaderboard-name">Monique</div>
-                    <div class="leaderboard-score">350</div>
-                    <div class="leaderboard-grade">E</div>
-                    <div class="leaderboard-date">24/10/25 13:55</div>
+                    <div class="leaderboard-rank"></div>
+                    <div class="leaderboard-medal"></div>
+                    <div class="leaderboard-name"></div>
+                    <div class="leaderboard-score"></div>
+                    <div class="leaderboard-grade"></div>
+                    <div class="leaderboard-date"></div>
                 </div>
             </div>
         </div>
