@@ -36,10 +36,40 @@
       border-bottom: 2px solid #00A8E9;
       padding: 12px 20px;
       display: flex;
-      justify-content: center;
+      justify-content: space-between;
       align-items: center;
       gap: 20px;
       box-shadow: 0 4px 20px rgba(0, 168, 233, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .windmill {
+      font-size: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      min-width: 50px;
+    }
+
+    .windmill-blades {
+      width: 40px;
+      height: 40px;
+      animation: windmill-spin 3s linear infinite;
+    }
+
+    @keyframes windmill-spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .windmill-wind {
+      font-size: 1.2rem;
+      animation: wind-wave 0.6s ease-in-out infinite;
+    }
+
+    @keyframes wind-wave {
+      0%, 100% { opacity: 0.3; transform: translateX(-2px); }
+      50% { opacity: 1; transform: translateX(2px); }
     }
 
     .timer-display { 
@@ -66,7 +96,7 @@
       border-radius: 15px; 
       overflow: hidden; 
       border: 2px solid rgba(0, 168, 233, 0.4);
-      box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 168, 233, 0.3);
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6);
       position: relative;
     }
 
@@ -77,14 +107,8 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: 
-        radial-gradient(circle at 20% 50%, transparent 8px, rgba(0, 168, 233, 0.2) 9px, rgba(0, 168, 233, 0.2) 20px, transparent 21px),
-        radial-gradient(circle at 60% 50%, transparent 8px, rgba(0, 168, 233, 0.2) 9px, rgba(0, 168, 233, 0.2) 20px, transparent 21px),
-        radial-gradient(circle at 100% 50%, transparent 8px, rgba(0, 168, 233, 0.2) 9px, rgba(0, 168, 233, 0.2) 20px, transparent 21px);
-      background-size: 80px 20px;
-      background-position: 0 0, 20px 0, 40px 0;
-      animation: wave-animation 2s linear infinite;
-      z-index: 1;
+      background: transparent;
+      z-index: 0;
     }
 
     @keyframes wave-animation {
@@ -104,6 +128,34 @@
         inset 0 1px 2px rgba(255, 255, 255, 0.3),
         inset 0 -1px 2px rgba(0, 0, 0, 0.5);
       position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+    }
+
+    .timer-fill::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: transparent;
+      z-index: 1;
+    }
+
+    .wind-effect {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.3);
+      font-weight: bold;
+      letter-spacing: -2px;
+      animation: wind-flow 2s linear infinite;
+      white-space: nowrap;
+      z-index: 2;
+      position: relative;
+    }
+
+    @keyframes wind-flow {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
     }
 
     @keyframes gradient-flow {
@@ -121,6 +173,7 @@
       background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.6), rgba(0, 168, 233, 0.3));
       filter: blur(8px);
       animation: edge-glow 1s ease-in-out infinite;
+      z-index: 2;
     }
 
     @keyframes edge-glow {
@@ -145,7 +198,7 @@
 
     .main-container {
       display: grid;
-      grid-template-columns: 1fr 350px;
+      grid-template-columns: 1fr 200px;
       height: calc(100vh - 85px);
       gap: 0;
     }
@@ -181,16 +234,43 @@
       height: calc(100vh - 85px);
     }
 
+    .inspection-content {
+      display: flex;
+      gap: 12px;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .canvas-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .inspection-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 160px;
+      flex-shrink: 0;
+    }
+
     .inspection-title {
-      font-size: 1.8rem;
+      font-size: 1.2rem;
       font-weight: 900;
       color: #FFD700;
       text-align: center;
-      margin-bottom: 10px;
-      letter-spacing: 2px;
+      padding: 6px 12px;
+      margin-bottom: 4px;
+      letter-spacing: 1px;
       text-transform: uppercase;
       text-shadow: 0 0 15px rgba(255, 215, 0, 0.8), 0 0 30px rgba(255, 215, 0, 0.4);
       animation: title-glow 2s ease-in-out infinite;
+      background: linear-gradient(90deg, rgba(2, 84, 160, 0.3) 0%, rgba(0, 168, 233, 0.3) 100%);
+      border-bottom: 2px solid #FFD700;
+      border-radius: 8px 8px 0 0;
     }
 
     @keyframes title-glow {
@@ -206,12 +286,48 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 8px;
+      margin-bottom: 4px;
+      max-height: calc(100vh - 200px);
+      padding: 8px;
+      background: rgba(0, 168, 233, 0.05);
+      border: 2px solid rgba(0, 168, 233, 0.3);
+      border-radius: 8px;
     }
 
     #productCanvas {
-      max-width: 100%;
-      max-height: 100%;
+      animation: product-transition 0.5s ease-out;
+    }
+
+    @keyframes product-transition {
+      0% { 
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      50% {
+        opacity: 0.5;
+        transform: scale(1.05);
+      }
+      100% { 
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .magnifier-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 12px;
+      background: rgba(255, 215, 0, 0.1);
+      border: 2px solid rgba(255, 215, 0, 0.3);
+      border-radius: 6px;
+      margin-bottom: 8px;
+      width: 100%;
+    }
+
+    #productCanvas {
+      max-width: 90%;
+      max-height: 90%;
       width: auto;
       height: auto;
       border: 3px solid #10B981;
@@ -228,43 +344,40 @@
       background: rgba(0, 168, 233, 0.15);
       border: 2px solid #00A8E9;
       border-radius: 8px;
-      padding: 10px 20px;
+      padding: 8px 16px;
       text-align: center;
       width: 100%;
       flex: 0 0 auto;
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 40px;
-      margin-bottom: 6px;
+      min-height: 35px;
+      margin-bottom: 4px;
     }
 
     .buttons-panel {
       display: flex;
+      flex-direction: column;
       gap: 8px;
       width: 100%;
-      justify-content: space-between;
-      align-items: center;
-      flex: 0 0 auto;
-      height: 45px;
     }
 
     .btn {
-      padding: 12px 16px;
+      padding: 14px 12px;
       border: none;
       border-radius: 8px;
       cursor: pointer;
       font-weight: 900;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       transition: all 0.3s;
       text-transform: uppercase;
       letter-spacing: 1px;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-      flex: 1;
-      height: 45px;
       display: flex;
       align-items: center;
       justify-content: center;
+      flex: 1;
+      min-height: 50px;
     }
 
     .btn.reject {
@@ -338,7 +451,6 @@
       transform: translate(-50%, -50%);
     }
 
-    /* DEFECT EMOJI ON CANVAS */
     .defect-emoji {
       position: absolute;
       font-size: 1.8rem;
@@ -352,7 +464,6 @@
       100% { transform: scale(1) rotate(360deg); opacity: 1; }
     }
 
-    /* PRODUCT STATUS ZONE */
     .product-status {
       background: rgba(0, 168, 233, 0.15);
       border: 2px solid #00A8E9;
@@ -414,31 +525,52 @@
     }
 
     .kpi-section {
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(0, 168, 233, 0.2);
       border: 2px solid #00A8E9;
       border-radius: 8px;
-      padding: 12px;
-      backdrop-filter: blur(10px);
+      padding: 12px 8px;
       flex: 0 0 auto;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .kpi-section.inspected {
+      background: rgba(128, 128, 128, 0.2);
+      border-color: #808080;
+    }
+
+    .kpi-section.well {
+      background: rgba(16, 185, 129, 0.2);
+      border-color: #10B981;
+    }
+
+    .kpi-section.quality {
+      background: rgba(255, 140, 0, 0.2);
+      border-color: #FF8C00;
+    }
+
+    .kpi-section.quality.high {
+      background: rgba(255, 215, 0, 0.2);
+      border-color: #FFD700;
     }
 
     .kpi-section-title {
-      font-size: 0.75rem;
+      font-size: 0.65rem;
       font-weight: 900;
       color: #FFD700;
       text-transform: uppercase;
-      margin-bottom: 8px;
-      border-bottom: 2px solid #00A8E9;
-      padding-bottom: 6px;
-      letter-spacing: 1.5px;
+      letter-spacing: 0.5px;
+      margin: 0;
     }
 
     .kpi-item {
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
       align-items: center;
-      margin-bottom: 8px;
-      padding: 6px 4px;
+      margin: 0;
+      padding: 0;
     }
 
     .kpi-item:last-child {
@@ -446,19 +578,41 @@
     }
 
     .kpi-label {
-      font-size: 0.65rem;
-      color: #00A8E9;
+      font-size: 0.6rem;
+      color: #999;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.3px;
+      margin-bottom: 2px;
     }
 
     .kpi-value {
-      font-size: 1.2rem;
+      font-size: 1.8rem;
       font-weight: 900;
       color: #10B981;
       font-family: 'Courier New', monospace;
       text-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+      line-height: 1;
+    }
+
+    .kpi-value.inspected {
+      color: #808080;
+      text-shadow: 0 0 10px rgba(128, 128, 128, 0.4);
+    }
+
+    .kpi-value.well {
+      color: #10B981;
+      text-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+    }
+
+    .kpi-value.quality {
+      color: #FF8C00;
+      text-shadow: 0 0 10px rgba(255, 140, 0, 0.4);
+    }
+
+    .kpi-value.quality.high {
+      color: #FFD700;
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
     }
 
     .quality-smiley {
@@ -618,6 +772,139 @@
     .leaderboard-table th { background: #0254A0; color: white; }
     .leaderboard-table tr:hover { background: rgba(0, 168, 233, 0.1); }
 
+    .leaderboard-container {
+      background: rgba(0, 0, 0, 0.3);
+      border: 3px solid #FFD700;
+      border-radius: 15px;
+      padding: 30px;
+      max-width: 1000px;
+      width: 95%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .leaderboard-layout {
+      display: grid;
+      grid-template-columns: 35% 65%;
+      gap: 30px;
+      margin-bottom: 20px;
+    }
+
+    .leaderboard-left {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .your-score-box {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(0, 168, 233, 0.2));
+      border: 3px solid #FFD700;
+      border-radius: 12px;
+      padding: 25px;
+      text-align: center;
+      width: 100%;
+    }
+
+    .score-title {
+      color: #FFD700;
+      font-size: 0.8rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+
+    .score-emoji {
+      font-size: 3rem;
+      margin-bottom: 15px;
+    }
+
+    .score-text {
+      color: #00A8E9;
+      font-weight: 900;
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+    }
+
+    .score-value {
+      color: #10B981;
+      font-weight: 900;
+      font-size: 2.5rem;
+      text-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
+      margin-bottom: 10px;
+    }
+
+    .score-ratio {
+      color: #FFD700;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .leaderboard-right {
+      background: rgba(0, 0, 0, 0.5);
+      border: 2px solid #00A8E9;
+      border-radius: 10px;
+      padding: 15px;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+
+    .leaderboard-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .leaderboard-row {
+      display: grid;
+      grid-template-columns: 50px 1fr 80px 50px;
+      gap: 10px;
+      padding: 10px;
+      background: rgba(0, 168, 233, 0.1);
+      border-radius: 6px;
+      align-items: center;
+      border-left: 3px solid #00A8E9;
+      transition: all 0.2s;
+    }
+
+    .leaderboard-row:hover {
+      background: rgba(0, 168, 233, 0.2);
+      border-left-color: #FFD700;
+    }
+
+    .leaderboard-row.highlight {
+      background: linear-gradient(90deg, rgba(255, 215, 0, 0.3), rgba(0, 168, 233, 0.2));
+      border-left-color: #FFD700;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+    }
+
+    .leaderboard-rank {
+      font-weight: 900;
+      color: #FFD700;
+      font-size: 1.1rem;
+      text-align: center;
+    }
+
+    .leaderboard-name {
+      color: #ccc;
+      font-weight: 700;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .leaderboard-score {
+      color: #10B981;
+      font-weight: 900;
+      text-align: right;
+    }
+
+    .leaderboard-grade {
+      color: #FFD700;
+      font-weight: 900;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
     .stats-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -642,6 +929,11 @@
       50% { transform: scale(1.2); }
     }
 
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
     @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
     @keyframes slideLeft { from { opacity: 0; transform: translateX(-50px); } to { opacity: 1; transform: translateX(0); } }
     @keyframes slideRight { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0); } }
@@ -649,7 +941,6 @@
     @keyframes firework { 0% { transform: translate(0, 0) scale(1); opacity: 1; } 100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; } }
     .firework { position: absolute; width: 10px; height: 10px; border-radius: 50%; pointer-events: none; }
 
-    /* === OVERLAY START INSPECTING === */
     .overlay-start-inspecting {
       position: fixed;
       top: 0;
@@ -753,7 +1044,6 @@
       box-shadow: 0 8px 20px rgba(239, 68, 68, 0.6);
     }
 
-    /* === COLLAPSIBLE SECTIONS === */
     .collapsible-header {
       display: flex;
       align-items: center;
@@ -761,9 +1051,11 @@
       cursor: pointer;
       user-select: none;
       transition: all 0.3s ease;
-      padding: 6px 0;
+      padding: 12px;
       font-size: 1.3rem;
       font-weight: 700;
+      margin: 0;
+      flex-wrap: wrap;
     }
 
     .collapsible-header:hover { transform: translateX(3px); }
@@ -777,18 +1069,36 @@
     .chevron.collapsed { transform: rotate(-90deg); }
 
     .collapsible-content {
-      max-height: 1000px;
+      max-height: 0;
       overflow: hidden;
-      transition: max-height 0.3s ease, opacity 0.3s ease;
-      opacity: 1;
+      transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
+      opacity: 0;
+      margin: 0;
+      padding: 0 !important;
     }
 
     .collapsible-content.collapsed {
       max-height: 0;
       opacity: 0;
+      padding: 0 !important;
+      overflow: hidden;
     }
 
-    /* === PLAYER NAME BOX === */
+    .collapsible-content:not(.collapsed) {
+      max-height: 600px;
+      opacity: 1;
+      padding: 0 12px 12px 12px !important;
+      overflow-y: auto;
+    }
+
+    #rulesContent:not(.collapsed) {
+      max-height: 550px;
+    }
+
+    #hallContent:not(.collapsed) {
+      max-height: 550px;
+    }
+
     .player-name-box {
       background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
       border: 3px solid white;
@@ -847,36 +1157,109 @@
     .validate-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255, 87, 22, 0.3); }
     .validate-btn:active { transform: translateY(0); }
 
-    .game-number { display: none; color: white; font-weight: bold; font-size: 0.8rem; margin-top: 10px; text-align: center; }
+    .game-number { display: none; }
 
-    /* RESPONSIVE DESIGN */
-    /* Simple layout PC/Mobile */
+    .history-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border: 2px solid #0254A0;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(2, 84, 160, 0.2);
+    }
+
+    .history-table thead {
+      background: linear-gradient(90deg, #0254A0 0%, #00A8E9 100%);
+      color: white;
+    }
+
+    .history-table th {
+      padding: 12px 10px;
+      font-weight: 900;
+      text-align: center;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .history-table td {
+      padding: 10px 10px;
+      text-align: center;
+      border-top: 1px solid #e0e0e0;
+      color: #0254A0;
+      font-weight: 700;
+      font-size: 0.8rem;
+      font-family: 'Courier New', monospace;
+    }
+
+    .history-table tbody tr:hover {
+      background: rgba(0, 168, 233, 0.1);
+    }
+
     .intro-content {
       display: grid;
-      grid-template-columns: 50% 50%;
+      grid-template-columns: 1fr 1fr;
       gap: 20px;
       width: 100%;
       margin: 0;
       padding: 0 20px;
       box-sizing: border-box;
+      height: auto;
+      max-height: fit-content;
+      align-items: start;
+    }
+
+    #rulesContainer,
+    #hallofFameContainer {
+      display: flex;
+      flex-direction: column;
+      min-height: auto;
+    }
+
+    #rulesContainer .collapsible-content,
+    #hallofFameContainer .collapsible-content {
+      flex: 1;
     }
 
     #rulesContainer {
       background: linear-gradient(135deg, rgba(2,84,160,0.95) 0%, rgba(0,168,233,0.85) 100%);
       border-radius: 12px;
-      padding: 20px;
       box-shadow: 0 15px 50px rgba(2,84,160,0.4), inset 0 0 30px rgba(255,255,255,0.1);
       animation: slideLeft 0.8s ease-out;
       border: 2px solid rgba(0,168,233,0.8);
+      overflow: hidden;
+      height: auto;
+      align-self: start;
+    }
+
+    #rulesContainer .collapsible-header {
+      padding: 12px;
+      margin: 0;
+    }
+
+    #rulesContainer .collapsible-content {
+      padding: 0 12px 12px 12px;
     }
 
     #hallofFameContainer {
       background: linear-gradient(135deg, rgba(255,87,22,0.95) 0%, rgba(255,150,22,0.85) 100%);
       border-radius: 12px;
-      padding: 20px;
       box-shadow: 0 15px 50px rgba(255,87,22,0.4), inset 0 0 30px rgba(255,255,255,0.1);
       animation: slideRight 0.8s ease-out;
       border: 2px solid rgba(255,200,100,0.8);
+      overflow: hidden;
+      height: auto;
+      align-self: start;
+    }
+
+    #hallofFameContainer .collapsible-header {
+      padding: 12px;
+      margin: 0;
+    }
+
+    #hallofFameContainer .collapsible-content {
+      padding: 0 12px 12px 12px;
     }
 
     @media (max-width: 600px) {
@@ -895,7 +1278,7 @@
   <div id="gameScreen" class="modal-overlay hidden" style="background: none; align-items: stretch; justify-content: stretch; inset: 0; position: fixed; flex-direction: column;">
     <div class="header">
       <div class="header-left">
-        <h1>⚡ QUALITY INSPECTOR</h1>
+        <h1>⚡ OFFSHORE EQUIPMENT INSPECTOR</h1>
       </div>
       <div class="header-right">
         <p>EDF POWER - Quality Week 2025</p>
@@ -904,31 +1287,51 @@
 
     <div class="timer-bar-full">
       <div class="timer-display" id="timeDisplay">5:00</div>
-      <div class="timer-bar"><div class="timer-fill" id="timerFill"></div></div>
+      <div class="windmill">
+        <svg class="windmill-blades" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <!-- Mât -->
+          <rect x="47" y="30" width="6" height="50" fill="#FFD700"/>
+          <!-- Base du mât -->
+          <circle cx="50" cy="82" r="6" fill="#FFD700"/>
+          <!-- Pales -->
+          <g id="blades">
+            <rect x="48" y="35" width="4" height="25" fill="#FF5716" rx="2"/>
+            <rect x="48" y="35" width="4" height="25" fill="#FF8C00" rx="2" transform="rotate(90 50 50)"/>
+            <rect x="48" y="35" width="4" height="25" fill="#FFB347" rx="2" transform="rotate(180 50 50)"/>
+            <rect x="48" y="35" width="4" height="25" fill="#FFA500" rx="2" transform="rotate(270 50 50)"/>
+          </g>
+          <!-- Cercle centre -->
+          <circle cx="50" cy="50" r="4" fill="#FFD700"/>
+        </svg>
+        <div class="windmill-wind">💨</div>
+      </div>
+      <div class="timer-bar"><div class="timer-fill" id="timerFill">
+        <div class="wind-effect">~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~</div>
+      </div></div>
     </div>
 
     <div class="stats-bar">
       <div class="stat-item">
-        <div class="stat-label">Produits</div>
+        <div class="stat-label">Equipment</div>
         <div class="stat-val" id="statsProducts">0</div>
       </div>
       <div class="stat-item">
-        <div class="stat-label">Bons</div>
+        <div class="stat-label">Good</div>
         <div class="stat-val" id="statsGood" style="color: #10B981;">0</div>
       </div>
       <div class="stat-item">
-        <div class="stat-label">Taux Qual.</div>
+        <div class="stat-label">Quality</div>
         <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
           <div class="stat-val warning" id="statsQuality">--%</div>
           <span id="qualitySmiley" style="font-size: 1.2rem;">😐</span>
         </div>
       </div>
       <div class="stat-item">
-        <div class="stat-label">Mauvais</div>
+        <div class="stat-label">Defects</div>
         <div class="stat-val danger" id="statsBad">0</div>
       </div>
       <div class="stat-item">
-        <div class="stat-label">Combo</div>
+        <div class="stat-label">Streak</div>
         <div class="stat-val" id="statsCombo" style="color: #00A8E9;">0</div>
       </div>
       <div class="stat-item">
@@ -939,74 +1342,59 @@
 
     <div class="main-container">
       <div class="center-area">
-        <div class="inspection-title">INSPECTION SCREEN</div>
-        <div class="canvas-container">
-          <canvas id="productCanvas" width="400" height="300"></canvas>
-        </div>
-        <div class="product-status">
-          <div class="status-message" id="productStatus">Inspect the product...</div>
-        </div>
-        <div class="buttons-panel">
-          <button class="btn approve" onclick="window.makeDecisionNow('good')">✅ GOOD</button>
-          <button class="btn reject" onclick="window.makeDecisionNow('reject')">❌ REJECT</button>
+        <div class="inspection-title">🔍 INSPECTION</div>
+        <div class="inspection-content">
+          <div class="canvas-wrapper">
+            <div class="product-status" style="margin-bottom: 8px;">
+              <div class="status-message" id="productStatus">Inspect the equipment...</div>
+            </div>
+            <div class="canvas-container">
+              <canvas id="productCanvas" width="400" height="300"></canvas>
+            </div>
+          </div>
+          <div class="inspection-controls">
+            <button class="btn approve" onclick="window.makeDecisionNow('good')">✅ ACCEPT</button>
+            <button class="btn reject" onclick="window.makeDecisionNow('reject')">❌ REJECT</button>
+          </div>
         </div>
       </div>
 
       <div class="right-panel">
-        <!-- QUALITY KPI -->
-        <div class="kpi-section">
-          <div class="kpi-section-title">📊 QUALITY KPI</div>
-          
+        <div class="kpi-section inspected">
+          <div class="kpi-section-title">📦 Scanned</div>
           <div class="kpi-item">
-            <span class="kpi-label">Well Inspected</span>
-            <span class="kpi-value" id="kpiWellInspected">0</span>
+            <span class="kpi-label">Equipment</span>
+            <span class="kpi-value inspected" id="kpiTotalInspected">0</span>
           </div>
-          
+        </div>
+
+        <div class="kpi-section well">
+          <div class="kpi-section-title">✅ Passed</div>
           <div class="kpi-item">
-            <span class="kpi-label">Inspected Products</span>
-            <span class="kpi-value" id="kpiTotalInspected">0</span>
+            <span class="kpi-label">Check</span>
+            <span class="kpi-value well" id="kpiWellInspected">0</span>
           </div>
-          
+        </div>
+
+        <div class="kpi-section quality">
+          <div class="kpi-section-title">⭐ Quality</div>
           <div class="kpi-item">
-            <span class="kpi-label">Quality Ratio</span>
-            <span class="kpi-value" id="kpiQualityRatio">0%</span>
+            <span class="kpi-label">Rate</span>
+            <span class="kpi-value quality" id="kpiQualityRatio">0%</span>
           </div>
-          
           <div class="quality-smiley" id="qualitySmiley">😐</div>
         </div>
 
-        <!-- PERFORMANCE KPI -->
         <div class="kpi-section">
-          <div class="kpi-section-title">📈 PERFORMANCE KPI</div>
-          
-          <div class="kpi-item">
-            <span class="kpi-label">Average Time</span>
-            <span class="kpi-value" id="kpiAvgTime">0s</span>
-          </div>
-          
+          <div class="kpi-section-title">📈 Performance</div>
           <div class="kpi-item">
             <span class="kpi-label">Score</span>
             <span class="kpi-value" id="kpiScore">0</span>
           </div>
-          
-          <!-- Mini Shewart Chart -->
-          <svg class="shewart-chart" id="shewartChart" viewBox="0 0 300 120" preserveAspectRatio="xMidYMid meet">
-            <!-- Axes -->
-            <line x1="30" y1="100" x2="280" y2="100" stroke="#10B981" stroke-width="2"/>
-            <line x1="30" y1="10" x2="30" y2="100" stroke="#10B981" stroke-width="2"/>
-            
-            <!-- Limites -->
-            <line x1="30" y1="20" x2="280" y2="20" stroke="#FF6B6B" stroke-width="1" stroke-dasharray="5,5"/>
-            <line x1="30" y1="80" x2="280" y2="80" stroke="#FF6B6B" stroke-width="1" stroke-dasharray="5,5"/>
-            <line x1="30" y1="50" x2="280" y2="50" stroke="#FFD700" stroke-width="2"/>
-            
-            <!-- Points (5 derniers produits) -->
-            <circle cx="80" cy="60" r="3" fill="#00A8E9"/>
-            <circle cx="130" cy="55" r="3" fill="#00A8E9"/>
-            <circle cx="180" cy="65" r="3" fill="#00A8E9"/>
-            <circle cx="230" cy="50" r="3" fill="#00A8E9"/>
-            <circle cx="270" cy="45" r="3" fill="#10B981"/>
-          </svg>
+          <div class="kpi-item">
+            <span class="kpi-label">Avg Time</span>
+            <span class="kpi-value" id="kpiAvgTime">0s</span>
+          </div>
         </div>
 
         <button class="quit-btn" onclick="window.quitGameNow()" style="margin-top: auto;">🚪 I GIVE UP!</button>
@@ -1057,24 +1445,29 @@
   </div>
 
   <!-- LEADERBOARD -->
-  <div id="leaderboardScreen" class="modal-overlay hidden">
-    <div class="modal" style="max-width: 800px; max-height: 90vh; display: flex; flex-direction: column;">
-      <h1 style="margin-bottom: 20px;">🏆 LEADERBOARD - TOP 20</h1>
-      <table class="leaderboard-table" style="flex: 1; overflow-y: auto; max-height: 500px;">
-        <thead style="position: sticky; top: 0; background: #0254A0;">
-          <tr>
-            <th>#</th>
-            <th>NAME</th>
-            <th>SCORE</th>
-            <th>INSP.</th>
-            <th>GOOD</th>
-            <th>RATIO</th>
-            <th>GRADE</th>
-          </tr>
-        </thead>
-        <tbody id="leaderboardBody"></tbody>
-      </table>
-      <button class="btn-primary" style="margin-top: 20px;" onclick="window.showIntroScreenNow()">PLAY AGAIN</button>
+  <div id="leaderboardScreen" class="modal-overlay hidden" style="background: linear-gradient(135deg, #0254A0 0%, #00A8E9 100%); align-items: center; justify-content: center;">
+    <div class="leaderboard-container">
+      <h1 style="text-align: center; font-size: 2.5rem; font-weight: 900; color: #FFD700; margin-bottom: 30px; text-shadow: 0 0 20px rgba(255, 215, 0, 0.6);">🏆 LEADERBOARD</h1>
+      
+      <div class="leaderboard-layout">
+        <div class="leaderboard-left">
+          <div class="your-score-box">
+            <div class="score-title">YOUR PERFORMANCE</div>
+            <div class="score-emoji" id="finalEmoji">🎯</div>
+            <div class="score-text" id="finalPlayerText">Amazing!</div>
+            <div class="score-value" id="finalPlayerScore">0</div>
+            <div class="score-ratio" id="finalPlayerRatio">0/0 = 0%</div>
+            <div style="font-size: 0.8rem; color: #00A8E9; margin-top: 8px; font-weight: 700;">QUALITY RATIO</div>
+          </div>
+        </div>
+        
+        <div class="leaderboard-right">
+          <div class="leaderboard-list" id="leaderboardList">
+          </div>
+        </div>
+      </div>
+      
+      <button class="btn-primary" style="margin-top: 30px; width: 100%;" onclick="window.showIntroScreenNow()">PLAY AGAIN</button>
     </div>
   </div>
 
@@ -1083,27 +1476,26 @@
     
     <h1 style="font-size: 2.8rem; font-weight: 900; color: white; text-shadow: 0 0 20px rgba(255,255,255,0.3); margin-bottom: 20px; margin-top: 20px; animation: bounce 2s infinite; cursor: pointer;" id="titleHeart" onclick="window.showEasterEggNow()">🔍 Quality Week 2025 💗</h1>
     
-    <!-- PLAYER NAME BOX -->
     <div class="player-name-box">
       <label class="player-name-label">👤 Enter Your Name:</label>
-      <input type="text" id="playerNameInput" class="player-name-input" placeholder="Type your name..." maxlength="30" onkeypress="if(event.key==='Enter') window.validatePlayerNameNow()">
-      <button class="validate-btn" onclick="window.validatePlayerNameNow()">✓ Validate Name</button>
+      <div style="position: relative; display: flex; align-items: center;">
+        <input type="text" id="playerNameInput" class="player-name-input" placeholder="Type your name..." maxlength="30" onkeypress="if(event.key==='Enter') window.validatePlayerNameNow()" style="flex: 1; margin-bottom: 0 !important; padding-right: 35px !important;">
+        <button id="clearNameBtn" onclick="window.clearPlayerName()" style="position: absolute; right: 8px; background: none; border: none; cursor: pointer; font-size: 1.5rem; color: rgba(2, 84, 160, 0.8); transition: all 0.2s; display: none; padding: 0; width: 30px; height: 30px; line-height: 30px; text-align: center;" title="Clear name">✕</button>
+      </div>
+      <button class="validate-btn" onclick="window.validatePlayerNameNow()" style="margin-top: 10px;">✓ Validate Name</button>
       <div class="game-number" id="gameNumberBox">Game #<span id="gameNumber">1</span></div>
     </div>
 
-    <!-- Conteneur flexible pour PC et Mobile -->
     <div class="intro-content">
       
-      <!-- HOW TO PLAY -->
       <div id="rulesContainer">
-        <div class="collapsible-header" onclick="window.toggleCollapse('rulesContent')" style="font-size: 1.4rem; padding: 6px 0; margin-bottom: 8px;">
+        <div class="collapsible-header" onclick="window.toggleCollapse('rulesContent')">
           <span class="chevron collapsed" id="rulesChevron">▶</span>
           <span style="color: white; font-weight: 900; text-shadow: 0 2px 8px rgba(0,0,0,0.3);" id="rulesTrigger">📋 HOW TO PLAY</span>
         </div>
         <div id="rulesContent" class="collapsible-content collapsed">
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; background: rgba(0,0,0,0.4); padding: 15px; border-radius: 10px;">
             
-            <!-- QUALITY FOCUS (Vert) -->
             <div style="background: rgba(16,185,129,0.25); border: 2px solid #10B981; border-radius: 8px; padding: 12px;">
               <div style="text-align: center; margin-bottom: 8px;">
                 <div style="font-size: 2rem; margin-bottom: 4px;">⏱️ 🔍</div>
@@ -1117,7 +1509,6 @@
               </div>
             </div>
 
-            <!-- SPEED FOCUS (Rouge) -->
             <div style="background: rgba(239,68,68,0.25); border: 2px solid #EF4444; border-radius: 8px; padding: 12px;">
               <div style="text-align: center; margin-bottom: 8px;">
                 <div style="font-size: 2rem; margin-bottom: 4px;">⚡ 💨</div>
@@ -1133,7 +1524,6 @@
 
           </div>
 
-          <!-- BALANCE -->
           <div style="background: rgba(0,0,0,0.4); border: 2px solid #00A8E9; border-radius: 8px; padding: 12px; margin-top: 10px; text-align: center;">
             <div style="font-size: 0.9rem; font-weight: 900; color: #FFD700; margin-bottom: 4px;">⚖️ FIND YOUR BALANCE</div>
             <div style="font-size: 0.75rem; color: #FFFFFF; font-weight: 700; text-shadow: 0 1px 3px rgba(0,0,0,0.5);">
@@ -1143,18 +1533,38 @@
         </div>
       </div>
 
-      <!-- HALL OF FAME -->
       <div id="hallofFameContainer">
-        <div class="collapsible-header" onclick="window.toggleCollapse('hallContent')" style="font-size: 1.4rem; padding: 6px 0; margin-bottom: 8px;">
-          <span class="chevron collapsed" id="hallChevron">▶</span>
-          <span style="color: white; font-weight: 900; text-shadow: 0 2px 8px rgba(0,0,0,0.3);" id="leaderboardTitle">🏆 HALL OF FAME</span>
+        <div class="collapsible-header" onclick="window.toggleCollapse('hallContent')" style="justify-content: space-between;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span class="chevron collapsed" id="hallChevron">▶</span>
+            <span style="color: white; font-weight: 900; text-shadow: 0 2px 8px rgba(0,0,0,0.3);" id="leaderboardTitle">🏆 HALL OF FAME</span>
+          </div>
+          <div id="hallUpdateTime" style="font-size: 0.65rem; color: #FFD700; font-weight: 700; background: rgba(255, 215, 0, 0.12); padding: 5px 12px; border-radius: 20px; border: 1.5px solid rgba(255, 215, 0, 0.3); letter-spacing: 0.3px; display: flex; align-items: center; gap: 6px; transition: all 0.3s ease; box-shadow: 0 0 10px rgba(255, 215, 0, 0.15);">
+            <span style="font-size: 0.75rem; display: inline-block; animation: spin 2s linear infinite;">🔄</span>
+            <span id="updateTimeText" style="font-family: 'Courier New', monospace; white-space: nowrap;">--:--:--</span>
+          </div>
         </div>
-        <div id="hallContent" class="collapsible-content collapsed" style="max-height: 350px; overflow-y: auto;">
-          <div id="introLeaderboardList" style="display: flex; flex-direction: column; gap: 0; background: transparent; border-radius: 8px; border: none; overflow: hidden; margin-top: 10px;">
+        <div id="hallContent" class="collapsible-content collapsed">
+          <div id="introLeaderboardList" style="display: flex; flex-direction: column; gap: 0; background: transparent; border-radius: 8px; border: none; overflow: hidden; margin-top: 10px; padding-right: 8px;">
             <div style="text-align: center; color: rgba(255,255,255,0.95); font-weight: bold; font-size: 0.95rem;"><p style="margin-bottom: 3px;">⭐ No scores yet!</p><p>Be the first!</p></div>
           </div>
         </div>
       </div>
+    </div>
+
+    <div id="historyTableContainer" style="display: none; margin-top: 30px; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto;">
+      <div style="color: #00A8E9; font-weight: 900; font-size: 0.9rem; margin-bottom: 10px; text-transform: uppercase;" id="historyTableTitle">📊 Your Previous Games</div>
+      <table class="history-table">
+        <thead>
+          <tr>
+            <th style="width: 45%;">Date & Time</th>
+            <th style="width: 27%;">Score</th>
+            <th style="width: 28%;">Quality</th>
+          </tr>
+        </thead>
+        <tbody id="historyTableBody">
+        </tbody>
+      </table>
     </div>
 
     <button id="startGameBtn" onclick="window.startGameNow()" disabled style="margin-top: 20px; padding: 14px 40px; font-size: 1.2rem; font-weight: 900; color: white; background: linear-gradient(135deg, #FF5716 0%, #E84E0F 100%); border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 10px 40px rgba(255,87,22,0.4); animation: pulse 2s infinite; text-transform: uppercase; letter-spacing: 1px; opacity: 0.5; transition: opacity 0.3s;">▶ START GAME</button>
@@ -1164,12 +1574,10 @@
   <div id="easterOverlay" style="position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: none; z-index: 9999; align-items: center; justify-content: center; padding: 40px;">
     <div style="display: flex; gap: 60px; width: 100%; max-width: 1000px; align-items: center; justify-content: center;">
       
-      <!-- PHOTO À GAUCHE -->
       <div style="flex: 0 0 auto; animation: slideLeft 0.8s ease-out;">
         <img src="/img/qualiteam.jpg" style="width: 280px; height: 350px; object-fit: cover; border: 4px solid #FF5716; border-radius: 20px; box-shadow: 0 20px 60px rgba(255, 87, 22, 0.6);">
       </div>
       
-      <!-- TEXTE ET CŒUR À DROITE -->
       <div style="flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 25px; animation: slideRight 0.8s ease-out;">
         <div style="font-size: 4rem; animation: heartbeat 1.5s ease-in-out infinite; filter: drop-shadow(0 0 15px #FF1493) drop-shadow(0 0 30px #FF69B4);">💗</div>
         <div style="font-size: 2.2rem; font-weight: bold; color: #FF5716; text-align: center; letter-spacing: 2px; text-shadow: 0 0 10px rgba(255,87,22,0.5);">Made with Love</div>
@@ -1214,7 +1622,13 @@
       en: { E: { emoji: '😅', messages: ['Keep practicing!'] }, D: { emoji: '😐', messages: ['Not bad!'] }, C: { emoji: '👍', messages: ['Pretty good!'] }, B: { emoji: '😊', messages: ['Brilliant!'] }, A: { emoji: '🤩', messages: ['Awesome!'] }, S: { emoji: '👑', messages: ['SPLENDID!'] } }
     };
 
-    // === COLLAPSE/EXPAND FUNCTIONS ===
+    function formatTimeOnly(date) {
+      const hours = String(date.getHours()).padStart(2, '0');
+      const mins = String(date.getMinutes()).padStart(2, '0');
+      const secs = String(date.getSeconds()).padStart(2, '0');
+      return `${hours}:${mins}:${secs}`;
+    }
+
     window.toggleCollapse = function(contentId) {
       const content = document.getElementById(contentId);
       const isCollapsed = content.classList.contains('collapsed');
@@ -1231,48 +1645,126 @@
     };
 
     window.expandAllSections = function() {
-      // Expand How to Play
       document.getElementById('rulesContent').classList.remove('collapsed');
       document.getElementById('rulesChevron').classList.remove('collapsed');
       
-      // Expand Hall of Fame
       document.getElementById('hallContent').classList.remove('collapsed');
       document.getElementById('hallChevron').classList.remove('collapsed');
     };
 
-    // === PLAYER NAME VALIDATION ===
     window.validatePlayerNameNow = function() {
       const input = document.getElementById('playerNameInput');
+      const clearBtn = document.getElementById('clearNameBtn');
       playerName = input.value.trim();
-      if (!playerName) { alert('Please enter a name!'); return; }
+      
+      console.log('validatePlayerNameNow called, name:', playerName);
+      
+      if (!playerName) { 
+        alert('Please enter a name!'); 
+        return; 
+      }
       
       playerNameValidated = true;
+      console.log('playerNameValidated set to true');
+      
       localStorage.setItem('playerName', playerName);
       input.disabled = true;
-      document.getElementById('gameNumberBox').style.display = 'block';
+      clearBtn.style.display = 'block';
+      clearBtn.onmouseover = function() { this.style.color = 'rgba(2, 84, 160, 1)'; };
+      clearBtn.onmouseout = function() { this.style.color = 'rgba(2, 84, 160, 0.6)'; };
+      document.getElementById('gameNumberBox').style.display = 'none';
       
-      // Enable START GAME button
-      document.getElementById('startGameBtn').disabled = false;
-      document.getElementById('startGameBtn').style.opacity = '1';
-      document.getElementById('startGameBtn').style.cursor = 'pointer';
+      document.getElementById('historyTableTitle').textContent = `📊 ${playerName}'s Previous Games`;
       
-      // Expand sections
+      const leaderboard = JSON.parse(localStorage.getItem('leaderboard') || '[]');
+      const playerGames = leaderboard.filter(s => s.name === playerName);
+      
+      if (playerGames.length > 0) {
+        const tbody = document.getElementById('historyTableBody');
+        tbody.innerHTML = playerGames.slice(0, 10).map(game => `
+          <tr>
+            <td>${new Date(game.date || Date.now()).toLocaleString()}</td>
+            <td>${game.score}</td>
+            <td>${game.quality}%</td>
+          </tr>
+        `).join('');
+        document.getElementById('historyTableContainer').style.display = 'block';
+      }
+      
+      const startBtn = document.getElementById('startGameBtn');
+      startBtn.disabled = false;
+      startBtn.style.opacity = '1';
+      startBtn.style.cursor = 'pointer';
+      console.log('START button enabled');
+      
       window.expandAllSections();
       
-      // Scroller vers les sections HOW TO PLAY et HALL OF FAME
       setTimeout(() => {
-        document.getElementById('rulesContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        document.getElementById('historyTableContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 100);
     };
 
+    window.clearPlayerName = function() {
+      const input = document.getElementById('playerNameInput');
+      const clearBtn = document.getElementById('clearNameBtn');
+      input.value = '';
+      input.disabled = false;
+      input.focus();
+      clearBtn.style.display = 'none';
+      playerName = '';
+      playerNameValidated = false;
+      
+      document.getElementById('startGameBtn').disabled = true;
+      document.getElementById('startGameBtn').style.opacity = '0.5';
+      
+      // Replier les sections
+      document.getElementById('rulesContent').classList.add('collapsed');
+      document.getElementById('rulesChevron').classList.add('collapsed');
+      document.getElementById('hallContent').classList.add('collapsed');
+      document.getElementById('hallChevron').classList.add('collapsed');
+      
+      document.getElementById('historyTableContainer').style.display = 'none';
+    };
+
     window.startGameNow = function() {
-      if (!playerNameValidated) return;
+      console.log('startGameNow called, playerNameValidated:', playerNameValidated);
+      if (!playerNameValidated) {
+        console.warn('Player name not validated!');
+        alert('Please validate your name first!');
+        return;
+      }
+      console.log('Launching game directly...');
       
+      // Cacher l'intro
       const intro = document.getElementById('introScreenAnimated');
-      const game = document.getElementById('gameScreen');
-      if (intro) intro.style.display = 'none';
-      if (game) game.classList.remove('hidden');
+      if (intro) {
+        intro.style.display = 'none';
+        console.log('Intro hidden');
+      }
       
+      // S'assurer que les écrans de fin sont cachés
+      const endScreen = document.getElementById('endGameScreen');
+      const leaderboard = document.getElementById('leaderboardScreen');
+      if (endScreen) {
+        endScreen.classList.add('hidden');
+        console.log('End screen hidden');
+      }
+      if (leaderboard) {
+        leaderboard.classList.add('hidden');
+        console.log('Leaderboard hidden');
+      }
+      
+      // Afficher le jeu
+      const game = document.getElementById('gameScreen');
+      if (game) {
+        game.classList.remove('hidden');
+        game.style.display = 'flex';
+        console.log('Game shown');
+      } else {
+        console.error('Game screen not found!');
+      }
+      
+      // Initialiser le jeu
       gameActive = true;
       gameStartTime = Date.now();
       correctCombo = 0;
@@ -1284,8 +1776,11 @@
         allProducts.push({ name: 'Product ' + i, id: i, value: 100 + Math.random() * 100, defects: Math.random() > 0.6 ? [{ name: 'Defect' }] : [] });
       }
       
+      console.log('Generated', allProducts.length, 'products');
+      
       loadNextProduct();
       startGameTimer();
+      console.log('Game started!');
     };
 
     window.makeDecisionNow = function(decision) {
@@ -1319,8 +1814,358 @@
         return;
       }
       currentProduct = allProducts[currentProductIndex];
+      currentDefects = currentProduct.defects || [];
+      foundDefects = [];
       productStartTime = Date.now();
+      
+      // Trigger animation
+      const canvas = document.getElementById('productCanvas');
+      if (canvas) {
+        // Remove and re-add animation
+        canvas.style.animation = 'none';
+        setTimeout(() => {
+          canvas.style.animation = 'product-transition 0.5s ease-out';
+        }, 10);
+      }
+      
+      // Draw product
+      drawProduct();
       updateStats();
+    }
+    
+    function drawProduct() {
+      const canvas = document.getElementById('productCanvas');
+      if (!canvas) return;
+      
+      const ctx = canvas.getContext('2d');
+      const width = canvas.width;
+      const height = canvas.height;
+      
+      // Ocean gradient background
+      const gradient = ctx.createLinearGradient(0, 0, 0, height);
+      gradient.addColorStop(0, '#E8F4F8');
+      gradient.addColorStop(1, '#B0E0E6');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, width, height);
+      
+      // Border
+      ctx.strokeStyle = '#00A8E9';
+      ctx.lineWidth = 3;
+      ctx.strokeRect(0, 0, width, height);
+      
+      const centerX = width / 2;
+      const centerY = height / 2;
+      
+      // Defect types for offshore equipment
+      const defectTypes = [
+        { emoji: '🔴', name: 'Corrosion' },
+        { emoji: '⚫', name: 'Salt Stain' },
+        { emoji: '🟡', name: 'Discoloration' },
+        { emoji: '❌', name: 'Crack' },
+        { emoji: '💥', name: 'Impact' }
+      ];
+      
+      // Draw random offshore equipment based on currentProductIndex
+      const productType = currentProductIndex % 4;
+      
+      if (productType === 0) {
+        // Draw turbine blade section
+        drawBlade(ctx, centerX, centerY);
+      } else if (productType === 1) {
+        // Draw foundation bolt
+        drawFoundationBolt(ctx, centerX, centerY);
+      } else if (productType === 2) {
+        // Draw cable connector
+        drawCableConnector(ctx, centerX, centerY);
+      } else {
+        // Draw tower section
+        drawTowerSection(ctx, centerX, centerY);
+      }
+      
+      // Draw defects if any - positioned ON the product
+      if (currentDefects && currentDefects.length > 0) {
+        currentDefects.forEach((defect, i) => {
+          // Position défauts selon le type de produit
+          let x, y;
+          const productType = currentProductIndex % 4;
+          
+          if (productType === 0) {
+            // Blade - position sur la lame
+            const angle = (i / currentDefects.length) * Math.PI * 2 - Math.PI / 2;
+            x = centerX + Math.cos(angle) * 40;
+            y = centerY + Math.sin(angle) * 60;
+          } else if (productType === 1) {
+            // Bolt - position sur le boulon
+            const radius = 35 + (i % 2) * 30;
+            const angle = (i / currentDefects.length) * Math.PI * 2;
+            x = centerX + Math.cos(angle) * radius;
+            y = centerY - 20 + Math.sin(angle) * radius;
+          } else if (productType === 2) {
+            // Connector - position sur le connecteur
+            x = centerX - 35 + (i % 3) * 35;
+            y = centerY - 15 + Math.floor(i / 3) * 30;
+          } else {
+            // Tower - position sur la tour
+            x = centerX - 30 + (i % 3) * 30;
+            y = centerY - 60 + Math.floor(i / 3) * 60;
+          }
+          
+          if (!defect.x) {
+            defect.x = x;
+            defect.y = y;
+            defect.type = defectTypes[i % defectTypes.length];
+          }
+          
+          // Red defect marker
+          ctx.fillStyle = '#FF0000';
+          ctx.beginPath();
+          ctx.arc(x, y, 8, 0, Math.PI * 2);
+          ctx.fill();
+          
+          // White border
+          ctx.strokeStyle = '#FFFFFF';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+          
+          // Defect label
+          ctx.fillStyle = '#333333';
+          ctx.font = 'bold 14px Arial';
+          ctx.textAlign = 'center';
+          
+          const emoji = defect.type.emoji;
+          const name = defect.type.name;
+          
+          ctx.fillText(emoji, x, y - 25);
+          ctx.font = 'bold 11px Arial';
+          ctx.fillStyle = '#FF0000';
+          ctx.fillText(name, x, y - 10);
+        });
+      }
+      
+      updateProductStatus();
+    }
+    
+    function drawBlade(ctx, x, y) {
+      // Turbine blade section
+      ctx.fillStyle = '#F5F5F5';
+      ctx.beginPath();
+      ctx.ellipse(x, y, 50, 90, Math.PI / 6, 0, Math.PI * 2);
+      ctx.fill();
+      
+      ctx.strokeStyle = '#333333';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      
+      // Surface pattern
+      ctx.strokeStyle = '#CCCCCC';
+      ctx.lineWidth = 1;
+      for (let i = -3; i < 3; i++) {
+        ctx.beginPath();
+        ctx.moveTo(x + i * 15, y - 90);
+        ctx.lineTo(x + i * 15, y + 90);
+        ctx.stroke();
+      }
+      
+      // Label
+      ctx.fillStyle = '#555555';
+      ctx.font = 'bold 12px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText('BLADE SECTION', x, y + 110);
+    }
+    
+    function drawFoundationBolt(ctx, x, y) {
+      // Large bolt
+      const boltSize = 40;
+      
+      // Bolt head
+      ctx.fillStyle = '#C0C0C0';
+      ctx.beginPath();
+      ctx.arc(x, y - 20, boltSize, 0, Math.PI * 2);
+      ctx.fill();
+      
+      ctx.strokeStyle = '#808080';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      
+      // Hexagon pattern
+      ctx.strokeStyle = '#999999';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      for (let i = 0; i < 6; i++) {
+        const angle = (i / 6) * Math.PI * 2;
+        const px = x + Math.cos(angle) * 25;
+        const py = y - 20 + Math.sin(angle) * 25;
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+      ctx.stroke();
+      
+      // Bolt shaft
+      ctx.fillStyle = '#A9A9A9';
+      ctx.fillRect(x - 15, y, 30, 80);
+      
+      ctx.strokeStyle = '#808080';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(x - 15, y, 30, 80);
+      
+      // Threading
+      ctx.strokeStyle = '#999999';
+      ctx.lineWidth = 1;
+      for (let i = 0; i < 5; i++) {
+        ctx.beginPath();
+        ctx.moveTo(x - 15, y + i * 20);
+        ctx.lineTo(x + 15, y + i * 20);
+        ctx.stroke();
+      }
+      
+      // Label
+      ctx.fillStyle = '#555555';
+      ctx.font = 'bold 12px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText('FOUNDATION BOLT', x, y + 115);
+    }
+    
+    function drawCableConnector(ctx, x, y) {
+      // Cable connector with multiple pins
+      ctx.fillStyle = '#FFD700';
+      ctx.beginPath();
+      ctx.rect(x - 45, y - 35, 90, 70);
+      ctx.fill();
+      
+      ctx.strokeStyle = '#FF8C00';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      
+      // Connection points (pins)
+      for (let i = 0; i < 4; i++) {
+        ctx.fillStyle = '#C0C0C0';
+        ctx.beginPath();
+        ctx.arc(x - 25 + i * 17, y + 25, 5, 0, Math.PI * 2);
+        ctx.fill();
+        
+        ctx.strokeStyle = '#808080';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+      
+      // Cable ports
+      ctx.fillStyle = '#444444';
+      ctx.fillRect(x - 50, y - 10, 8, 20);
+      ctx.fillRect(x + 42, y - 10, 8, 20);
+      
+      // Label
+      ctx.fillStyle = '#555555';
+      ctx.font = 'bold 12px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText('CABLE CONNECTOR', x, y + 60);
+    }
+    
+    function drawTowerSection(ctx, x, y) {
+      // Tower section
+      ctx.fillStyle = '#E8E8E8';
+      ctx.beginPath();
+      ctx.rect(x - 40, y - 70, 80, 140);
+      ctx.fill();
+      
+      ctx.strokeStyle = '#333333';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      
+      // Weld points
+      ctx.fillStyle = '#FF6B6B';
+      for (let i = 0; i < 3; i++) {
+        ctx.beginPath();
+        ctx.arc(x - 50, y - 40 + i * 70, 4, 0, Math.PI * 2);
+        ctx.fill();
+        
+        ctx.beginPath();
+        ctx.arc(x + 50, y - 40 + i * 70, 4, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      
+      // Rust/corrosion spots
+      ctx.fillStyle = 'rgba(139, 69, 19, 0.3)';
+      for (let i = 0; i < 8; i++) {
+        ctx.beginPath();
+        ctx.arc(x - 30 + Math.random() * 60, y - 50 + Math.random() * 100, Math.random() * 6 + 2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      
+      // Label
+      ctx.fillStyle = '#555555';
+      ctx.font = 'bold 12px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText('TOWER SECTION', x, y + 95);
+    }
+    
+    function updateProductStatus() {
+      const status = document.getElementById('productStatus');
+      if (!status) return;
+      
+      if (currentDefects.length === 0) {
+        status.textContent = '✅ Equipment is good!';
+        status.style.color = '#10B981';
+      } else {
+        status.textContent = `⚠️ Found ${currentDefects.length - foundDefects.length} defect(s)`;
+        status.style.color = '#FF5716';
+      }
+    }
+    
+    // Gérer les clics sur le canvas pour trouver les défauts
+    document.addEventListener('DOMContentLoaded', function() {
+      const canvas = document.getElementById('productCanvas');
+      if (canvas) {
+        canvas.addEventListener('click', function(e) {
+          if (!gameActive || currentDefects.length === 0) return;
+          
+          const rect = canvas.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          
+          // Vérifier si un défaut est cliqué
+          for (let defect of currentDefects) {
+            if (!foundDefects.includes(defect)) {
+              const dist = Math.sqrt((x - defect.x) ** 2 + (y - defect.y) ** 2);
+              if (dist < 15) {
+                foundDefects.push(defect);
+                drawDefectFound(defect.x, defect.y);
+                
+                if (foundDefects.length === currentDefects.length) {
+                  updateProductStatus();
+                }
+                return;
+              }
+            }
+          }
+        });
+      }
+    });
+    
+    function drawDefectFound(x, y) {
+      const canvas = document.getElementById('productCanvas');
+      if (!canvas) return;
+      
+      const ctx = canvas.getContext('2d');
+      // Redessiner le défaut en vert (trouvé)
+      ctx.fillStyle = '#10B981';
+      ctx.beginPath();
+      ctx.arc(x, y, 8, 0, Math.PI * 2);
+      ctx.fill();
+      
+      // Bordure blanche
+      ctx.strokeStyle = '#FFFFFF';
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+      
+      // Ajouter une checkmark visible
+      ctx.strokeStyle = '#FFFFFF';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.moveTo(x - 3, y);
+      ctx.lineTo(x, y + 3);
+      ctx.lineTo(x + 4, y - 2);
+      ctx.stroke();
     }
 
     function showFeedback(msg, isGood) {
@@ -1378,7 +2223,8 @@
         good_count: gameStats.productsGood,
         total_count: gameStats.productsInspected,
         quality: gameStats.quality,
-        avg_time: (gameStats.productsInspected > 0 ? (gameStats.totalInspectionTime / gameStats.productsInspected).toFixed(1) : 0)
+        avg_time: (gameStats.productsInspected > 0 ? (gameStats.totalInspectionTime / gameStats.productsInspected).toFixed(1) : 0),
+        date: new Date().toISOString()
       };
       
       const local = JSON.parse(localStorage.getItem('leaderboard') || '[]');
@@ -1387,17 +2233,34 @@
       if (local.length > 100) local.pop();
       localStorage.setItem('leaderboard', JSON.stringify(local));
       
+      loadLeaderboardFromSupabase();
       showLeaderboardNow();
     };
 
     function showLeaderboardNow() {
       const local = JSON.parse(localStorage.getItem('leaderboard') || '[]');
-      const tbody = document.getElementById('leaderboardBody');
-      tbody.innerHTML = '';
+      const list = document.getElementById('leaderboardList');
+      list.innerHTML = '';
+      
+      const playerRank = local.findIndex(s => s.name === playerName && s.score === gameStats.totalScore) + 1;
+      
+      document.getElementById('finalEmoji').textContent = RANK_MESSAGES[currentLanguage][gameStats.quality >= 90 ? 'S' : gameStats.quality >= 75 ? 'A' : gameStats.quality >= 60 ? 'B' : gameStats.quality >= 40 ? 'C' : gameStats.quality >= 20 ? 'D' : 'E'].emoji;
+      document.getElementById('finalPlayerText').textContent = RANK_MESSAGES[currentLanguage][gameStats.quality >= 90 ? 'S' : gameStats.quality >= 75 ? 'A' : gameStats.quality >= 60 ? 'B' : gameStats.quality >= 40 ? 'C' : gameStats.quality >= 20 ? 'D' : 'E'].messages[0];
+      document.getElementById('finalPlayerScore').textContent = gameStats.totalScore;
+      document.getElementById('finalPlayerRatio').textContent = `${gameStats.productsGood}/${gameStats.productsInspected} = ${gameStats.quality}%`;
       
       local.slice(0, 20).forEach((s, i) => {
-        const g = s.quality >= 90 ? 'S' : s.quality >= 75 ? 'A' : s.quality >= 60 ? 'B' : 'C';
-        tbody.innerHTML += `<tr><td>${i+1}</td><td>${s.name}</td><td>${s.score}</td><td>${s.total_count}</td><td>${s.good_count}</td><td>${s.quality}%</td><td>${g}</td></tr>`;
+        const grade = s.quality >= 90 ? 'S' : s.quality >= 75 ? 'A' : s.quality >= 60 ? 'B' : s.quality >= 40 ? 'C' : s.quality >= 20 ? 'D' : 'E';
+        const isCurrentPlayer = s.name === playerName && s.score === gameStats.totalScore;
+        const row = document.createElement('div');
+        row.className = 'leaderboard-row' + (isCurrentPlayer ? ' highlight' : '');
+        row.innerHTML = `
+          <div class="leaderboard-rank">#${i+1}</div>
+          <div class="leaderboard-name">${s.name}</div>
+          <div class="leaderboard-score">${s.score}</div>
+          <div class="leaderboard-grade">${grade}</div>
+        `;
+        list.appendChild(row);
       });
       
       const end = document.getElementById('endGameScreen');
@@ -1410,19 +2273,21 @@
       const intro = document.getElementById('introScreenAnimated');
       const board = document.getElementById('leaderboardScreen');
       
-      // Reset form
       playerNameValidated = false;
       document.getElementById('playerNameInput').disabled = false;
       document.getElementById('playerNameInput').value = '';
+      document.getElementById('clearNameBtn').style.display = 'none';
       document.getElementById('gameNumberBox').style.display = 'none';
       document.getElementById('startGameBtn').disabled = true;
       document.getElementById('startGameBtn').style.opacity = '0.5';
       
-      // Collapse sections
+      // Bien replier les sections
       document.getElementById('rulesContent').classList.add('collapsed');
       document.getElementById('rulesChevron').classList.add('collapsed');
       document.getElementById('hallContent').classList.add('collapsed');
       document.getElementById('hallChevron').classList.add('collapsed');
+      
+      document.getElementById('historyTableContainer').style.display = 'none';
       
       if (intro) intro.style.display = 'flex';
       if (board) board.classList.add('hidden');
@@ -1461,7 +2326,6 @@
       gameActive = false;
       if (gameTimer) clearInterval(gameTimer);
       
-      // Calculer les stats finales
       gameStats.quality = gameStats.productsInspected > 0 ? Math.round((gameStats.productsGood / gameStats.productsInspected) * 100) : 0;
       const rank = gameStats.quality >= 90 ? 'S' : gameStats.quality >= 75 ? 'A' : gameStats.quality >= 60 ? 'B' : gameStats.quality >= 40 ? 'C' : gameStats.quality >= 20 ? 'D' : 'E';
       
@@ -1483,41 +2347,192 @@
     };
 
     function updateStats() {
-      // Anciens stats (si encore utilisés)
       if (document.getElementById('statsProducts')) document.getElementById('statsProducts').textContent = gameStats.productsInspected;
       if (document.getElementById('statsGood')) document.getElementById('statsGood').textContent = gameStats.productsGood;
       if (document.getElementById('statsQuality')) document.getElementById('statsQuality').textContent = gameStats.quality + '%';
       if (document.getElementById('statsCombo')) document.getElementById('statsCombo').textContent = correctCombo + 'x';
       if (document.getElementById('statsScore')) document.getElementById('statsScore').textContent = gameStats.totalScore;
       
-      // Nouveaux KPIs à droite
       if (document.getElementById('kpiWellInspected')) document.getElementById('kpiWellInspected').textContent = gameStats.productsGood;
       if (document.getElementById('kpiTotalInspected')) document.getElementById('kpiTotalInspected').textContent = gameStats.productsInspected;
-      if (document.getElementById('kpiQualityRatio')) document.getElementById('kpiQualityRatio').textContent = gameStats.quality + '%';
+      
+      const qualityEl = document.getElementById('kpiQualityRatio');
+      const qualityContainer = qualityEl ? qualityEl.closest('.kpi-section') : null;
+      const qualityValue = document.getElementById('kpiQualityRatio');
+      
+      if (qualityEl) qualityEl.textContent = gameStats.quality + '%';
+      
+      // Changer la couleur selon la qualité
+      if (qualityContainer) {
+        qualityContainer.classList.remove('high');
+        if (gameStats.quality >= 75) {
+          qualityContainer.classList.add('high');
+          if (qualityValue) {
+            qualityValue.classList.remove('quality');
+            qualityValue.classList.add('quality', 'high');
+          }
+        } else {
+          if (qualityValue) {
+            qualityValue.classList.remove('quality', 'high');
+            qualityValue.classList.add('quality');
+          }
+        }
+      }
+      
       if (document.getElementById('kpiScore')) document.getElementById('kpiScore').textContent = gameStats.totalScore;
       
-      // Average time
       const avgTime = gameStats.productsInspected > 0 ? (gameStats.totalInspectionTime / gameStats.productsInspected).toFixed(1) : 0;
       if (document.getElementById('kpiAvgTime')) document.getElementById('kpiAvgTime').textContent = avgTime + 's';
       
-      // Quality smiley
-      const qualityEl = document.getElementById('qualitySmiley');
-      if (qualityEl) {
-        if (gameStats.quality >= 90) qualityEl.textContent = '😍';
-        else if (gameStats.quality >= 75) qualityEl.textContent = '😊';
-        else if (gameStats.quality >= 50) qualityEl.textContent = '😐';
-        else if (gameStats.quality >= 25) qualityEl.textContent = '😕';
-        else qualityEl.textContent = '😡';
+      const smileyEl = document.getElementById('qualitySmiley');
+      if (smileyEl) {
+        if (gameStats.quality >= 90) smileyEl.textContent = '😍';
+        else if (gameStats.quality >= 75) smileyEl.textContent = '😊';
+        else if (gameStats.quality >= 50) smileyEl.textContent = '😐';
+        else if (gameStats.quality >= 25) smileyEl.textContent = '😕';
+        else smileyEl.textContent = '😡';
       }
+    }
+
+    async function loadLeaderboardFromSupabase() {
+      try {
+        const SUPABASE_URL = 'https://your-supabase-url.supabase.co';
+        const SUPABASE_KEY = 'your-supabase-key';
+        const TABLE_NAME = 'leaderboard';
+        
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE_NAME}?order=score.desc&limit=20`, {
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        if (!response.ok) throw new Error('Supabase error');
+        
+        const data = await response.json();
+        displayLeaderboardInHallOfFame(data);
+        updateLeaderboardTimestamp(true);
+      } catch (error) {
+        console.log('Supabase not available, using fallback');
+        loadLeaderboardFallback();
+      }
+    }
+
+    function loadLeaderboardFallback() {
+      const local = JSON.parse(localStorage.getItem('leaderboard') || '[]');
+      displayLeaderboardInHallOfFame(local.slice(0, 20));
+      updateLeaderboardTimestamp(false);
+    }
+
+    function updateLeaderboardTimestamp(isCloud) {
+      const date = new Date();
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = String(date.getFullYear()).slice(-2);
+      const hours = String(date.getHours()).padStart(2, '0');
+      const mins = String(date.getMinutes()).padStart(2, '0');
+      const secs = String(date.getSeconds()).padStart(2, '0');
+      
+      const icon = isCloud ? '☁️' : '🏠';
+      document.getElementById('updateTimeText').textContent = `${icon} Updated ${day}/${month}/${year} ${hours}:${mins}:${secs}`;
+    }
+
+    function displayLeaderboardInHallOfFame(scores) {
+      const introList = document.getElementById('introLeaderboardList');
+      introList.innerHTML = '';
+      
+      if (!scores || scores.length === 0) {
+        introList.innerHTML = '<div style="text-align: center; color: rgba(255,255,255,0.95); font-weight: bold; font-size: 0.95rem;"><p style="margin-bottom: 3px;">⭐ No scores yet!</p><p>Be the first!</p></div>';
+        return;
+      }
+      
+      scores.slice(0, 15).forEach((s, i) => {
+        const grade = s.quality >= 90 ? 'S' : s.quality >= 75 ? 'A' : s.quality >= 60 ? 'B' : s.quality >= 40 ? 'C' : s.quality >= 20 ? 'D' : 'E';
+        const medals = { 1: '🥇', 2: '🥈', 3: '🥉' };
+        const medal = medals[i + 1] || '🎖️';
+        
+        // Couleurs du grade - alignées avec le leaderboard final
+        const gradeColors = {
+          'S': '#FFD700',
+          'A': '#FF6B00',
+          'B': '#FF5716',
+          'C': '#10B981',
+          'D': '#00A8E9',
+          'E': '#EF4444'
+        };
+        const gradeColor = gradeColors[grade] || '#FFD700';
+        
+        // Couleurs éclatantes par rang
+        const rankColors = {
+          1: { bg: '#FFD700', glow: 'rgba(255, 215, 0, 0.6)', textLight: '#000' },
+          2: { bg: '#E8E8E8', glow: 'rgba(232, 232, 232, 0.6)', textLight: '#000' },
+          3: { bg: '#FF8C00', glow: 'rgba(255, 140, 0, 0.6)', textLight: '#fff' }
+        };
+        const defaultColor = { bg: 'rgba(0, 168, 233, 0.7)', glow: 'rgba(0, 168, 233, 0.4)', textLight: '#fff' };
+        const colors = rankColors[i + 1] || defaultColor;
+        
+        const date = new Date(s.date || Date.now());
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = String(date.getFullYear()).slice(-2);
+        const hours = String(date.getHours()).padStart(2, '0');
+        const mins = String(date.getMinutes()).padStart(2, '0');
+        
+        const row = document.createElement('div');
+        row.style.cssText = `
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 10px 12px;
+          background: ${i + 1 <= 3 ? colors.bg : 'rgba(20, 30, 50, 0.8)'};
+          border: 2px solid ${i + 1 <= 3 ? colors.bg : 'rgba(0, 168, 233, 0.5)'};
+          border-radius: 8px;
+          margin-bottom: 6px;
+          transition: all 0.25s;
+          box-shadow: ${i + 1 <= 3 ? `0 0 15px ${colors.glow}` : '0 2px 6px rgba(0, 0, 0, 0.4)'};
+        `;
+        row.onmouseover = function() { 
+          this.style.transform = 'translateX(8px) scale(1.02)';
+          this.style.boxShadow = i + 1 <= 3 
+            ? `0 0 25px ${colors.glow}, 0 8px 16px rgba(0, 0, 0, 0.4)` 
+            : '0 4px 12px rgba(0, 168, 233, 0.5)';
+        };
+        row.onmouseout = function() { 
+          this.style.transform = 'translateX(0) scale(1)';
+          this.style.boxShadow = i + 1 <= 3 
+            ? `0 0 15px ${colors.glow}` 
+            : '0 2px 6px rgba(0, 0, 0, 0.4)';
+        };
+        
+        row.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 6px; min-width: 50px; flex-shrink: 0;">
+            <div style="color: ${i + 1 <= 3 ? colors.textLight : '#FFD700'}; font-weight: 900; font-size: 0.9rem;">#${i+1}</div>
+            <div style="font-size: 1.8rem;">${medal}</div>
+          </div>
+          
+          <div style="flex: 1; min-width: 0; overflow: hidden;">
+            <div style="color: ${i + 1 <= 3 ? colors.textLight : '#FFFFFF'}; font-weight: 900; font-size: 1rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; ${i + 1 <= 3 ? 'text-shadow: 0 1px 2px rgba(0,0,0,0.3)' : ''};">${s.name}</div>
+            <div style="color: ${i + 1 <= 3 ? colors.textLight : '#00A8E9'}; font-weight: 600; font-size: 0.7rem; opacity: ${i + 1 <= 3 ? '0.8' : '0.9'};">${day}/${month}/${year} ${hours}:${mins}</div>
+          </div>
+          
+          <div style="text-align: right; min-width: 70px; flex-shrink: 0;">
+            <div style="color: ${i + 1 <= 3 ? colors.textLight : '#10B981'}; font-weight: 900; font-size: 1.15rem; ${i + 1 <= 3 ? 'text-shadow: 0 1px 2px rgba(0,0,0,0.3)' : 'text-shadow: 0 1px 3px rgba(0,0,0,0.5)'};">${s.score}</div>
+            <div style="color: ${gradeColor}; font-weight: 900; font-size: 0.85rem; opacity: 1;">${grade}</div>
+          </div>
+        `;
+        introList.appendChild(row);
+      });
     }
 
     window.addEventListener('load', () => {
       const saved = localStorage.getItem('playerName');
       if (saved) document.getElementById('playerNameInput').value = saved;
+      
+      loadLeaderboardFromSupabase();
     });
   </script>
 
-  <!-- OVERLAY START INSPECTING -->
   <div id="overlayStartInspecting" class="overlay-start-inspecting">
     <div class="start-inspecting-content">
       <h2>🔍 READY TO START INSPECTING?</h2>
@@ -1531,13 +2546,26 @@
 
   <script>
     window.confirmStartGame = function() {
+      console.log('confirmStartGame called');
       const overlay = document.getElementById('overlayStartInspecting');
-      if (overlay) overlay.classList.remove('active');
+      if (overlay) {
+        overlay.classList.remove('active');
+        console.log('Overlay hidden');
+      }
       
       const intro = document.getElementById('introScreenAnimated');
       const game = document.getElementById('gameScreen');
-      if (intro) intro.style.display = 'none';
-      if (game) game.classList.remove('hidden');
+      
+      console.log('Intro found:', !!intro, 'Game found:', !!game);
+      
+      if (intro) {
+        intro.style.display = 'none';
+        console.log('Intro hidden');
+      }
+      if (game) {
+        game.classList.remove('hidden');
+        console.log('Game shown');
+      }
       
       gameActive = true;
       gameStartTime = Date.now();
@@ -1550,16 +2578,18 @@
         allProducts.push({ name: 'Product ' + i, id: i, value: 100 + Math.random() * 100, defects: Math.random() > 0.6 ? [{ name: 'Defect' }] : [] });
       }
       
+      console.log('Generated', allProducts.length, 'products');
+      
       loadNextProduct();
       startGameTimer();
+      console.log('Game started');
     };
 
     window.cancelStartGame = function() {
+      console.log('cancelStartGame called');
       const overlay = document.getElementById('overlayStartInspecting');
       if (overlay) overlay.classList.remove('active');
     };
-
-
   </script>
 
 </body>
