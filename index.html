@@ -89,6 +89,11 @@
       50% { transform: scale(1.05); opacity: 0.9; }
     }
 
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
     .timer-bar { 
       flex: 1;
       height: 22px; 
@@ -153,8 +158,6 @@
       position: relative;
     }
 
-    @keyframes wind-flow {
-      0% { transform: translateX(-100%); }
       100% { transform: translateX(100%); }
     }
 
@@ -176,13 +179,7 @@
       z-index: 2;
     }
 
-    @keyframes edge-glow {
-      0%, 100% { opacity: 0.5; }
       50% { opacity: 1; }
-    }
-
-    .stats-bar {
-      display: none;
     }
 
     .stat-item { text-align: center; }
@@ -215,11 +212,6 @@
       justify-content: center;
     }
 
-    .left-panel h3 { display: none; }
-    .queue-items { display: none; }
-    .queue-item { display: none; }
-    .queue-item.active { display: none; }
-
     .center-area {
       background: linear-gradient(135deg, #0a0e27 0%, #1a1f2e 100%);
       display: flex;
@@ -239,22 +231,6 @@
       gap: 12px;
       flex: 1;
       min-height: 0;
-    }
-
-    .canvas-wrapper {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      min-width: 0;
-    }
-
-    .inspection-controls {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      width: 160px;
-      flex-shrink: 0;
     }
 
     .inspection-title {
@@ -294,10 +270,6 @@
       border-radius: 8px;
     }
 
-    #productCanvas {
-      animation: product-transition 0.5s ease-out;
-    }
-
     @keyframes product-transition {
       0% { 
         opacity: 0;
@@ -322,43 +294,6 @@
       border: 2px solid rgba(255, 215, 0, 0.3);
       border-radius: 6px;
       margin-bottom: 8px;
-      width: 100%;
-    }
-
-    #productCanvas {
-      max-width: 90%;
-      max-height: 90%;
-      width: auto;
-      height: auto;
-      border: 3px solid #10B981;
-      border-radius: 10px;
-      box-shadow: 0 0 40px rgba(16, 185, 129, 0.5), inset 0 0 20px rgba(16, 185, 129, 0.1);
-      cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><text x="0" y="17" font-size="16">🔍</text></svg>') 2 17, auto;
-      background: white;
-      display: block;
-      position: relative;
-      z-index: 1;
-    }
-
-    .product-status {
-      background: rgba(0, 168, 233, 0.15);
-      border: 2px solid #00A8E9;
-      border-radius: 8px;
-      padding: 8px 16px;
-      text-align: center;
-      width: 100%;
-      flex: 0 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 35px;
-      margin-bottom: 4px;
-    }
-
-    .buttons-panel {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
       width: 100%;
     }
 
@@ -400,20 +335,6 @@
     .btn.approve:hover {
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
-    }
-
-    .inspection-zone {
-      position: fixed;
-      width: 150px;
-      height: 150px;
-      border: 4px solid #FF5716;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(245, 158, 11, 0.4), rgba(245, 158, 11, 0.1));
-      pointer-events: none;
-      z-index: 99;
-      box-shadow: 0 0 50px #FF5716, inset 0 0 50px rgba(245, 158, 11, 0.6);
-      transform: translate(-50%, -50%);
-      display: none;
     }
 
     .magnifier-circle {
@@ -459,24 +380,7 @@
       cursor: default;
     }
 
-    @keyframes popDefect {
-      0% { transform: scale(0) rotate(0deg); opacity: 1; }
       100% { transform: scale(1) rotate(360deg); opacity: 1; }
-    }
-
-    .product-status {
-      background: rgba(0, 168, 233, 0.15);
-      border: 2px solid #00A8E9;
-      border-radius: 8px;
-      padding: 10px 20px;
-      text-align: center;
-      min-height: 50px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      width: 90%;
-      max-width: 500px;
     }
 
     .status-message {
@@ -493,36 +397,6 @@
 
     .status-score.good { color: #10B981; }
     .status-score.bad { color: #EF4444; }
-
-    .feedback-message {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: #0f1419;
-      color: white;
-      padding: 30px 60px;
-      border-radius: 15px;
-      border: 3px solid #00A8E9;
-      font-size: 1.5rem;
-      font-weight: bold;
-      display: none;
-      z-index: 1000;
-      box-shadow: 0 0 50px rgba(0, 168, 233, 0.5);
-    }
-
-    .feedback-message.good { border-color: #10B981; color: #10B981; }
-    .feedback-message.bad { border-color: #EF4444; color: #EF4444; }
-
-    .right-panel {
-      background: linear-gradient(180deg, #0254A0 0%, rgba(2, 84, 160, 0.8) 50%, #0a0e27 100%);
-      border-left: 3px solid #00A8E9;
-      padding: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      overflow-y: auto;
-    }
 
     .kpi-section {
       background: rgba(0, 168, 233, 0.2);
@@ -654,25 +528,11 @@
       background: linear-gradient(135deg, #5a6470 0%, #3a445a 100%);
     }
 
-    .buttons-panel { display: flex; flex-direction: column; gap: 5px; }
     .btn { padding: 12px 8px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.85rem; transition: all 0.2s; text-transform: uppercase; }
     .btn.reject { background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%); color: white; border: 1px solid #DC2626; }
     .btn.reject:hover { transform: translateY(-2px); }
     .btn.approve { background: linear-gradient(135deg, #10B981 0%, #059669 100%); color: white; border: 1px solid #059669; }
     .btn.approve:hover { transform: translateY(-2px); }
-
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.95); display: flex; align-items: center; justify-content: center; z-index: 2000; }
-    .modal-overlay.hidden { display: none; }
-
-    .modal {
-      background: linear-gradient(135deg, #1a1f2e 0%, #0f1419 100%);
-      border: 2px solid #00A8E9;
-      border-radius: 12px;
-      padding: 40px;
-      max-width: 600px;
-      max-height: 95vh;
-      overflow-y: auto;
-    }
 
     .modal h1 { color: #00A8E9; margin-bottom: 20px; font-size: 1.8rem; }
     .modal p { color: #ccc; line-height: 1.6; margin-bottom: 16px; }
@@ -777,7 +637,7 @@
       border: 3px solid #FFD700;
       border-radius: 15px;
       padding: 30px;
-      max-width: 1000px;
+      max-width: 950px;
       width: 95%;
       max-height: 90vh;
       overflow-y: auto;
@@ -937,7 +797,7 @@
     @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
     @keyframes slideLeft { from { opacity: 0; transform: translateX(-50px); } to { opacity: 1; transform: translateX(0); } }
     @keyframes slideRight { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0); } }
-    @keyframes pulse { 0%, 100% { box-shadow: 0 10px 40px rgba(255,87,22,0.4); transform: scale(1); } 50% { box-shadow: 0 15px 60px rgba(255,87,22,0.7); transform: scale(1.05); } }
+    50% { box-shadow: 0 15px 60px rgba(255,87,22,0.7); transform: scale(1.05); } }
     @keyframes firework { 0% { transform: translate(0, 0) scale(1); opacity: 1; } 100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; } }
     .firework { position: absolute; width: 10px; height: 10px; border-radius: 50%; pointer-events: none; }
 
@@ -1105,12 +965,42 @@
       border-radius: 12px;
       padding: 18px;
       box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-      max-width: 320px;
       margin-bottom: 15px;
       animation: slideDown 0.6s ease-out;
     }
 
+    .logo-container {
+      text-align: center;
+      margin-bottom: 15px;
+      animation: fadeInScale 0.8s ease-out;
+    }
+
+    .logo-container img {
+      height: 60px;
+      width: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.2)) drop-shadow(0 0 20px rgba(0, 168, 233, 0.15));
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transform: scale(1) rotateZ(-1deg);
+    }
+
+    .logo-container img:hover {
+      transform: scale(1.08) rotateZ(0deg);
+      filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.3)) drop-shadow(0 0 30px rgba(0, 168, 233, 0.25));
+    }
+
     @keyframes slideDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+
+    @keyframes fadeInScale {
+      from {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
 
     .player-name-label {
       font-size: 0.95rem;
@@ -1155,11 +1045,7 @@
     }
 
     .validate-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255, 87, 22, 0.3); }
-    .validate-btn:active { transform: translateY(0); }
-
-    .game-number { display: none; }
-
-    .history-table {
+    .validate-btn:active { transform: translateY(0); }.history-table {
       width: 100%;
       border-collapse: collapse;
       background: white;
@@ -1262,7 +1148,7 @@
       padding: 0 12px 12px 12px;
     }
 
-    @media (max-width: 600px) {
+    @media (max-width: 650px) {
       .intro-content {
         grid-template-columns: 1fr;
       }
@@ -1270,179 +1156,8 @@
   </style>
 </head>
 <body>
-  <div class="inspection-zone" id="inspectionZone"></div>
-  <div class="magnifier-circle" id="magnifier"></div>
-  <div class="feedback-message" id="feedbackMessage"></div>
-
-  <!-- GAME SCREEN -->
-  <div id="gameScreen" class="modal-overlay hidden" style="background: none; align-items: stretch; justify-content: stretch; inset: 0; position: fixed; flex-direction: column;">
-    <div class="header">
-      <div class="header-left">
-        <h1>⚡ OFFSHORE EQUIPMENT INSPECTOR</h1>
-      </div>
-      <div class="header-right">
-        <p>EDF POWER - Quality Week 2025</p>
-      </div>
-    </div>
-
-    <div class="timer-bar-full">
-      <div class="timer-display" id="timeDisplay">5:00</div>
-      <div class="windmill">
-        <svg class="windmill-blades" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <!-- Mât -->
-          <rect x="47" y="30" width="6" height="50" fill="#FFD700"/>
-          <!-- Base du mât -->
-          <circle cx="50" cy="82" r="6" fill="#FFD700"/>
-          <!-- Pales -->
-          <g id="blades">
-            <rect x="48" y="35" width="4" height="25" fill="#FF5716" rx="2"/>
-            <rect x="48" y="35" width="4" height="25" fill="#FF8C00" rx="2" transform="rotate(90 50 50)"/>
-            <rect x="48" y="35" width="4" height="25" fill="#FFB347" rx="2" transform="rotate(180 50 50)"/>
-            <rect x="48" y="35" width="4" height="25" fill="#FFA500" rx="2" transform="rotate(270 50 50)"/>
-          </g>
-          <!-- Cercle centre -->
-          <circle cx="50" cy="50" r="4" fill="#FFD700"/>
-        </svg>
-        <div class="windmill-wind">💨</div>
-      </div>
-      <div class="timer-bar"><div class="timer-fill" id="timerFill">
-        <div class="wind-effect">~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~</div>
-      </div></div>
-    </div>
-
-    <div class="stats-bar">
-      <div class="stat-item">
-        <div class="stat-label">Equipment</div>
-        <div class="stat-val" id="statsProducts">0</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-label">Good</div>
-        <div class="stat-val" id="statsGood" style="color: #10B981;">0</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-label">Quality</div>
-        <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
-          <div class="stat-val warning" id="statsQuality">--%</div>
-          <span id="qualitySmiley" style="font-size: 1.2rem;">😐</span>
-        </div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-label">Defects</div>
-        <div class="stat-val danger" id="statsBad">0</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-label">Streak</div>
-        <div class="stat-val" id="statsCombo" style="color: #00A8E9;">0</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-label">Score</div>
-        <div class="stat-val" id="statsScore" style="color: #FF5716;">0</div>
-      </div>
-    </div>
-
-    <div class="main-container">
-      <div class="center-area">
-        <div class="inspection-title">🔍 INSPECTION</div>
-        <div class="inspection-content">
-          <div class="canvas-wrapper">
-            <div class="product-status" style="margin-bottom: 8px;">
-              <div class="status-message" id="productStatus">Inspect the equipment...</div>
-            </div>
-            <div class="canvas-container">
-              <canvas id="productCanvas" width="400" height="300"></canvas>
-            </div>
-          </div>
-          <div class="inspection-controls">
-            <button class="btn approve" onclick="window.makeDecisionNow('good')">✅ ACCEPT</button>
-            <button class="btn reject" onclick="window.makeDecisionNow('reject')">❌ REJECT</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="right-panel">
-        <div class="kpi-section inspected">
-          <div class="kpi-section-title">📦 Scanned</div>
-          <div class="kpi-item">
-            <span class="kpi-label">Equipment</span>
-            <span class="kpi-value inspected" id="kpiTotalInspected">0</span>
-          </div>
-        </div>
-
-        <div class="kpi-section well">
-          <div class="kpi-section-title">✅ Passed</div>
-          <div class="kpi-item">
-            <span class="kpi-label">Check</span>
-            <span class="kpi-value well" id="kpiWellInspected">0</span>
-          </div>
-        </div>
-
-        <div class="kpi-section quality">
-          <div class="kpi-section-title">⭐ Quality</div>
-          <div class="kpi-item">
-            <span class="kpi-label">Rate</span>
-            <span class="kpi-value quality" id="kpiQualityRatio">0%</span>
-          </div>
-          <div class="quality-smiley" id="qualitySmiley">😐</div>
-        </div>
-
-        <div class="kpi-section">
-          <div class="kpi-section-title">📈 Performance</div>
-          <div class="kpi-item">
-            <span class="kpi-label">Score</span>
-            <span class="kpi-value" id="kpiScore">0</span>
-          </div>
-          <div class="kpi-item">
-            <span class="kpi-label">Avg Time</span>
-            <span class="kpi-value" id="kpiAvgTime">0s</span>
-          </div>
-        </div>
-
-        <button class="quit-btn" onclick="window.quitGameNow()" style="margin-top: auto;">🚪 I GIVE UP!</button>
-      </div>
-    </div>
-  </div>
 
   <!-- END GAME SCREEN -->
-  <div id="endGameScreen" class="modal-overlay hidden">
-    <div class="modal" style="max-width: 700px;">
-      <h1 style="margin-bottom: 30px; text-align: center; font-size: 2.5rem;">🎯 GAME OVER</h1>
-
-      <div class="rank-timeline">
-        <div class="rank-node e"><div class="rank-letter">E</div><div class="rank-name">Very Poor</div></div>
-        <div class="rank-node d"><div class="rank-letter">D</div><div class="rank-name">Poor</div></div>
-        <div class="rank-node c"><div class="rank-letter">C</div><div class="rank-name">Average</div></div>
-        <div class="rank-node b"><div class="rank-letter">B</div><div class="rank-name">Good</div></div>
-        <div class="rank-node a"><div class="rank-letter">A</div><div class="rank-name">Very Good</div></div>
-        <div class="rank-node s"><div class="rank-letter">S</div><div class="rank-name">Perfect</div></div>
-      </div>
-
-      <div class="performance-message">
-        <div class="performance-emoji" id="performanceEmoji">🎯</div>
-        <div id="performanceText"></div>
-      </div>
-
-      <div class="stats-grid">
-        <div class="stat-box" style="grid-column: 1 / -1; background: rgba(0, 168, 233, 0.2); padding: 20px; border-radius: 8px;">
-          <div class="stat-box-label">FINAL SCORE</div>
-          <div style="font-size: 3rem; font-weight: bold; color: #10B981; text-shadow: 0 0 20px rgba(16, 185, 129, 0.8);" id="finalScore">0</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-box-label">Player Ratio</div>
-          <div class="stat-box-value" id="finalRatio">0/0 = 0%</div>
-        </div>
-        <div class="stat-box" style="background: rgba(245, 158, 11, 0.15); padding: 15px; border-radius: 8px;">
-          <div class="stat-box-label">🔥 MAX COMBO</div>
-          <div style="font-size: 2rem; font-weight: bold; color: #FF5716; text-shadow: 0 0 15px rgba(245, 158, 11, 0.8);" id="maxComboDisplay">0</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-box-label">Avg Time/Product</div>
-          <div class="stat-box-value" id="avgTime">0s</div>
-        </div>
-      </div>
-
-      <button class="btn-primary" onclick="window.submitScoreNow()">SUBMIT →</button>
-    </div>
-  </div>
 
   <!-- LEADERBOARD -->
   <div id="leaderboardScreen" class="modal-overlay hidden" style="background: linear-gradient(135deg, #0254A0 0%, #00A8E9 100%); align-items: center; justify-content: center;">
@@ -1474,67 +1189,174 @@
   <!-- INTRO SCREEN -->
   <div id="introScreenAnimated" style="position: fixed; inset: 0; background: linear-gradient(135deg, #0254A0 0%, #00A8E9 100%); display: flex; z-index: 2000; align-items: center; justify-content: flex-start; flex-direction: column; padding: 40px 20px; overflow-y: auto;">
     
-    <h1 style="font-size: 2.8rem; font-weight: 900; color: white; text-shadow: 0 0 20px rgba(255,255,255,0.3); margin-bottom: 20px; margin-top: 20px; animation: bounce 2s infinite; cursor: pointer;" id="titleHeart" onclick="window.showEasterEggNow()">🔍 Quality Week 2025 💗</h1>
+    <h1 style="font-size: 2.8rem; font-weight: 900; color: white; text-shadow: 0 0 20px rgba(255,255,255,0.3); margin-bottom: 40px; margin-top: 20px; animation: bounce 2s infinite; cursor: pointer;" id="titleHeart" onclick="window.FIRST_showEasterEgg()">🔍 Quality Week 2025 💗</h1>
     
-    <div class="player-name-box">
-      <label class="player-name-label">👤 Enter Your Name:</label>
-      <div style="position: relative; display: flex; align-items: center;">
-        <input type="text" id="playerNameInput" class="player-name-input" placeholder="Type your name..." maxlength="30" onkeypress="if(event.key==='Enter') window.validatePlayerNameNow()" style="flex: 1; margin-bottom: 0 !important; padding-right: 35px !important;">
-        <button id="clearNameBtn" onclick="window.clearPlayerName()" style="position: absolute; right: 8px; background: none; border: none; cursor: pointer; font-size: 1.5rem; color: rgba(2, 84, 160, 0.8); transition: all 0.2s; display: none; padding: 0; width: 30px; height: 30px; line-height: 30px; text-align: center;" title="Clear name">✕</button>
+    <!-- Container principal pour tout aligner proprement -->
+    <div style="width: 100%; max-width: 950px; margin-left: auto; margin-right: auto;">
+    
+    <!-- Layout 2 colonnes : gauche texte, droite input -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 40px; align-items: start; padding: 0 20px; box-sizing: border-box;">
+      
+      <!-- LIGNE 1 : LOGOS en haut petits et centrés -->
+      <div style="display: flex; gap: 20px; width: 100%; margin-bottom: 30px; justify-content: center; align-items: center; flex-wrap: wrap;">
+        <!-- Logo COU -->
+        <div style="text-align: center;">
+          <img src="/img/COU.png" style="max-width: 100px; height: auto;">
+        </div>
+        <!-- Logo EDFPS -->
+        <div style="text-align: center;">
+          <img src="/img/EDFPS.jfif" style="max-width: 100px; height: auto;">
+        </div>
       </div>
-      <button class="validate-btn" onclick="window.validatePlayerNameNow()" style="margin-top: 10px;">✓ Validate Name</button>
-      <div class="game-number" id="gameNumberBox">Game #<span id="gameNumber">1</span></div>
+      
+      <!-- LIGNE 2 : BLOCS en dessous prenant toute la largeur -->
+      <div style="display: flex; gap: 20px; width: 100%; margin-bottom: 30px;">
+        
+        <!-- GAUCHE : 2 MINUTES GAME -->
+        <div style="flex: 1; text-align: left;">
+          <div style="background: rgba(0,0,0,0.3); border: 2px solid #FFD700; border-radius: 10px; padding: 15px;">
+            <div style="font-size: 0.95rem; font-weight: 700; color: white; margin-bottom: 8px; text-shadow: 0 1px 3px rgba(0,0,0,0.5);">
+              ⏱️ <span style="color: #FFD700; font-weight: 900;">~2 MINUTES GAME</span>
+            </div>
+            <div style="font-size: 0.85rem; color: #FFFFFF; line-height: 1.6; font-weight: 600; text-shadow: 0 1px 3px rgba(0,0,0,0.5);">
+              You are a <strong>Quality Inspector</strong> for EDF.
+              <br/><br/>
+              Products will pass in front of you and you must inspect them as <strong>fast AND accurate</strong> as possible.
+            </div>
+          </div>
+        </div>
+
+        <!-- DROITE : Enter Your Name -->
+        <div style="flex: 1;">
+          <div class="player-name-box" style="width: 100% !important;">
+            <label class="player-name-label">👤 Enter Your Name:</label>
+            <div style="position: relative; display: flex; align-items: center;">
+              <input type="text" id="playerNameInput" class="player-name-input" placeholder="Type your name..." maxlength="30" onkeypress="if(event.key==='Enter') window.FIRST_validatePlayerName()" style="flex: 1; margin-bottom: 0 !important; padding-right: 35px !important;">
+              <button id="clearNameBtn" onclick="window.FIRST_clearPlayerName()" style="position: absolute; right: 8px; background: none; border: none; cursor: pointer; font-size: 1.5rem; color: rgba(2, 84, 160, 0.8); transition: all 0.2s; display: none; padding: 0; width: 30px; height: 30px; line-height: 30px; text-align: center;" title="Clear name">✕</button>
+            </div>
+            <button class="validate-btn" onclick="window.FIRST_validatePlayerName()" style="margin-top: 10px; width: 100%;">✓ Validate Name</button>
+          </div>
+        </div>
+        
+      </div>
+
     </div>
 
-    <div class="intro-content">
+    <!-- INSPECTION DILEMMA CONDENSÉ -->
+    <div style="background: rgba(20, 30, 50, 0.8); backdrop-filter: blur(10px); border: 2px solid rgba(0, 168, 233, 0.4); border-radius: 15px; padding: 30px; margin-bottom: 40px; margin-left: 20px; margin-right: 20px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);">
       
-      <div id="rulesContainer">
-        <div class="collapsible-header" onclick="window.toggleCollapse('rulesContent')">
-          <span class="chevron collapsed" id="rulesChevron">▶</span>
-          <span style="color: white; font-weight: 900; text-shadow: 0 2px 8px rgba(0,0,0,0.3);" id="rulesTrigger">📋 HOW TO PLAY</span>
-        </div>
-        <div id="rulesContent" class="collapsible-content collapsed">
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; background: rgba(0,0,0,0.4); padding: 15px; border-radius: 10px;">
-            
-            <div style="background: rgba(16,185,129,0.25); border: 2px solid #10B981; border-radius: 8px; padding: 12px;">
-              <div style="text-align: center; margin-bottom: 8px;">
-                <div style="font-size: 2rem; margin-bottom: 4px;">⏱️ 🔍</div>
-                <div style="font-size: 0.85rem; font-weight: 900; color: #FFD700;">SLOW & CAREFUL</div>
-              </div>
-              <div style="font-size: 0.75rem; color: #FFFFFF; font-weight: 700; line-height: 1.6; text-shadow: 0 1px 3px rgba(0,0,0,0.5);">
-                <div>✅ High quality</div>
-                <div>✅ Good reputation</div>
-                <div>❌ Less products</div>
-                <div style="color: #FFD700;">📉 Low score</div>
-              </div>
-            </div>
-
-            <div style="background: rgba(239,68,68,0.25); border: 2px solid #EF4444; border-radius: 8px; padding: 12px;">
-              <div style="text-align: center; margin-bottom: 8px;">
-                <div style="font-size: 2rem; margin-bottom: 4px;">⚡ 💨</div>
-                <div style="font-size: 0.85rem; font-weight: 900; color: #FFD700;">FAST & CARELESS</div>
-              </div>
-              <div style="font-size: 0.75rem; color: #FFFFFF; font-weight: 700; line-height: 1.6; text-shadow: 0 1px 3px rgba(0,0,0,0.5);">
-                <div>✅ More products</div>
-                <div style="color: #FFD700;">💰 More money</div>
-                <div>❌ Bad quality</div>
-                <div>❌ Lost reputation</div>
-              </div>
-            </div>
-
-          </div>
-
-          <div style="background: rgba(0,0,0,0.4); border: 2px solid #00A8E9; border-radius: 8px; padding: 12px; margin-top: 10px; text-align: center;">
-            <div style="font-size: 0.9rem; font-weight: 900; color: #FFD700; margin-bottom: 4px;">⚖️ FIND YOUR BALANCE</div>
-            <div style="font-size: 0.75rem; color: #FFFFFF; font-weight: 700; text-shadow: 0 1px 3px rgba(0,0,0,0.5);">
-              The challenge: Be fast enough to earn, accurate enough to stay credible!
-            </div>
+      <div style="text-align: center; margin-bottom: 20px;">
+        <div style="font-size: 1.2rem; font-weight: 900; color: #FFD700; letter-spacing: 2px; text-shadow: 0 2px 8px rgba(0,0,0,0.5);">🎯 INSPECTION DILEMMA 🎯</div>
+        <div style="font-size: 0.8rem; color: #00A8E9; font-weight: 600; text-shadow: 0 1px 3px rgba(0,0,0,0.5);">Every Quality Inspector faces this fundamental choice...</div>
+      </div>
+      
+      <div style="display: flex; align-items: center; justify-content: center; gap: 20px;">
+        
+        <!-- OPTION 1: SLOW -->
+        <div style="flex: 1; background: linear-gradient(135deg, rgba(16,185,129,0.2) 0%, rgba(16,185,129,0.05) 100%); border: 2px solid #10B981; border-radius: 12px; padding: 18px; text-align: center; box-shadow: 0 6px 15px rgba(16, 185, 129, 0.2);">
+          <div style="font-size: 1.8rem; margin-bottom: 10px; animation: bounce 2s infinite;">⏱️</div>
+          <div style="font-size: 0.95rem; font-weight: 900; color: #10B981; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;">SLOW</div>
+          <div style="font-size: 0.75rem; color: #FFFFFF; margin-bottom: 12px; line-height: 1.4;">Take your time</div>
+          <div style="background: rgba(16, 185, 129, 0.15); border-left: 3px solid #10B981; padding: 10px; border-radius: 6px; text-align: left; font-size: 0.7rem;">
+            <div style="color: #10B981; font-weight: 900; margin-bottom: 5px;">✅ PROS:</div>
+            <div style="color: #FFFFFF; margin-bottom: 8px; line-height: 1.3;">• Catch defects • High quality</div>
+            <div style="color: #EF4444; font-weight: 900; margin-bottom: 5px;">⚠️ CONS:</div>
+            <div style="color: #FFFFFF;">• Low score</div>
           </div>
         </div>
+
+        <!-- CENTER: VS -->
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 5px; font-size: 0.65rem;">
+          <div style="font-size: 2.5rem; font-weight: 900; color: #FFD700; animation: pulse 1.5s infinite; text-shadow: 0 2px 8px rgba(255, 215, 0, 0.6);">VS</div>
+          <div style="color: #FFD700; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; text-align: center;">Choose</div>
+        </div>
+
+        <!-- OPTION 2: FAST -->
+        <div style="flex: 1; background: linear-gradient(135deg, rgba(239,68,68,0.2) 0%, rgba(239,68,68,0.05) 100%); border: 2px solid #EF4444; border-radius: 12px; padding: 18px; text-align: center; box-shadow: 0 6px 15px rgba(239, 68, 68, 0.2);">
+          <div style="font-size: 1.8rem; margin-bottom: 10px; animation: spin 3s linear infinite;">⚡</div>
+          <div style="font-size: 0.95rem; font-weight: 900; color: #EF4444; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;">FAST</div>
+          <div style="font-size: 0.75rem; color: #FFFFFF; margin-bottom: 12px; line-height: 1.4;">Maximize output</div>
+          <div style="background: rgba(239, 68, 68, 0.15); border-left: 3px solid #EF4444; padding: 10px; border-radius: 6px; text-align: left; font-size: 0.7rem;">
+            <div style="color: #10B981; font-weight: 900; margin-bottom: 5px;">✅ PROS:</div>
+            <div style="color: #FFFFFF; margin-bottom: 8px; line-height: 1.3;">• High score • Many products</div>
+            <div style="color: #EF4444; font-weight: 900; margin-bottom: 5px;">⚠️ CONS:</div>
+            <div style="color: #FFFFFF;">• Miss defects</div>
+          </div>
+        </div>
+
       </div>
 
+    </div>
+
+    <!-- TRADE-OFF et HALL OF FAME côte à côte -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 40px; padding: 0 20px; box-sizing: border-box;">
+      
+      <!-- TRADE-OFF à gauche -->
+      <div id="rulesContainer">
+        <div class="collapsible-header" onclick="window.FIRST_toggleCollapse('rulesContent')">
+          <span class="chevron collapsed" id="rulesChevron">▶</span>
+          <span style="color: white; font-weight: 900; text-shadow: 0 2px 8px rgba(0,0,0,0.3);" id="rulesTrigger">📋 THE TRADE-OFF</span>
+        </div>
+        <div id="rulesContent" class="collapsible-content collapsed">
+        
+        <!-- FIND YOUR BALANCE au dessus -->
+        <div style="background: rgba(0,0,0,0.4); border: 2px solid #00A8E9; border-radius: 8px; padding: 15px; margin-bottom: 15px; text-align: center;">
+          <div style="font-size: 1rem; font-weight: 900; color: #FFD700; margin-bottom: 8px;">⚖️ FIND YOUR BALANCE</div>
+          <div style="font-size: 0.8rem; color: #FFFFFF; font-weight: 700; text-shadow: 0 1px 3px rgba(0,0,0,0.5); line-height: 1.6;">
+            The challenge is to find the sweet spot between speed and accuracy. Which strategy will you choose?
+          </div>
+        </div>
+
+        <!-- 2 colonnes avec meilleure explication -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: rgba(0,0,0,0.4); padding: 15px; border-radius: 10px;">
+          
+          <div style="background: rgba(16,185,129,0.25); border: 2px solid #10B981; border-radius: 8px; padding: 12px;">
+            <div style="text-align: center; margin-bottom: 10px;">
+              <div style="font-size: 2rem; margin-bottom: 4px;">⏱️ 🔍</div>
+              <div style="font-size: 0.85rem; font-weight: 900; color: #FFD700;">SLOW & CAREFUL</div>
+            </div>
+            <div style="font-size: 0.75rem; color: #FFFFFF; font-weight: 700; line-height: 1.8; text-shadow: 0 1px 3px rgba(0,0,0,0.5);">
+              <div style="margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 8px;">
+                <div style="color: #10B981; font-weight: 900;">✅ ADVANTAGES:</div>
+                <div>• Catch defects</div>
+                <div>• High quality</div>
+                <div>• Keep reputation</div>
+              </div>
+              <div>
+                <div style="color: #EF4444; font-weight: 900;">❌ DISADVANTAGES:</div>
+                <div>• Fewer inspections</div>
+                <div>• Low Game Score</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="background: rgba(239,68,68,0.25); border: 2px solid #EF4444; border-radius: 8px; padding: 12px;">
+            <div style="text-align: center; margin-bottom: 10px;">
+              <div style="font-size: 2rem; margin-bottom: 4px;">⚡ 💨</div>
+              <div style="font-size: 0.85rem; font-weight: 900; color: #FFD700;">FAST & CARELESS</div>
+            </div>
+            <div style="font-size: 0.75rem; color: #FFFFFF; font-weight: 700; line-height: 1.8; text-shadow: 0 1px 3px rgba(0,0,0,0.5);">
+              <div style="margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 8px;">
+                <div style="color: #10B981; font-weight: 900;">✅ ADVANTAGES:</div>
+                <div>• More inspections</div>
+                <div>• Better Game Score</div>
+                <div>• High throughput</div>
+              </div>
+              <div>
+                <div style="color: #EF4444; font-weight: 900;">❌ DISADVANTAGES:</div>
+                <div>• Miss defects</div>
+                <div>• Lost reputation</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      </div>
+
+      <!-- HALL OF FAME à droite -->
       <div id="hallofFameContainer">
-        <div class="collapsible-header" onclick="window.toggleCollapse('hallContent')" style="justify-content: space-between;">
+        <div class="collapsible-header" onclick="window.FIRST_toggleCollapse('hallContent')" style="justify-content: space-between;">
           <div style="display: flex; align-items: center; gap: 8px;">
             <span class="chevron collapsed" id="hallChevron">▶</span>
             <span style="color: white; font-weight: 900; text-shadow: 0 2px 8px rgba(0,0,0,0.3);" id="leaderboardTitle">🏆 HALL OF FAME</span>
@@ -1550,9 +1372,13 @@
           </div>
         </div>
       </div>
+
+    </div>
+    
+    <!-- Fin du container principal -->
     </div>
 
-    <div id="historyTableContainer" style="display: none; margin-top: 30px; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto;">
+    <div id="historyTableContainer" style="display: none; margin-top: 30px; width: 100%; max-width: 650px; margin-left: auto; margin-right: auto;">
       <div style="color: #00A8E9; font-weight: 900; font-size: 0.9rem; margin-bottom: 10px; text-transform: uppercase;" id="historyTableTitle">📊 Your Previous Games</div>
       <table class="history-table">
         <thead>
@@ -1567,25 +1393,26 @@
       </table>
     </div>
 
-    <button id="startGameBtn" onclick="window.startGameNow()" disabled style="margin-top: 20px; padding: 14px 40px; font-size: 1.2rem; font-weight: 900; color: white; background: linear-gradient(135deg, #FF5716 0%, #E84E0F 100%); border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 10px 40px rgba(255,87,22,0.4); animation: pulse 2s infinite; text-transform: uppercase; letter-spacing: 1px; opacity: 0.5; transition: opacity 0.3s;">▶ START GAME</button>
+    <!-- Historique des games de l'utilisateur -->
+    <div id="gameHistoryContainer" style="display: none; margin-top: 30px; width: 90%; max-width: 650px; margin-left: auto; margin-right: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);">
+      <h3 id="gameHistoryTitle" style="color: #0254A0; text-align: center; margin-bottom: 15px; font-size: 1.1rem;">📊 Game History</h3>
+      <table style="width: 100%; border-collapse: collapse; background: white;">
+        <thead>
+          <tr style="background: linear-gradient(90deg, #0254A0 0%, #00A8E9 100%); color: white;">
+            <th style="padding: 12px; text-align: left; font-weight: 900;">Date</th>
+            <th style="padding: 12px; text-align: center; font-weight: 900;">Score</th>
+            <th style="padding: 12px; text-align: center; font-weight: 900;">Rank</th>
+          </tr>
+        </thead>
+        <tbody id="gameHistoryBody" style="color: #333;">
+        </tbody>
+      </table>
+    </div>
+
+    <button id="startGameBtn" onclick="window.FIRST_startGame()" style="margin-top: 20px; padding: 14px 40px; font-size: 1.2rem; font-weight: 900; color: white; background: linear-gradient(135deg, #FF5716 0%, #E84E0F 100%); border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 10px 40px rgba(255,87,22,0.4); animation: pulse 2s infinite; text-transform: uppercase; letter-spacing: 1px; opacity: 0.5; transition: opacity 0.3s;">▶ OPEN INSPECTION</button>
   </div>
 
   <!-- EASTER EGG -->
-  <div id="easterOverlay" style="position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: none; z-index: 9999; align-items: center; justify-content: center; padding: 40px;">
-    <div style="display: flex; gap: 60px; width: 100%; max-width: 1000px; align-items: center; justify-content: center;">
-      
-      <div style="flex: 0 0 auto; animation: slideLeft 0.8s ease-out;">
-        <img src="/img/qualiteam.jpg" style="width: 280px; height: 350px; object-fit: cover; border: 4px solid #FF5716; border-radius: 20px; box-shadow: 0 20px 60px rgba(255, 87, 22, 0.6);">
-      </div>
-      
-      <div style="flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 25px; animation: slideRight 0.8s ease-out;">
-        <div style="font-size: 4rem; animation: heartbeat 1.5s ease-in-out infinite; filter: drop-shadow(0 0 15px #FF1493) drop-shadow(0 0 30px #FF69B4);">💗</div>
-        <div style="font-size: 2.2rem; font-weight: bold; color: #FF5716; text-align: center; letter-spacing: 2px; text-shadow: 0 0 10px rgba(255,87,22,0.5);">Made with Love</div>
-        <div style="font-size: 1.8rem; font-weight: bold; color: #00A8E9; text-align: center; letter-spacing: 1px; text-shadow: 0 0 10px rgba(0,168,233,0.5);">Quali-Team 11/2025</div>
-      </div>
-    </div>
-    <div id="fireworksContainer" style="position: absolute; width: 100%; height: 100%; pointer-events: none; inset: 0;"></div>
-  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
@@ -1593,30 +1420,8 @@
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRxd3JzYWt5bGJ5cW14d3lob2FyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEwNjE4NTUsImV4cCI6MjA3NjYzNzg1NX0.WIo5YUtJnxfgsZmnPluGexBAztB7dJG6uYKnNe7o_6A';
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    let gameActive = false;
-    let gameStartTime = 0;
-    let currentProduct = null;
-    let currentDefects = [];
-    let foundDefects = [];
-    let allProducts = [];
-    let currentProductIndex = 0;
-    let correctCombo = 0;
-    let productStartTime = 0;
     let currentLanguage = 'en';
-    let playerName = '';
     let gameTimer = null;
-    let playerNameValidated = false;
-
-    let gameStats = {
-      productsInspected: 0,
-      productsGood: 0,
-      productsBad: 0,
-      totalScore: 0,
-      quality: 0,
-      maxCombo: 0,
-      totalInspectionTime: 0
-    };
-
     const RANK_MESSAGES = {
       fr: { E: { emoji: '😅', messages: ['Continue à pratiquer!'] }, D: { emoji: '😐', messages: ['Pas mal!'] }, C: { emoji: '👍', messages: ['Pas mal!'] }, B: { emoji: '😊', messages: ['Brilliant!'] }, A: { emoji: '🤩', messages: ['Awesome!'] }, S: { emoji: '👑', messages: ['SPLENDID!'] } },
       en: { E: { emoji: '😅', messages: ['Keep practicing!'] }, D: { emoji: '😐', messages: ['Not bad!'] }, C: { emoji: '👍', messages: ['Pretty good!'] }, B: { emoji: '😊', messages: ['Brilliant!'] }, A: { emoji: '🤩', messages: ['Awesome!'] }, S: { emoji: '👑', messages: ['SPLENDID!'] } }
@@ -1629,7 +1434,7 @@
       return `${hours}:${mins}:${secs}`;
     }
 
-    window.toggleCollapse = function(contentId) {
+    window.FIRST_toggleCollapse = function(contentId) {
       const content = document.getElementById(contentId);
       const isCollapsed = content.classList.contains('collapsed');
       
@@ -1644,7 +1449,7 @@
       }
     };
 
-    window.expandAllSections = function() {
+    window.FIRST_expandAllSections = function() {
       document.getElementById('rulesContent').classList.remove('collapsed');
       document.getElementById('rulesChevron').classList.remove('collapsed');
       
@@ -1652,67 +1457,94 @@
       document.getElementById('hallChevron').classList.remove('collapsed');
     };
 
-    window.validatePlayerNameNow = function() {
+    window.FIRST_loadGameHistory = async function(username) {
+      try {
+        const { data, error } = await supabase
+          .from('leaderboard')
+          .select('*')
+          .eq('name', username)
+          .order('date', { ascending: false })
+          .limit(20);
+        
+        if (error) throw error;
+        
+        FIRST_displayGameHistory(username, data || []);
+      } catch (err) {FIRST_displayGameHistory(username, []);
+      }
+    };
+
+    function FIRST_displayGameHistory(username, games) {
+      const container = document.getElementById('gameHistoryContainer');
+      const tbody = document.getElementById('gameHistoryBody');
+      const titleElement = document.getElementById('gameHistoryTitle');
+      
+      // Mettre le titre avec le prénom coloré
+      titleElement.innerHTML = `📊 <span style="color: #00A8E9; font-weight: 900;">${username}</span>'s Game History`;
+      
+      if (games && games.length > 0) {
+        tbody.innerHTML = games.map((game, index) => {
+          const date = new Date(game.date || Date.now());
+          const day = String(date.getDate()).padStart(2, '0');
+          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const year = String(date.getFullYear()).slice(-2);
+          const hours = String(date.getHours()).padStart(2, '0');
+          const mins = String(date.getMinutes()).padStart(2, '0');
+          const secs = String(date.getSeconds()).padStart(2, '0');
+          
+          return `
+            <tr style="border-bottom: 1px solid #e0e0e0; background-color: #f9f9f9;">
+              <td style="padding: 10px 12px; color: #333;">${day}/${month}/${year} ${hours}:${mins}:${secs}</td>
+              <td style="padding: 10px 12px; text-align: center; color: #0254A0; font-weight: 700;">${game.score}</td>
+              <td style="padding: 10px 12px; text-align: center; color: #00A8E9; font-weight: 900;">#${index + 1}</td>
+            </tr>
+          `;
+        }).join('');
+      } else {
+        tbody.innerHTML = '<tr style="border-bottom: 1px solid #e0e0e0;"><td colspan="3" style="padding: 20px; text-align: center; color: #999;">No games yet</td></tr>';
+      }
+      
+      container.style.display = 'block';
+    }
+
+    window.FIRST_validatePlayerName = function() {
       const input = document.getElementById('playerNameInput');
       const clearBtn = document.getElementById('clearNameBtn');
-      playerName = input.value.trim();
-      
-      console.log('validatePlayerNameNow called, name:', playerName);
-      
-      if (!playerName) { 
+      FIRST_playerName = input.value.trim();if (!FIRST_playerName) { 
         alert('Please enter a name!'); 
         return; 
       }
       
-      playerNameValidated = true;
-      console.log('playerNameValidated set to true');
-      
-      localStorage.setItem('playerName', playerName);
+      FIRST_playerNameValidated = true;localStorage.setItem('playerName', FIRST_playerName);
       input.disabled = true;
       clearBtn.style.display = 'block';
       clearBtn.onmouseover = function() { this.style.color = 'rgba(2, 84, 160, 1)'; };
       clearBtn.onmouseout = function() { this.style.color = 'rgba(2, 84, 160, 0.6)'; };
-      document.getElementById('gameNumberBox').style.display = 'none';
       
-      document.getElementById('historyTableTitle').textContent = `📊 ${playerName}'s Previous Games`;
-      
-      const leaderboard = JSON.parse(localStorage.getItem('leaderboard') || '[]');
-      const playerGames = leaderboard.filter(s => s.name === playerName);
-      
-      if (playerGames.length > 0) {
-        const tbody = document.getElementById('historyTableBody');
-        tbody.innerHTML = playerGames.slice(0, 10).map(game => `
-          <tr>
-            <td>${new Date(game.date || Date.now()).toLocaleString()}</td>
-            <td>${game.score}</td>
-            <td>${game.quality}%</td>
-          </tr>
-        `).join('');
-        document.getElementById('historyTableContainer').style.display = 'block';
-      }
+      // Charger l'historique depuis Supabase
+      window.FIRST_loadGameHistory(FIRST_playerName);
       
       const startBtn = document.getElementById('startGameBtn');
       startBtn.disabled = false;
       startBtn.style.opacity = '1';
-      startBtn.style.cursor = 'pointer';
-      console.log('START button enabled');
-      
-      window.expandAllSections();
+      startBtn.style.cursor = 'pointer';window.FIRST_expandAllSections();
       
       setTimeout(() => {
-        document.getElementById('historyTableContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        const historyContainer = document.getElementById('gameHistoryContainer');
+        if (historyContainer.style.display !== 'none') {
+          historyContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
       }, 100);
     };
 
-    window.clearPlayerName = function() {
+    window.FIRST_clearPlayerName = function() {
       const input = document.getElementById('playerNameInput');
       const clearBtn = document.getElementById('clearNameBtn');
       input.value = '';
       input.disabled = false;
       input.focus();
       clearBtn.style.display = 'none';
-      playerName = '';
-      playerNameValidated = false;
+      FIRST_playerName = '';
+      FIRST_playerNameValidated = false;
       
       document.getElementById('startGameBtn').disabled = true;
       document.getElementById('startGameBtn').style.opacity = '0.5';
@@ -1726,226 +1558,50 @@
       document.getElementById('historyTableContainer').style.display = 'none';
     };
 
-    window.startGameNow = function() {
-      console.log('startGameNow called, playerNameValidated:', playerNameValidated);
-      if (!playerNameValidated) {
-        console.warn('Player name not validated!');
-        alert('Please validate your name first!');
+    window.FIRST_startGame = function() {
+      if (!FIRST_playerNameValidated) {
+        // Créer un popup stylé
+        const popup = document.createElement('div');
+        popup.style.cssText = `
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background: linear-gradient(135deg, #0254A0 0%, #00A8E9 100%);
+          border: 3px solid #FFD700;
+          border-radius: 15px;
+          padding: 30px;
+          text-align: center;
+          z-index: 10000;
+          box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
+          min-width: 300px;
+          animation: popupIn 0.3s ease-out;
+        `;
+        popup.innerHTML = `
+          <div style="font-size: 2rem; margin-bottom: 15px;">⚠️</div>
+          <div style="color: white; font-size: 1.2rem; font-weight: 900; margin-bottom: 15px;">WAIT!</div>
+          <div style="color: #FFD700; font-size: 1rem; font-weight: 700; margin-bottom: 20px;">Please enter your name first!</div>
+          <button onclick="this.parentElement.parentElement.remove()" style="padding: 12px 30px; background: #FFD700; color: #0254A0; border: none; border-radius: 8px; font-weight: 900; cursor: pointer; font-size: 1rem;">Got it!</button>
+        `;
+        
+        // Ajouter l'animation au CSS
+        if (!document.getElementById('popupInAnimation')) {
+          const style = document.createElement('style');
+          style.id = 'popupInAnimation';
+          style.innerHTML = `
+            @keyframes popupIn {
+              0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+              100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            }
+          `;
+          document.head.appendChild(style);
+        }
+        
+        document.body.appendChild(popup);
         return;
-      }
-      console.log('Launching game directly...');
-      
-      // Cacher l'intro
-      const intro = document.getElementById('introScreenAnimated');
-      if (intro) {
-        intro.style.display = 'none';
-        console.log('Intro hidden');
-      }
-      
-      // S'assurer que les écrans de fin sont cachés
-      const endScreen = document.getElementById('endGameScreen');
-      const leaderboard = document.getElementById('leaderboardScreen');
-      if (endScreen) {
-        endScreen.classList.add('hidden');
-        console.log('End screen hidden');
-      }
-      if (leaderboard) {
-        leaderboard.classList.add('hidden');
-        console.log('Leaderboard hidden');
-      }
-      
-      // Afficher le jeu
-      const game = document.getElementById('gameScreen');
-      if (game) {
-        game.classList.remove('hidden');
-        game.style.display = 'flex';
-        console.log('Game shown');
-      } else {
-        console.error('Game screen not found!');
-      }
-      
-      // Initialiser le jeu
-      gameActive = true;
-      gameStartTime = Date.now();
-      correctCombo = 0;
-      gameStats = { productsInspected: 0, productsGood: 0, productsBad: 0, totalScore: 0, quality: 0, maxCombo: 0, totalInspectionTime: 0 };
-      
-      currentProductIndex = 0;
-      allProducts = [];
-      for (let i = 0; i < 30; i++) {
-        allProducts.push({ name: 'Product ' + i, id: i, value: 100 + Math.random() * 100, defects: Math.random() > 0.6 ? [{ name: 'Defect' }] : [] });
-      }
-      
-      console.log('Generated', allProducts.length, 'products');
-      
-      loadNextProduct();
-      startGameTimer();
-      console.log('Game started!');
-    };
+      }};
 
-    window.makeDecisionNow = function(decision) {
-      if (!gameActive) return;
-      const hasDefects = currentProduct.defects.length > 0;
-      let isCorrect = (decision === 'good' && !hasDefects) || (decision === 'reject' && hasDefects);
-
-      gameStats.productsInspected++;
-      const productTime = (Date.now() - productStartTime) / 1000;
-      gameStats.totalInspectionTime += productTime;
-
-      if (isCorrect) {
-        correctCombo++;
-        if (correctCombo > gameStats.maxCombo) gameStats.maxCombo = correctCombo;
-        gameStats.productsGood++;
-        gameStats.totalScore += Math.round(currentProduct.value);
-        showFeedback('✅ CORRECT!', true);
-      } else {
-        correctCombo = 0;
-        gameStats.totalScore = Math.max(0, gameStats.totalScore - 50);
-        showFeedback('❌ WRONG!', false);
-      }
-
-      currentProductIndex++;
-      setTimeout(() => loadNextProduct(), 800);
-    };
-
-    function loadNextProduct() {
-      if (currentProductIndex >= allProducts.length || !gameActive) {
-        endGameNow();
-        return;
-      }
-      currentProduct = allProducts[currentProductIndex];
-      currentDefects = currentProduct.defects || [];
-      foundDefects = [];
-      productStartTime = Date.now();
-      
-      // Trigger animation
-      const canvas = document.getElementById('productCanvas');
-      if (canvas) {
-        // Remove and re-add animation
-        canvas.style.animation = 'none';
-        setTimeout(() => {
-          canvas.style.animation = 'product-transition 0.5s ease-out';
-        }, 10);
-      }
-      
-      // Draw product
-      drawProduct();
-      updateStats();
-    }
-    
-    function drawProduct() {
-      const canvas = document.getElementById('productCanvas');
-      if (!canvas) return;
-      
-      const ctx = canvas.getContext('2d');
-      const width = canvas.width;
-      const height = canvas.height;
-      
-      // Ocean gradient background
-      const gradient = ctx.createLinearGradient(0, 0, 0, height);
-      gradient.addColorStop(0, '#E8F4F8');
-      gradient.addColorStop(1, '#B0E0E6');
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, width, height);
-      
-      // Border
-      ctx.strokeStyle = '#00A8E9';
-      ctx.lineWidth = 3;
-      ctx.strokeRect(0, 0, width, height);
-      
-      const centerX = width / 2;
-      const centerY = height / 2;
-      
-      // Defect types for offshore equipment
-      const defectTypes = [
-        { emoji: '🔴', name: 'Corrosion' },
-        { emoji: '⚫', name: 'Salt Stain' },
-        { emoji: '🟡', name: 'Discoloration' },
-        { emoji: '❌', name: 'Crack' },
-        { emoji: '💥', name: 'Impact' }
-      ];
-      
-      // Draw random offshore equipment based on currentProductIndex
-      const productType = currentProductIndex % 4;
-      
-      if (productType === 0) {
-        // Draw turbine blade section
-        drawBlade(ctx, centerX, centerY);
-      } else if (productType === 1) {
-        // Draw foundation bolt
-        drawFoundationBolt(ctx, centerX, centerY);
-      } else if (productType === 2) {
-        // Draw cable connector
-        drawCableConnector(ctx, centerX, centerY);
-      } else {
-        // Draw tower section
-        drawTowerSection(ctx, centerX, centerY);
-      }
-      
-      // Draw defects if any - positioned ON the product
-      if (currentDefects && currentDefects.length > 0) {
-        currentDefects.forEach((defect, i) => {
-          // Position défauts selon le type de produit
-          let x, y;
-          const productType = currentProductIndex % 4;
-          
-          if (productType === 0) {
-            // Blade - position sur la lame
-            const angle = (i / currentDefects.length) * Math.PI * 2 - Math.PI / 2;
-            x = centerX + Math.cos(angle) * 40;
-            y = centerY + Math.sin(angle) * 60;
-          } else if (productType === 1) {
-            // Bolt - position sur le boulon
-            const radius = 35 + (i % 2) * 30;
-            const angle = (i / currentDefects.length) * Math.PI * 2;
-            x = centerX + Math.cos(angle) * radius;
-            y = centerY - 20 + Math.sin(angle) * radius;
-          } else if (productType === 2) {
-            // Connector - position sur le connecteur
-            x = centerX - 35 + (i % 3) * 35;
-            y = centerY - 15 + Math.floor(i / 3) * 30;
-          } else {
-            // Tower - position sur la tour
-            x = centerX - 30 + (i % 3) * 30;
-            y = centerY - 60 + Math.floor(i / 3) * 60;
-          }
-          
-          if (!defect.x) {
-            defect.x = x;
-            defect.y = y;
-            defect.type = defectTypes[i % defectTypes.length];
-          }
-          
-          // Red defect marker
-          ctx.fillStyle = '#FF0000';
-          ctx.beginPath();
-          ctx.arc(x, y, 8, 0, Math.PI * 2);
-          ctx.fill();
-          
-          // White border
-          ctx.strokeStyle = '#FFFFFF';
-          ctx.lineWidth = 2;
-          ctx.stroke();
-          
-          // Defect label
-          ctx.fillStyle = '#333333';
-          ctx.font = 'bold 14px Arial';
-          ctx.textAlign = 'center';
-          
-          const emoji = defect.type.emoji;
-          const name = defect.type.name;
-          
-          ctx.fillText(emoji, x, y - 25);
-          ctx.font = 'bold 11px Arial';
-          ctx.fillStyle = '#FF0000';
-          ctx.fillText(name, x, y - 10);
-        });
-      }
-      
-      updateProductStatus();
-    }
-    
-    function drawBlade(ctx, x, y) {
+    function FIRST_drawBlade(ctx, x, y) {
       // Turbine blade section
       ctx.fillStyle = '#F5F5F5';
       ctx.beginPath();
@@ -1973,7 +1629,7 @@
       ctx.fillText('BLADE SECTION', x, y + 110);
     }
     
-    function drawFoundationBolt(ctx, x, y) {
+    function FIRST_drawBolt(ctx, x, y) {
       // Large bolt
       const boltSize = 40;
       
@@ -2026,7 +1682,7 @@
       ctx.fillText('FOUNDATION BOLT', x, y + 115);
     }
     
-    function drawCableConnector(ctx, x, y) {
+    function FIRST_drawCable(ctx, x, y) {
       // Cable connector with multiple pins
       ctx.fillStyle = '#FFD700';
       ctx.beginPath();
@@ -2099,7 +1755,7 @@
       ctx.fillText('TOWER SECTION', x, y + 95);
     }
     
-    function updateProductStatus() {
+    function FIRST_updateStatus() {
       const status = document.getElementById('productStatus');
       if (!status) return;
       
@@ -2129,10 +1785,10 @@
               const dist = Math.sqrt((x - defect.x) ** 2 + (y - defect.y) ** 2);
               if (dist < 15) {
                 foundDefects.push(defect);
-                drawDefectFound(defect.x, defect.y);
+                FIRST_drawDefect(defect.x, defect.y);
                 
                 if (foundDefects.length === currentDefects.length) {
-                  updateProductStatus();
+                  FIRST_updateStatus();
                 }
                 return;
               }
@@ -2142,7 +1798,7 @@
       }
     });
     
-    function drawDefectFound(x, y) {
+    function FIRST_drawDefect(x, y) {
       const canvas = document.getElementById('productCanvas');
       if (!canvas) return;
       
@@ -2168,57 +1824,9 @@
       ctx.stroke();
     }
 
-    function showFeedback(msg, isGood) {
-      const feedback = document.getElementById('feedbackMessage');
-      feedback.textContent = msg;
-      feedback.className = `feedback-message ${isGood ? 'good' : 'bad'}`;
-      feedback.style.display = 'block';
-      setTimeout(() => { feedback.style.display = 'none'; }, 2000);
-    }
-
-    function startGameTimer() {
-      let timeLeft = 300;
-      gameTimer = setInterval(() => {
-        timeLeft--;
-        const mins = Math.floor(timeLeft / 60);
-        const secs = timeLeft % 60;
-        document.getElementById('timeDisplay').textContent = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-        document.getElementById('timerFill').style.width = (timeLeft / 300) * 100 + '%';
-        if (timeLeft <= 0) {
-          clearInterval(gameTimer);
-          gameActive = false;
-          endGameNow();
-        }
-      }, 1000);
-    }
-
-    function endGameNow() {
-      gameActive = false;
-      if (gameTimer) clearInterval(gameTimer);
-      
-      gameStats.quality = gameStats.productsInspected > 0 ? Math.round((gameStats.productsGood / gameStats.productsInspected) * 100) : 0;
-      const rank = gameStats.quality >= 90 ? 'S' : gameStats.quality >= 75 ? 'A' : gameStats.quality >= 60 ? 'B' : gameStats.quality >= 40 ? 'C' : gameStats.quality >= 20 ? 'D' : 'E';
-      
-      document.querySelectorAll('.rank-node').forEach(n => n.classList.remove('active'));
-      const nodeEl = document.querySelector(`.rank-node.${rank}`);
-      if (nodeEl) nodeEl.classList.add('active');
-
-      document.getElementById('performanceEmoji').textContent = RANK_MESSAGES[currentLanguage][rank].emoji;
-      document.getElementById('performanceText').innerHTML = `<strong style="font-size: 1.3rem; color: #00A8E9;">${RANK_MESSAGES[currentLanguage][rank].messages[0]}</strong>`;
-      document.getElementById('finalRatio').textContent = `${gameStats.productsGood}/${gameStats.productsInspected} = ${gameStats.quality}%`;
-      document.getElementById('finalScore').textContent = gameStats.totalScore;
-      document.getElementById('maxComboDisplay').textContent = gameStats.maxCombo;
-      document.getElementById('avgTime').textContent = (gameStats.productsInspected > 0 ? (gameStats.totalInspectionTime / gameStats.productsInspected).toFixed(1) : 0) + 's';
-
-      const gameScreen = document.getElementById('gameScreen');
-      const endScreen = document.getElementById('endGameScreen');
-      if (gameScreen) gameScreen.classList.add('hidden');
-      if (endScreen) endScreen.classList.remove('hidden');
-    }
-
     window.submitScoreNow = function() {
       const score = {
-        name: playerName,
+        name: FIRST_playerName,
         score: gameStats.totalScore,
         good_count: gameStats.productsGood,
         total_count: gameStats.productsInspected,
@@ -2233,16 +1841,16 @@
       if (local.length > 100) local.pop();
       localStorage.setItem('leaderboard', JSON.stringify(local));
       
-      loadLeaderboardFromSupabase();
-      showLeaderboardNow();
+      FIRST_loadLeaderboard();
+      FIRST_showLeaderboard();
     };
 
-    function showLeaderboardNow() {
+    function FIRST_showLeaderboard() {
       const local = JSON.parse(localStorage.getItem('leaderboard') || '[]');
       const list = document.getElementById('leaderboardList');
       list.innerHTML = '';
       
-      const playerRank = local.findIndex(s => s.name === playerName && s.score === gameStats.totalScore) + 1;
+      const playerRank = local.findIndex(s => s.name === FIRST_playerName && s.score === gameStats.totalScore) + 1;
       
       document.getElementById('finalEmoji').textContent = RANK_MESSAGES[currentLanguage][gameStats.quality >= 90 ? 'S' : gameStats.quality >= 75 ? 'A' : gameStats.quality >= 60 ? 'B' : gameStats.quality >= 40 ? 'C' : gameStats.quality >= 20 ? 'D' : 'E'].emoji;
       document.getElementById('finalPlayerText').textContent = RANK_MESSAGES[currentLanguage][gameStats.quality >= 90 ? 'S' : gameStats.quality >= 75 ? 'A' : gameStats.quality >= 60 ? 'B' : gameStats.quality >= 40 ? 'C' : gameStats.quality >= 20 ? 'D' : 'E'].messages[0];
@@ -2251,7 +1859,7 @@
       
       local.slice(0, 20).forEach((s, i) => {
         const grade = s.quality >= 90 ? 'S' : s.quality >= 75 ? 'A' : s.quality >= 60 ? 'B' : s.quality >= 40 ? 'C' : s.quality >= 20 ? 'D' : 'E';
-        const isCurrentPlayer = s.name === playerName && s.score === gameStats.totalScore;
+        const isCurrentPlayer = s.name === FIRST_playerName && s.score === gameStats.totalScore;
         const row = document.createElement('div');
         row.className = 'leaderboard-row' + (isCurrentPlayer ? ' highlight' : '');
         row.innerHTML = `
@@ -2273,7 +1881,7 @@
       const intro = document.getElementById('introScreenAnimated');
       const board = document.getElementById('leaderboardScreen');
       
-      playerNameValidated = false;
+      FIRST_playerNameValidated = false;
       document.getElementById('playerNameInput').disabled = false;
       document.getElementById('playerNameInput').value = '';
       document.getElementById('clearNameBtn').style.display = 'none';
@@ -2293,16 +1901,16 @@
       if (board) board.classList.add('hidden');
     };
 
-    window.showEasterEggNow = function() {
+    window.FIRST_showEasterEgg = function() {
       const overlay = document.getElementById('easterOverlay');
       if (overlay) {
         overlay.style.display = 'flex';
-        createFireworks();
+        FIRST_createFireworks();
         setTimeout(() => { overlay.style.display = 'none'; }, 5000);
       }
     };
 
-    function createFireworks() {
+    function FIRST_createFireworks() {
       const container = document.getElementById('fireworksContainer');
       if (!container) return;
       container.innerHTML = '';
@@ -2346,86 +1954,17 @@
       if (endScreen) endScreen.classList.remove('hidden');
     };
 
-    function updateStats() {
-      if (document.getElementById('statsProducts')) document.getElementById('statsProducts').textContent = gameStats.productsInspected;
-      if (document.getElementById('statsGood')) document.getElementById('statsGood').textContent = gameStats.productsGood;
-      if (document.getElementById('statsQuality')) document.getElementById('statsQuality').textContent = gameStats.quality + '%';
-      if (document.getElementById('statsCombo')) document.getElementById('statsCombo').textContent = correctCombo + 'x';
-      if (document.getElementById('statsScore')) document.getElementById('statsScore').textContent = gameStats.totalScore;
-      
-      if (document.getElementById('kpiWellInspected')) document.getElementById('kpiWellInspected').textContent = gameStats.productsGood;
-      if (document.getElementById('kpiTotalInspected')) document.getElementById('kpiTotalInspected').textContent = gameStats.productsInspected;
-      
-      const qualityEl = document.getElementById('kpiQualityRatio');
-      const qualityContainer = qualityEl ? qualityEl.closest('.kpi-section') : null;
-      const qualityValue = document.getElementById('kpiQualityRatio');
-      
-      if (qualityEl) qualityEl.textContent = gameStats.quality + '%';
-      
-      // Changer la couleur selon la qualité
-      if (qualityContainer) {
-        qualityContainer.classList.remove('high');
-        if (gameStats.quality >= 75) {
-          qualityContainer.classList.add('high');
-          if (qualityValue) {
-            qualityValue.classList.remove('quality');
-            qualityValue.classList.add('quality', 'high');
-          }
-        } else {
-          if (qualityValue) {
-            qualityValue.classList.remove('quality', 'high');
-            qualityValue.classList.add('quality');
-          }
-        }
-      }
-      
-      if (document.getElementById('kpiScore')) document.getElementById('kpiScore').textContent = gameStats.totalScore;
-      
-      const avgTime = gameStats.productsInspected > 0 ? (gameStats.totalInspectionTime / gameStats.productsInspected).toFixed(1) : 0;
-      if (document.getElementById('kpiAvgTime')) document.getElementById('kpiAvgTime').textContent = avgTime + 's';
-      
-      const smileyEl = document.getElementById('qualitySmiley');
-      if (smileyEl) {
-        if (gameStats.quality >= 90) smileyEl.textContent = '😍';
-        else if (gameStats.quality >= 75) smileyEl.textContent = '😊';
-        else if (gameStats.quality >= 50) smileyEl.textContent = '😐';
-        else if (gameStats.quality >= 25) smileyEl.textContent = '😕';
-        else smileyEl.textContent = '😡';
-      }
+    async function FIRST_loadLeaderboard() {
+      FIRST_loadLeaderboardFallback();
     }
 
-    async function loadLeaderboardFromSupabase() {
-      try {
-        const SUPABASE_URL = 'https://your-supabase-url.supabase.co';
-        const SUPABASE_KEY = 'your-supabase-key';
-        const TABLE_NAME = 'leaderboard';
-        
-        const response = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE_NAME}?order=score.desc&limit=20`, {
-          headers: {
-            'apikey': SUPABASE_KEY,
-            'Authorization': `Bearer ${SUPABASE_KEY}`,
-            'Content-Type': 'application/json'
-          }
-        });
-        
-        if (!response.ok) throw new Error('Supabase error');
-        
-        const data = await response.json();
-        displayLeaderboardInHallOfFame(data);
-        updateLeaderboardTimestamp(true);
-      } catch (error) {
-        console.log('Supabase not available, using fallback');
-        loadLeaderboardFallback();
-      }
-    }
-
-    function loadLeaderboardFallback() {
+     function FIRST_loadLeaderboardFallback() {
       const local = JSON.parse(localStorage.getItem('leaderboard') || '[]');
-      displayLeaderboardInHallOfFame(local.slice(0, 20));
-      updateLeaderboardTimestamp(false);
+      FIRST_displayLeaderboard(local.slice(0, 20));
+      FIRST_updateTimestamp(false);
     }
 
-    function updateLeaderboardTimestamp(isCloud) {
+    function FIRST_updateTimestamp(isCloud) {
       const date = new Date();
       const day = String(date.getDate()).padStart(2, '0');
       const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -2438,7 +1977,7 @@
       document.getElementById('updateTimeText').textContent = `${icon} Updated ${day}/${month}/${year} ${hours}:${mins}:${secs}`;
     }
 
-    function displayLeaderboardInHallOfFame(scores) {
+    function FIRST_displayLeaderboard(scores) {
       const introList = document.getElementById('introLeaderboardList');
       introList.innerHTML = '';
       
@@ -2529,67 +2068,37 @@
       const saved = localStorage.getItem('playerName');
       if (saved) document.getElementById('playerNameInput').value = saved;
       
-      loadLeaderboardFromSupabase();
+      FIRST_loadLeaderboard();
     });
   </script>
+
+  <!-- Easter Egg Overlay -->
+  <div id="easterOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(2, 84, 160, 0.95) 0%, rgba(0, 168, 233, 0.95) 100%); z-index: 9999; align-items: center; justify-content: center; flex-direction: column;">
+    <div style="display: flex; align-items: center; gap: 40px; max-width: 950px;">
+      <div style="position: relative; padding: 8px; background: linear-gradient(135deg, #FFD700 0%, #FF6B00 50%, #FFD700 100%); border-radius: 16px; box-shadow: 0 0 30px rgba(255, 107, 0, 0.8), inset 0 0 20px rgba(255, 215, 0, 0.3);">
+        <img src="/img/qualiteam.jpg">
+      </div>
+      <div style="text-align: center; color: white;">
+        <h2 style="font-size: 2.5rem; font-weight: 900; margin-bottom: 15px; text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); animation: pulse 0.8s infinite;">Made with Love 💗</h2>
+        <p style="font-size: 1.8rem; font-weight: 700; letter-spacing: 2px; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);">QualiTeam 💗</p>
+      </div>
+    </div>
+    <div id="fireworksContainer" style="position: absolute; width: 100%; height: 100%; pointer-events: none;"></div>
+  </div>
 
   <div id="overlayStartInspecting" class="overlay-start-inspecting">
     <div class="start-inspecting-content">
       <h2>🔍 READY TO START INSPECTING?</h2>
       <p>You are now <strong>Quality Inspector for EDF</strong>. You have <strong>5 minutes</strong> to inspect products and maintain quality!</p>
       <div class="start-inspecting-buttons">
-        <button class="btn-yes" onclick="window.confirmStartGame()">YES, LET'S GO! ▶</button>
+        <button class="btn-yes" onclick="alert('GO TO SCREEN2');">YES, LET'S GO! ▶</button>
         <button class="btn-no" onclick="window.cancelStartGame()">WAIT, I NEED HELP</button>
       </div>
     </div>
   </div>
 
   <script>
-    window.confirmStartGame = function() {
-      console.log('confirmStartGame called');
-      const overlay = document.getElementById('overlayStartInspecting');
-      if (overlay) {
-        overlay.classList.remove('active');
-        console.log('Overlay hidden');
-      }
-      
-      const intro = document.getElementById('introScreenAnimated');
-      const game = document.getElementById('gameScreen');
-      
-      console.log('Intro found:', !!intro, 'Game found:', !!game);
-      
-      if (intro) {
-        intro.style.display = 'none';
-        console.log('Intro hidden');
-      }
-      if (game) {
-        game.classList.remove('hidden');
-        console.log('Game shown');
-      }
-      
-      gameActive = true;
-      gameStartTime = Date.now();
-      correctCombo = 0;
-      gameStats = { productsInspected: 0, productsGood: 0, productsBad: 0, totalScore: 0, quality: 0, maxCombo: 0, totalInspectionTime: 0 };
-      
-      currentProductIndex = 0;
-      allProducts = [];
-      for (let i = 0; i < 30; i++) {
-        allProducts.push({ name: 'Product ' + i, id: i, value: 100 + Math.random() * 100, defects: Math.random() > 0.6 ? [{ name: 'Defect' }] : [] });
-      }
-      
-      console.log('Generated', allProducts.length, 'products');
-      
-      loadNextProduct();
-      startGameTimer();
-      console.log('Game started');
-    };
 
-    window.cancelStartGame = function() {
-      console.log('cancelStartGame called');
-      const overlay = document.getElementById('overlayStartInspecting');
-      if (overlay) overlay.classList.remove('active');
-    };
   </script>
 
 </body>
