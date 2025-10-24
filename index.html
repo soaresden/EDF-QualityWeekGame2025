@@ -1890,6 +1890,9 @@
     }
   </style>
 </head>
+
+<script src="leaderboard-manager.js"></script>
+
 <body>
 <!-- INTRO SCREEN -->
   <div id="introScreenAnimated" style="position: fixed; inset: 0; background: linear-gradient(135deg, #0254A0 0%, #00A8E9 100%); display: flex; z-index: 2000; align-items: center; justify-content: flex-start; flex-direction: column; padding: 40px 20px; overflow-y: auto;">
@@ -2306,6 +2309,10 @@
       const intro = document.getElementById('introScreenAnimated');
       const rulesOverlay = document.getElementById('rulesOverlay');
       
+      // Supprimer l'icône de la page 1
+      const firstIcon = document.getElementById('firstSourceIcon');
+      if (firstIcon) firstIcon.remove();
+      
       if (intro) intro.style.display = 'none';
       if (rulesOverlay) rulesOverlay.classList.remove('hidden');
     };
@@ -2664,6 +2671,38 @@
     };
 
     async function FIRST_loadLeaderboard() {
+      // Essayer Supabase d'abord
+      try {
+        if (typeof supabase !== 'undefined') {
+          const { data, error } = await supabase
+            .from('leaderboard')
+            .select('*')
+            .order('score', { ascending: false })
+            .limit(20);
+          
+          if (!error && data && data.length > 0) {
+            // Formater les données pour l'affichage
+            const formattedData = data.map(item => ({
+              name: item.name,
+              score: item.score,
+              grade: item.grade,
+              good: item.good,
+              total: item.total,
+              quality: item.quality,
+              date: item.created_at
+            }));
+            
+            FIRST_displayLeaderboard(formattedData);
+            FIRST_updateTimestamp(true);
+            FIRST_displaySourceIcon(true);
+            return;
+          }
+        }
+      } catch (err) {
+        console.log('Supabase non disponible, utilisation localStorage');
+      }
+      
+      // Fallback sur localStorage
       FIRST_loadLeaderboardFallback();
     }
 
@@ -2671,6 +2710,34 @@
       const local = JSON.parse(localStorage.getItem('leaderboard') || '[]');
       FIRST_displayLeaderboard(local.slice(0, 20));
       FIRST_updateTimestamp(false);
+      FIRST_displaySourceIcon(false);
+    }
+    
+    function FIRST_displaySourceIcon(isCloud) {
+      // Supprimer l'ancienne icône si elle existe
+      const oldIcon = document.getElementById('firstSourceIcon');
+      if (oldIcon) oldIcon.remove();
+      
+      const icon = isCloud ? '☁️' : '💻';
+      const tooltip = isCloud ? 'Données cloud (Supabase)' : 'Données locales (localStorage)';
+      
+      const iconEl = document.createElement('div');
+      iconEl.id = 'firstSourceIcon';
+      iconEl.style.cssText = 'position: fixed; bottom: 20px; right: 20px; font-size: 2.5rem; cursor: pointer; z-index: 2001; filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.6)); transition: transform 0.3s;';
+      iconEl.textContent = icon;
+      iconEl.title = tooltip + ' - Cliquez pour actualiser';
+      iconEl.onclick = function() {
+        console.log('🔄 Rafraîchissement des données...');
+        iconEl.style.transform = 'rotate(360deg) scale(1.3)';
+        setTimeout(() => {
+          iconEl.style.transform = 'rotate(0deg) scale(1)';
+        }, 500);
+        FIRST_loadLeaderboard();
+      };
+      iconEl.onmouseover = () => iconEl.style.transform = 'scale(1.3) rotate(10deg)';
+      iconEl.onmouseout = () => iconEl.style.transform = 'scale(1) rotate(0deg)';
+      
+      document.body.appendChild(iconEl);
     }
 
     function FIRST_updateTimestamp(isCloud) {
@@ -2682,7 +2749,7 @@
       const mins = String(date.getMinutes()).padStart(2, '0');
       const secs = String(date.getSeconds()).padStart(2, '0');
       
-      const icon = isCloud ? '☁️' : '🏠';
+      const icon = isCloud ? '☁️' : '💻';
       document.getElementById('updateTimeText').textContent = `${icon} Updated ${day}/${month}/${year} ${hours}:${mins}:${secs}`;
     }
 
@@ -3642,7 +3709,495 @@ TYPE html>
     .leaderboard-grade { color: #FFD700; font-weight: 900; min-width: 20px; text-align: center; }
     .leaderboard-date { color: #00A8E9; font-size: 0.7rem; min-width: 70px; text-align: right; opacity: 0.8; }
 
-    </style>
+    
+
+    /* ===== STYLES NEW3 LEADERBOARD (SCOPÉ) ===== */
+#leaderboardPage * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        #leaderboardPage {
+            background: linear-gradient(135deg, #0254A0 0%, #00A8E9 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Poppins', sans-serif;
+            padding: 10px;
+        }
+
+    #leaderboardPage .leaderboard-container {
+            background: rgba(0, 0, 0, 0.3);
+            border: 3px solid #FFD700;
+            border-radius: 15px;
+            padding: 15px;
+            max-width: 1200px;
+            width: 100%;
+            overflow: visible;
+            display: flex;
+            flex-direction: column;
+        }
+
+    #leaderboardPage .header-section {
+            position: relative;
+            width: 100%;
+            margin-bottom: 12px;
+        }
+
+    #leaderboardPage .header-section h1 {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: #FFD700;
+            margin: 0;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+        }
+
+    #leaderboardPage .play-again-btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 4px 8px;
+            font-size: 0.6rem;
+            background: linear-gradient(135deg, #0254A0, #00A8E9);
+            border: 2px solid #FFD700;
+            color: #FFD700;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 900;
+        }
+
+    #leaderboardPage .main-layout {
+            display: grid;
+            grid-template-columns: 40% 60%;
+            gap: 12px;
+        }
+
+    #leaderboardPage .left-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+    #leaderboardPage .well-done {
+            color: #FFFFFF;
+            font-size: 1.3rem;
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 8px;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+        }
+
+        /* TABLEAU 1: Rangs */
+    #leaderboardPage .ranks-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 8px;
+            border: 2px solid #FFD700;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+        }
+
+    #leaderboardPage .ranks-table tr {
+            border-bottom: 1px solid rgba(0, 168, 233, 0.2);
+            height: 24px;
+        }
+
+    #leaderboardPage .ranks-table tr:last-child {
+            border-bottom: none;
+        }
+
+    #leaderboardPage .ranks-table td {
+            padding: 1px 6px;
+            vertical-align: middle;
+        }
+
+    #leaderboardPage .rank-letter-cell {
+            width: 40px;
+            text-align: center;
+        }
+
+    #leaderboardPage .rank-letter {
+            font-size: 2rem;
+            font-weight: 900;
+            font-style: italic;
+            line-height: 1;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s;
+            cursor: pointer;
+            opacity: 0.2;
+            filter: brightness(0.4);
+        }
+
+    #leaderboardPage .rank-letter:hover {
+            opacity: 1;
+            filter: brightness(1.2);
+        }
+
+    #leaderboardPage .rank-letter.rank-s {
+            color: #FF1493;
+            filter: drop-shadow(0 0 2px #FF69B4) drop-shadow(0 0 1px #FF1493);
+            animation: breathingOutline 3s ease-in-out infinite;
+            opacity: 1 !important;
+        }
+
+    #leaderboardPage .rank-word-cell {
+            font-size: 0.85rem;
+            font-weight: 700;
+            font-style: italic;
+            transition: color 0.3s;
+            opacity: 0.2;
+            filter: brightness(0.4);
+        }
+
+    #leaderboardPage .rank-word-cell.rank-s-word {
+            opacity: 1;
+            filter: brightness(1);
+            color: #FF1493;
+        }
+
+    #leaderboardPage .ranks-table tr:hover .rank-word-cell {
+            opacity: 1;
+            filter: brightness(1.2);
+        }
+
+    #leaderboardPage .rank-word-cell.rank-s-word {
+            color: #FF1493;
+            filter: drop-shadow(0 0 1px #FF69B4);
+        }
+
+    #leaderboardPage .rank-word-cell.rank-a-word {
+            color: #00BFFF;
+        }
+
+    #leaderboardPage .rank-word-cell.rank-b-word {
+            color: #00FF00;
+        }
+
+    #leaderboardPage .rank-word-cell.rank-c-word {
+            color: #ADFF2F;
+        }
+
+    #leaderboardPage .rank-word-cell.rank-d-word {
+            color: #FFD700;
+        }
+
+    #leaderboardPage .rank-word-cell.rank-e-word {
+            color: #808080;
+        }
+
+        /* Hover sur les rangs */
+    #leaderboardPage .ranks-table tr:hover .rank-letter:not(.rank-s) {
+            opacity: 1;
+            filter: brightness(1.3);
+        }
+
+    #leaderboardPage .ranks-table:has(tr:hover) tr:not(:hover) .rank-letter:not(.rank-s) {
+            opacity: 0.3;
+            filter: brightness(0.5);
+        }
+
+    #leaderboardPage .ranks-table:has(tr:hover) tr:not(:hover) .rank-word-cell {
+            opacity: 0.3;
+            filter: brightness(0.5);
+        }
+
+        .rank-letter:hover ~ .rank-word-cell,
+    #leaderboardPage .ranks-table tr:hover .rank-word-cell {
+            color: #FFD700;
+        }
+
+    #leaderboardPage .rank-letter.rank-e {
+            color: #808080;
+            text-shadow: 3px 3px 0px rgba(255, 255, 255, 0.2), 2px 2px 0px rgba(0, 0, 0, 0.5);
+        }
+
+    #leaderboardPage .rank-letter.rank-d {
+            color: #FFD700;
+            filter: drop-shadow(0 0 2px #FFFF00) drop-shadow(0 0 1px #FFD700);
+        }
+
+    #leaderboardPage .rank-letter.rank-c {
+            color: #ADFF2F;
+            filter: drop-shadow(0 0 2px #7FFF00) drop-shadow(0 0 1px #ADFF2F);
+        }
+
+    #leaderboardPage .rank-letter.rank-b {
+            color: #00FF00;
+            filter: drop-shadow(0 0 2px #00FF7F) drop-shadow(0 0 1px #00FF00);
+        }
+
+    #leaderboardPage .rank-letter.rank-a {
+            color: #00BFFF;
+            filter: drop-shadow(0 0 2px #1E90FF) drop-shadow(0 0 1px #00BFFF);
+        }
+
+    #leaderboardPage .rank-letter.rank-s {
+            color: #FF1493;
+            filter: drop-shadow(0 0 2px #FF69B4) drop-shadow(0 0 1px #FF1493);
+            animation: breathingOutline 3s ease-in-out infinite;
+        }
+
+        @keyframes breathingOutline {
+    #leaderboardPage 0%, 100% {
+                text-shadow: 0 0 2px rgba(255, 255, 255, 0.2), 
+                            1px 1px 0px rgba(255, 255, 255, 0.3);
+            }
+    #leaderboardPage 50% {
+                text-shadow: -3px -3px 0px rgba(255, 255, 255, 0.8),
+                            -2px -2px 0px rgba(255, 255, 255, 0.8),
+                            -1px -1px 0px rgba(255, 255, 255, 0.8),
+                            3px 3px 0px rgba(255, 255, 255, 0.8),
+                            2px 2px 0px rgba(255, 255, 255, 0.8),
+                            1px 1px 0px rgba(255, 255, 255, 0.8),
+                            -3px 0px 0px rgba(255, 255, 255, 0.8),
+                            3px 0px 0px rgba(255, 255, 255, 0.8),
+                            0px -3px 0px rgba(255, 255, 255, 0.8),
+                            0px 3px 0px rgba(255, 255, 255, 0.8);
+            }
+        }
+
+        /* Score et Results combinés dans rangs */
+    #leaderboardPage .ranks-results-container {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 8px;
+            width: 100%;
+        }
+
+    #leaderboardPage .ranks-score-box {
+            background: rgba(0, 0, 0, 0.2);
+            border: 2px solid rgba(255, 215, 0, 0.2);
+            border-radius: 8px;
+            padding: 8px;
+            text-align: center;
+            animation: tableBreathing 3s ease-in-out infinite;
+        }
+
+        @keyframes tableBreathing {
+    #leaderboardPage 0%, 100% {
+                border-color: rgba(255, 215, 0, 0.2);
+                box-shadow: 0 0 8px rgba(255, 215, 0, 0.1);
+            }
+    #leaderboardPage 50% {
+                border-color: rgba(255, 215, 0, 0.6);
+                box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+            }
+        }
+
+    #leaderboardPage .player-name-score {
+            color: #FFD700;
+            font-size: 1.1rem;
+            font-weight: 900;
+            margin-bottom: 4px;
+            text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+            display: block;
+        }
+
+    #leaderboardPage .score-emoji {
+            font-size: 1.8rem;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+    #leaderboardPage .score-label {
+            background: linear-gradient(90deg, #FF0000, #FF6600, #FFFF00, #00FF00, #00FFFF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 900;
+            font-size: 0.9rem;
+            margin-bottom: 2px;
+            font-style: italic;
+            display: block;
+        }
+
+    #leaderboardPage .score-value {
+            background: linear-gradient(90deg, #FF0000, #FF6600, #FFFF00, #00FF00, #00FFFF, #FF00FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 900;
+            font-size: 1.6rem;
+            margin-bottom: 2px;
+            font-style: italic;
+            display: block;
+        }
+
+    #leaderboardPage .score-ratio {
+            color: #FFD700;
+            font-weight: 700;
+            font-size: 0.8rem;
+            display: block;
+        }
+
+    #leaderboardPage .ranks-results-box {
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid #FFD700;
+            border-radius: 8px;
+            padding: 12px;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        }
+
+    #leaderboardPage .results-title {
+            color: #FFD700;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+            font-size: 0.75rem;
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+        }
+
+    #leaderboardPage .results-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+
+    #leaderboardPage .result-group {
+            display: flex;
+            gap: 2px;
+            padding: 3px 6px;
+            background: rgba(0, 168, 233, 0.15);
+            border-radius: 4px;
+            border: 1px solid rgba(0, 168, 233, 0.3);
+            flex: 0 0 calc(33.333% - 6px);
+            justify-content: center;
+            box-shadow: 0 0 5px rgba(0, 168, 233, 0.2);
+        }
+
+    #leaderboardPage .result-emoji {
+            width: 14px;
+            height: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+    #leaderboardPage .result-emoji.success {
+            color: #10B981;
+            text-shadow: 0 0 3px rgba(16, 185, 129, 0.8);
+        }
+
+    #leaderboardPage .result-emoji.error {
+            color: #EF4444;
+            text-shadow: 0 0 3px rgba(239, 68, 68, 0.8);
+        }
+
+        /* LEADERBOARD DROIT */
+    #leaderboardPage .right-panel {
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid #00A8E9;
+            border-radius: 8px;
+            padding: 10px;
+            overflow-y: auto;
+            max-height: 400px;
+        }
+
+    .right-panel::-webkit-scrollbar {
+            width: 6px;
+        }
+
+    .right-panel::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+    .right-panel::-webkit-scrollbar-thumb {
+            background: #00A8E9;
+            border-radius: 3px;
+        }
+
+    #leaderboardPage .leaderboard-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            background: rgba(0, 168, 233, 0.1);
+            border: 1px solid rgba(0, 168, 233, 0.3);
+            border-radius: 6px;
+            margin-bottom: 4px;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+        }
+
+    #leaderboardPage .leaderboard-row:hover {
+            background: rgba(0, 168, 233, 0.4);
+            border-color: #FFD700;
+            transform: translateX(4px);
+            box-shadow: 0 0 15px rgba(0, 168, 233, 0.6), inset 0 0 10px rgba(0, 168, 233, 0.3);
+        }
+
+    #leaderboardPage .right-panel:has(> .leaderboard-row:hover) .leaderboard-row:not(:hover) {
+            opacity: 0.5;
+            filter: brightness(0.7);
+        }
+
+    #leaderboardPage .leaderboard-row.top-3 {
+            background: rgba(255, 215, 0, 0.15);
+            border-color: #FFD700;
+        }
+
+    #leaderboardPage .leaderboard-row.top-3:hover {
+            background: rgba(255, 215, 0, 0.3);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.6), inset 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+
+    #leaderboardPage .leaderboard-rank {
+            color: #FFD700;
+            font-weight: 900;
+            min-width: 25px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+    #leaderboardPage .leaderboard-medal {
+            font-size: 1.2rem;
+            min-width: 20px;
+            text-align: center;
+        }
+
+    #leaderboardPage .leaderboard-name {
+            flex: 1;
+            color: #fff;
+            font-weight: 600;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 0.95rem;
+        }
+
+    #leaderboardPage .leaderboard-score {
+            color: #10B981;
+            font-weight: 900;
+            min-width: 35px;
+            text-align: right;
+            font-size: 0.95rem;
+        }
+
+    #leaderboardPage .leaderboard-grade {
+            color: #FFD700;
+            font-weight: 900;
+            min-width: 20px;
+            text-align: center;
+            font-size: 0.95rem;
+        }
+
+    #leaderboardPage .leaderboard-date {
+            color: #00A8E9;
+            font-size: 0.75rem;
+            min-width: 75px;
+            text-align: right;
+            opacity: 0.8;
+        }
+  </style>
 </head>
   <!-- RULES OVERLAY -->
   <div class="rulesOverlay hidden" id="rulesOverlay">
@@ -4270,10 +4825,11 @@ TYPE html>
     }
 
     window.quitGame = function() {
+      console.log('🚪 GIVE UP clicked!');
       gameActive = false;
-      console.log('OPEN FINAL LEADERBOARD');
-      alert(`GAME OVER!\n\nGood: ${gameStats.good}\nWrong: ${gameStats.wrong}\nQuality: ${gameStats.inspected > 0 ? Math.round((gameStats.good / gameStats.inspected) * 100) : 0}%`);
-      location.reload();
+      const quality = gameStats.inspected > 0 ? Math.round((gameStats.good / gameStats.inspected) * 100) : 0;
+      console.log('Stats:', { good: gameStats.good, inspected: gameStats.inspected, quality });
+      saveGameScoreAndShowLeaderboard(gameStats.good, gameStats.inspected, quality);
     };
 
     function startTimer() {
@@ -4385,6 +4941,37 @@ TYPE html>
       await showLeaderboardPage(gameScore);
     }
     
+    
+    function displaySourceIcon() {
+      if (document.getElementById('sourceIcon')) return;
+      
+      let icon = '💻';
+      let tooltip = 'Données locales (localStorage)';
+      
+      if (typeof supabase !== 'undefined') {
+        icon = '☁️';
+        tooltip = 'Données cloud (Supabase)';
+      }
+      
+      const iconEl = document.createElement('div');
+      iconEl.id = 'sourceIcon';
+      iconEl.style.cssText = 'position: fixed; bottom: 20px; right: 20px; font-size: 2.5rem; cursor: pointer; z-index: 10001; filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.6)); transition: transform 0.3s;';
+      iconEl.textContent = icon;
+      iconEl.title = tooltip + ' - Cliquez pour actualiser';
+      iconEl.onclick = async function() {
+        console.log('🔄 Rafraîchissement du leaderboard...');
+        iconEl.style.transform = 'rotate(360deg) scale(1.3)';
+        setTimeout(() => {
+          iconEl.style.transform = 'rotate(0deg) scale(1)';
+        }, 500);
+        await loadAndDisplayLeaderboard();
+      };
+      iconEl.onmouseover = () => iconEl.style.transform = 'scale(1.3) rotate(10deg)';
+      iconEl.onmouseout = () => iconEl.style.transform = 'scale(1) rotate(0deg)';
+      
+      document.body.appendChild(iconEl);
+    }
+
     async function showLeaderboardPage(currentScore) {
       // Masquer le jeu
       document.getElementById('rulesOverlay').classList.add('hidden');
@@ -4405,16 +4992,54 @@ TYPE html>
       
       // Charger et afficher le leaderboard
       await loadAndDisplayLeaderboard();
+      
+      // Afficher l'icône source
+      displaySourceIcon();
     }
     
     function updatePlayerInfo(score) {
+      // Mapping des grades vers les textes complets
+      const gradeTexts = {
+        'S': 'STYLISH!',
+        'A': 'ABSOLUTE!',
+        'B': 'BRAVO!',
+        'C': 'COOL!',
+        'D': 'DULL!',
+        'E': 'EMPTY!'
+      };
+      
       document.getElementById('playerNameScore').textContent = score.name;
-      document.getElementById('scoreGrade').textContent = score.grade;
+      document.getElementById('scoreGrade').textContent = gradeTexts[score.grade] || score.grade;
       document.getElementById('scoreValue').textContent = score.score;
       document.getElementById('scoreRatio').textContent = `${score.good}/${score.total} = ${score.quality}%`;
       document.getElementById('resultsTotal').textContent = `${score.good}/${score.total}`;
       
-      // Générer les emojis de résultats
+      const rankMap = { 'S': 'rank-s', 'A': 'rank-a', 'B': 'rank-b', 'C': 'rank-c', 'D': 'rank-d', 'E': 'rank-e' };
+      const rankClass = rankMap[score.grade];
+      
+      document.querySelectorAll('#leaderboardPage .rank-letter').forEach(el => {
+        el.style.opacity = '0.2';
+        el.style.filter = 'brightness(0.4)';
+      });
+      document.querySelectorAll('#leaderboardPage .rank-word-cell').forEach(el => {
+        el.style.opacity = '0.2';
+        el.style.filter = 'brightness(0.4)';
+      });
+      
+      if (rankClass) {
+        const rankLetter = document.querySelector(`#leaderboardPage .${rankClass}`);
+        const rankWord = document.querySelector(`#leaderboardPage .${rankClass}-word`);
+        if (rankLetter) {
+          rankLetter.style.opacity = '1';
+          rankLetter.style.filter = 'brightness(1.2)';
+        }
+        if (rankWord) {
+          rankWord.style.opacity = '1';
+          rankWord.style.filter = 'brightness(1.2)';
+        }
+      }
+      
+      // Générer les résultats en format horizontal plus clair
       let resultEmojis = '';
       for (let i = 0; i < score.total; i += 5) {
         resultEmojis += '<div class="result-group">';
@@ -4493,28 +5118,52 @@ TYPE html>
     }
     
     function returnToMenu() {
-      console.log('📌 Retour au menu');
+      console.log('🔄 Retour au menu (page 1)');
       
-      // Masquer le leaderboard
+      // Masquer la page leaderboard
       const leaderboardPage = document.getElementById('leaderboardPage');
-      if (leaderboardPage) {
-        leaderboardPage.style.display = 'none';
-        console.log('✅ Leaderboard masqué');
-      }
+      if (leaderboardPage) leaderboardPage.style.display = 'none';
       
-      // Afficher les règles
+      // Supprimer l'icône source
+      const sourceIcon = document.getElementById('sourceIcon');
+      if (sourceIcon) sourceIcon.remove();
+      
+      // Masquer l'overlay des règles
       const rulesOverlay = document.getElementById('rulesOverlay');
-      if (rulesOverlay) {
-        rulesOverlay.classList.remove('hidden');
-        console.log('✅ Overlay des règles affiché');
-      }
+      if (rulesOverlay) rulesOverlay.classList.add('hidden');
+      
+      // Afficher la page 1 (intro)
+      const introScreen = document.getElementById('introScreenAnimated');
+      if (introScreen) introScreen.style.display = 'flex';
       
       // Réinitialiser le jeu
       gameActive = false;
       gameStats = { inspected: 0, good: 0, wrong: 0, maxCombo: 0, totalTime: 0 };
       currentProductIndex = 0;
       revealedDefects = [];
-      console.log('✅ Jeu réinitialisé');
+      
+      // Réinitialiser le champ de nom
+      const nameInput = document.getElementById('playerNameInput');
+      if (nameInput) {
+        nameInput.disabled = false;
+        nameInput.value = '';
+      }
+      
+      // Désactiver le bouton START
+      const startBtn = document.getElementById('openGameBtn');
+      if (startBtn) {
+        startBtn.disabled = true;
+        startBtn.style.opacity = '0.5';
+        startBtn.style.cursor = 'not-allowed';
+        startBtn.textContent = '▶ OPEN INSPECTION';
+      }
+      
+      // Réinitialiser le bouton de démarrage de la page 1
+      const startGameBtn = document.getElementById('startGameBtn');
+      if (startGameBtn) {
+        startGameBtn.disabled = true;
+        startGameBtn.style.opacity = '0.5';
+      }
     }
 
     window.addEventListener('load', () => {
@@ -4713,27 +5362,63 @@ TYPE html>
 
 
 <!-- Easter Egg Overlay -->
-  <div id="easterOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(10, 14, 39, 0.98) 0%, rgba(20, 30, 60, 0.98) 100%); z-index: 9999; align-items: center; justify-content: center; flex-direction: column;">
-    <div style="display: flex; align-items: center; gap: 40px; max-width: 950px;">
-      <div style="position: relative; padding: 8px; background: linear-gradient(135deg, #FFD700 0%, #FF6B00 50%, #FFD700 100%); border-radius: 16px; box-shadow: 0 0 30px rgba(255, 107, 0, 0.8), inset 0 0 20px rgba(255, 215, 0, 0.3);">
-        <img src="./img/qualiteam.jpg">
+  <div id="easterOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(10, 14, 39, 0.98) 0%, rgba(20, 30, 60, 0.98) 100%); z-index: 9999; align-items: center; justify-content: center;">
+    <!-- Conteneur principal avec photo à gauche et texte à droite -->
+    <div style="display: flex; align-items: center; justify-content: center; gap: 60px; max-width: 90vw; height: 90vh;">
+      <!-- Photo à gauche (75% max height) -->
+      <div style="position: relative; max-height: 75vh; padding: 12px; background: linear-gradient(135deg, #FFD700 0%, #FF6B00 50%, #FFD700 100%); border-radius: 20px; box-shadow: 0 0 40px rgba(255, 107, 0, 0.9), 0 0 80px rgba(255, 215, 0, 0.6), inset 0 0 30px rgba(255, 215, 0, 0.4); animation: glow-pulse 2s ease-in-out infinite;">
+        <img src="./img/qualiteam.jpg" style="max-height: calc(75vh - 24px); width: auto; border-radius: 12px; display: block; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);">
       </div>
-      <div style="text-align: center; color: white;">
-        <h2 style="font-size: 2.5rem; font-weight: 900; margin-bottom: 15px; text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); animation: pulse 0.8s infinite;">Made with Love 💗</h2>
-        <p style="font-size: 1.8rem; font-weight: 700; letter-spacing: 2px; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);">QualiTeam 💗</p>
+      
+      <!-- Texte à droite avec animation derrière -->
+      <div style="text-align: center; color: white; position: relative; z-index: 2;">
+        <!-- Animation derrière le texte -->
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; height: 300px; background: radial-gradient(circle, rgba(255, 107, 0, 0.3) 0%, rgba(255, 215, 0, 0.2) 40%, transparent 70%); border-radius: 50%; animation: pulse-glow 2s ease-in-out infinite; z-index: -1; filter: blur(20px);"></div>
+        
+        <h2 style="font-size: 3rem; font-weight: 900; margin-bottom: 20px; text-shadow: 0 0 20px rgba(255, 107, 0, 0.8), 0 0 40px rgba(255, 215, 0, 0.6), 0 4px 15px rgba(0, 0, 0, 0.5); animation: text-pulse 1.5s infinite; background: linear-gradient(135deg, #FFD700, #FF6B00, #FFD700); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Made with Love 💗</h2>
+        
+        <p style="font-size: 2.2rem; font-weight: 700; letter-spacing: 3px; text-shadow: 0 0 15px rgba(255, 107, 0, 0.7), 0 0 30px rgba(255, 215, 0, 0.5), 0 3px 10px rgba(0, 0, 0, 0.4); color: #FFD700; animation: text-pulse 1.5s infinite 0.5s;">QualiTeam 💗</p>
       </div>
     </div>
-    <div id="fireworksContainer" style="position: absolute; width: 100%; height: 100%; pointer-events: none;"></div>
+    
+    <!-- Conteneur des feux d'artifice -->
+    <div id="fireworksContainer" style="position: absolute; width: 100%; height: 100%; pointer-events: none; z-index: 1;"></div>
   </div>
 
-  <script>
-
-  </script>
-
+  <style>
+    @keyframes glow-pulse {
+      0%, 100% {
+        box-shadow: 0 0 40px rgba(255, 107, 0, 0.9), 0 0 80px rgba(255, 215, 0, 0.6), inset 0 0 30px rgba(255, 215, 0, 0.4);
+      }
+      50% {
+        box-shadow: 0 0 60px rgba(255, 107, 0, 1), 0 0 120px rgba(255, 215, 0, 0.8), inset 0 0 40px rgba(255, 215, 0, 0.6);
+      }
+    }
+    
+    @keyframes pulse-glow {
+      0%, 100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.6;
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 0.9;
+      }
+    }
+    
+    @keyframes text-pulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+    }
+  </style>
 
   <!-- LEADERBOARD PAGE -->
-  <div id="leaderboardPage" style="display: none;">
-<div class="leaderboard-container">
+  <div id="leaderboardPage" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #0254A0 0%, #00A8E9 100%); align-items: center; justify-content: center; z-index: 10000;">
+    <div class="leaderboard-container">
         <div class="header-section">
             <h1>🏆 LEADERBOARD</h1>
             <button class="play-again-btn" onclick="returnToMenu()">▶ AGAIN</button>
