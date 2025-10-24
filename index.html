@@ -1162,40 +1162,736 @@
         grid-template-columns: 1fr;
       }
     }
+  
+
+    /* ===== STYLES DU JEU (NEW2) ===== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: 'Poppins', sans-serif; 
+      background: linear-gradient(135deg, #0a0e27 0%, #1a1f2e 100%);
+      color: #ccc; 
+      overflow: hidden; 
+      height: 100vh;
+    }
+
+    /* ===== HEADER ===== */
+    .header {
+      background: linear-gradient(90deg, #0254A0 0%, #00A8E9 100%);
+      height: 45px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      border-bottom: 3px solid #00A8E9;
+      box-shadow: 0 4px 20px rgba(0, 168, 233, 0.4);
+    }
+
+    .headerTitle { 
+      font-size: 1rem; 
+      font-weight: 900; 
+      color: white;
+    }
+
+    .headerRight {
+      font-size: 0.75rem;
+      color: white;
+    }
+
+    /* ===== TIMER BAR ===== */
+    .gameStatusBar {
+      background: linear-gradient(90deg, #0254A0 0%, #00A8E9 100%);
+      height: 70px;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      padding: 0 20px;
+      gap: 8px;
+      border-bottom: 2px solid #00A8E9;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 4px 20px rgba(0, 168, 233, 0.2);
+    }
+
+    .timerDisplay {
+      font-size: 2rem;
+      font-weight: 900;
+      color: #FFD700;
+      font-family: 'Courier New', monospace;
+      letter-spacing: 2px;
+      min-width: 90px;
+      animation: electric-pulse 0.4s ease-in-out infinite;
+      filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.9));
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+    }
+
+    @keyframes electric-pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .windmill {
+      width: 45px;
+      height: 45px;
+      animation: spin 1.5s linear infinite;
+      filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.4));
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .timerBarContainer {
+      flex: 1;
+      max-width: none;
+      height: 20px;
+      background: linear-gradient(90deg, #000000 0%, rgba(0, 0, 0, 0.7) 50%, #000000 100%);
+      border-radius: 15px;
+      overflow: hidden;
+      border: 2px solid rgba(0, 168, 233, 0.7);
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 15px rgba(0, 168, 233, 0.3);
+    }
+
+    .timerFill {
+      height: 100%;
+      background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(0, 212, 255, 0.3) 20%,
+        rgba(0, 168, 233, 0.6) 50%, 
+        rgba(0, 212, 255, 0.3) 80%,
+        transparent 100%);
+      background-size: 200% 100%;
+      animation: electricity-flow 1.5s linear infinite;
+      width: 100%;
+      box-shadow: 
+        inset 0 0 30px rgba(0, 212, 255, 0.6),
+        inset -3px 0 15px rgba(0, 212, 255, 0.5),
+        0 0 30px rgba(0, 168, 233, 0.5);
+    }
+
+    @keyframes electricity-flow {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .windWave {
+      font-size: 1.3rem;
+      animation: wave 0.6s ease-in-out infinite;
+      margin-right: -8px;
+      margin-left: -5px;
+    }
+
+    @keyframes wave {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+
+    /* ===== GAME ZONE ===== */
+    .gameZone {
+      display: grid;
+      grid-template-columns: 1fr 18%;
+      gap: 15px;
+      padding: 15px;
+      height: calc(100vh - 115px);
+      background: linear-gradient(135deg, #0a0e27 0%, #1a1f2e 100%);
+    }
+
+    /* ===== INSPECTION ZONE (TABLEAU 2 COL) ===== */
+    .inspectionZone {
+      display: grid;
+      grid-template-columns: 1fr 140px;
+      grid-template-rows: auto auto 1fr;
+      gap: 12px;
+      background: rgba(2, 84, 160, 0.1);
+      border: 2px solid rgba(0, 168, 233, 0.25);
+      border-radius: 12px;
+      padding: 15px;
+      box-shadow: 0 4px 15px rgba(2, 84, 160, 0.15);
+    }
+
+    /* Ligne 1: INSPECTION | Give Up */
+    .inspectionHeader {
+      grid-column: 1 / 2;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .inspectionTitle {
+      font-size: 1rem;
+      font-weight: 900;
+      color: #FFD700;
+      text-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+    }
+
+    .giveUpBtn {
+      grid-column: 2 / 3;
+      grid-row: 1 / 2;
+      padding: 8px 14px;
+      background: linear-gradient(135deg, #7B7B7B 0%, #5C5C5C 100%);
+      color: white;
+      border: 1px solid #4a4a4a;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 0.8rem;
+      transition: all 0.2s;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .giveUpBtn:hover {
+      transform: translateY(-1px);
+      background: linear-gradient(135deg, #8A8A8A 0%, #6B6B6B 100%);
+    }
+
+    /* Ligne 2: Status | (vide) */
+    .statusBox {
+      grid-column: 1 / 2;
+      grid-row: 2 / 3;
+      background: linear-gradient(90deg, rgba(0, 168, 233, 0.15), rgba(0, 168, 233, 0.08));
+      border: 2px solid rgba(0, 168, 233, 0.35);
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+      min-height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 10px rgba(0, 168, 233, 0.1);
+    }
+
+    .statusMessage {
+      color: #00A8E9;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    /* Ligne 3-4: ZONE DESSIN (fusionnée 2 lignes) | BUTTONS */
+    .drawingZone {
+      grid-column: 1 / 2;
+      grid-row: 3 / 5;
+      background: linear-gradient(135deg, #001a33 0%, #003d66 100%);
+      border: 3px solid #10B981;
+      border-radius: 12px;
+      padding: 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: auto;
+      box-shadow: 0 8px 30px rgba(16, 185, 129, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+
+    #productCanvas {
+      max-width: 280px;
+      max-height: 280px;
+      background: linear-gradient(135deg, #001a33 0%, #003d66 100%);
+      border-radius: 8px;
+      cursor: none;
+    }
+
+    /* ===== LOUPE INTERACTIVE ===== */
+    .magnifyingGlass {
+      position: fixed;
+      width: 35px;
+      height: 35px;
+      border: 1.5px solid #FFD700;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 500;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.6), inset 0 0 10px rgba(255, 215, 0, 0.2);
+      display: none;
+    }
+
+    .magnifyingGlass.active {
+      display: block;
+    }
+
+    .magnifyingGlassHandle {
+      position: fixed;
+      width: 3px;
+      height: 12px;
+      background: linear-gradient(45deg, #FFD700, #FFA500);
+      pointer-events: none;
+      z-index: 500;
+      display: none;
+      transform: rotate(45deg);
+      bottom: -10px;
+      right: -10px;
+      box-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+    }
+
+    .magnifyingGlassHandle.active {
+      display: block;
+    }
+
+    .searchZone {
+      position: fixed;
+      background: rgba(0, 0, 0, 0.8);
+      border: 1px solid rgba(255, 215, 0, 0.4);
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-size: 0.6rem;
+      color: #FFD700;
+      pointer-events: none;
+      z-index: 501;
+      display: none;
+      white-space: nowrap;
+      text-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+    }
+
+    .searchZone.active {
+      display: block;
+    }
+
+    /* ===== OVERLAY RÈGLES ===== */
+    .rulesOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(2, 84, 160, 0.25) 100%);
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(3px);
+      padding: 20px;
+    }
+
+    .rulesContainer {
+      background: linear-gradient(135deg, rgba(2, 84, 160, 0.3) 0%, rgba(0, 168, 233, 0.2) 100%);
+      border: 2px solid rgba(0, 168, 233, 0.5);
+      border-radius: 16px;
+      padding: 25px;
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 0 50px rgba(0, 168, 233, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    @media (max-width: 768px) {
+      .rulesContainer {
+        grid-template-columns: 1fr;
+        padding: 20px;
+      }
+    }
+
+    .rulesTitle {
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: #FFD700;
+      margin-bottom: 12px;
+      text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+      letter-spacing: 1px;
+      grid-column: 1 / -1;
+    }
+
+    .rulesSection {
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .rulesSectionTitle {
+      font-size: 1rem;
+      font-weight: 900;
+      color: #FFD700;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .rulesContent {
+      color: #00A8E9;
+      font-size: 0.8rem;
+      line-height: 1.5;
+    }
+
+    .rulesContent ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .rulesContent li {
+      margin: 4px 0;
+      padding-left: 18px;
+      position: relative;
+    }
+
+    .rulesContent li:before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: #10B981;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+
+    .rulesStat {
+      background: rgba(0, 168, 233, 0.1);
+      border-left: 2px solid #FFD700;
+      padding: 6px;
+      margin: 4px 0;
+      border-radius: 3px;
+      font-weight: 600;
+      font-size: 0.78rem;
+    }
+
+    .startButton {
+      padding: 11px 40px;
+      background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+      color: white;
+      border: 2px solid #059669;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 900;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 6px 15px rgba(16, 185, 129, 0.3);
+      grid-column: 1 / -1;
+      margin-top: 10px;
+    }
+
+    .startButton:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.5);
+    }
+
+    .startButton:active {
+      transform: translateY(-1px);
+    }
+
+    .rulesOverlay.hidden {
+      display: none;
+    }
+
+    .rulesOverlay.hidden {
+      display: none;
+    }
+
+    /* Boutons côté droit */
+    .buttonColumn {
+      grid-column: 2 / 3;
+      grid-row: 3 / 5;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 0;
+      cursor: pointer;
+      font-weight: 900;
+      font-size: 0.75rem;
+      transition: all 0.2s;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      min-height: 50px;
+    }
+
+    .btn:first-child {
+      border-radius: 8px 8px 0 0;
+    }
+
+    .btn:last-child {
+      border-radius: 0 0 8px 8px;
+    }
+
+    .btnAccept {
+      background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+      color: white;
+      border: 1px solid #059669;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .btnAccept:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(16, 185, 129, 0.45);
+    }
+
+    .btnReject {
+      background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+      color: white;
+      border: 1px solid #DC2626;
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    }
+
+    .btnReject:hover {
+      transform: translateY(2px);
+      box-shadow: 0 6px 16px rgba(239, 68, 68, 0.45);
+    }
+
+    /* ===== KPI ZONE ===== */
+    .kpiZone {
+      background: linear-gradient(135deg, rgba(2, 84, 160, 0.2), rgba(0, 168, 233, 0.1));
+      border: 2px solid rgba(0, 168, 233, 0.35);
+      border-radius: 12px;
+      padding: 15px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(2, 84, 160, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .kpiZoneTitle {
+      font-size: 0.75rem;
+      font-weight: 900;
+      color: #FFD700;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      text-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+      text-align: center;
+      padding: 4px 0;
+      border-bottom: 1px solid rgba(0, 168, 233, 0.2);
+      margin-bottom: 6px;
+    }
+
+    .kpiSection {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .kpiSectionTitle {
+      font-size: 0.65rem;
+      font-weight: 900;
+      color: #FFD700;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      text-shadow: 0 0 6px rgba(255, 215, 0, 0.4);
+      margin-bottom: 3px;
+      line-height: 1;
+    }
+
+    .kpiBlock {
+      background: linear-gradient(135deg, rgba(0, 168, 233, 0.15) 0%, rgba(0, 168, 233, 0.05) 100%);
+      border: 1px solid rgba(0, 168, 233, 0.25);
+      border-radius: 5px;
+      padding: 5px 3px;
+      text-align: center;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+      margin-bottom: 3px;
+    }
+
+    .kpiLabel {
+      font-size: 0.6rem;
+      color: #00A8E9;
+      text-transform: uppercase;
+      margin-bottom: 1px;
+      letter-spacing: 0.1px;
+      font-weight: 600;
+      line-height: 1;
+    }
+
+    .kpiValue {
+      font-size: 1rem;
+      font-weight: 900;
+      color: #10B981;
+      text-shadow: 0 0 5px rgba(16, 185, 129, 0.4);
+      line-height: 1;
+      transition: all 0.3s ease;
+    }
+
+    .kpiBlockDecisions {
+      background: linear-gradient(135deg, rgba(0, 168, 233, 0.15) 0%, rgba(0, 168, 233, 0.05) 100%);
+      border: 1px solid rgba(0, 168, 233, 0.25);
+      border-radius: 5px;
+      padding: 4px 2px;
+      text-align: center;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+      margin-bottom: 2px;
+    }
+
+    .kpiDecisionsRow {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      margin-top: 2px;
+    }
+
+    .kpiDecisionItem {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 3px;
+      padding: 2px;
+    }
+
+    .kpiDecisionLabel {
+      font-size: 0.48rem;
+      color: #00A8E9;
+      text-transform: uppercase;
+      letter-spacing: 0.1px;
+      font-weight: 600;
+      line-height: 1;
+      margin-bottom: 1px;
+    }
+
+    .kpiLabel {
+      font-size: 0.52rem;
+      color: #00A8E9;
+      text-transform: uppercase;
+      margin-bottom: 0px;
+      letter-spacing: 0.1px;
+      font-weight: 600;
+      line-height: 1;
+    }
+
+    .kpiValue {
+      font-size: 0.85rem;
+      font-weight: 900;
+      color: #10B981;
+      text-shadow: 0 0 5px rgba(16, 185, 129, 0.4);
+      line-height: 1;
+      transition: all 0.3s ease;
+    }
+
+    /* Inspected - Gris */
+    #kpiInspected {
+      color: #888;
+      background: rgba(80, 80, 80, 0.15);
+      padding: 2px;
+      border-radius: 3px;
+    }
+
+    /* Quality - Vert vers Doré */
+    #kpiQuality {
+      transition: all 0.3s ease;
+    }
+
+    /* Wrong Decision - Orange/Rouge */
+    #kpiWrong {
+      color: #FF5716;
+      text-shadow: 0 0 5px rgba(255, 87, 22, 0.4);
+    }
+
+    /* Combo - Change couleur + animation */
+    #kpiCombo {
+      transition: all 0.3s ease;
+    }
+
+    @keyframes comboGlow {
+      0% { text-shadow: 0 0 5px rgba(16, 185, 129, 0.4); }
+      50% { text-shadow: 0 0 12px rgba(16, 185, 129, 0.8); }
+      100% { text-shadow: 0 0 5px rgba(16, 185, 129, 0.4); }
+    }
+
+    /* Average Time - Vert vers Noir */
+    #kpiAvgTime {
+      transition: all 0.3s ease;
+    }
+
+    @keyframes tremble {
+      0%, 100% { transform: rotate(0deg) scale(1); }
+      10% { transform: rotate(-2deg) scale(1.05); }
+      20% { transform: rotate(2deg) scale(1.05); }
+      30% { transform: rotate(-2deg) scale(1.05); }
+      40% { transform: rotate(2deg) scale(1.05); }
+      50% { transform: rotate(-1deg) scale(1.05); }
+      60% { transform: rotate(1deg) scale(1.05); }
+      70% { transform: rotate(-1deg) scale(1.05); }
+      80% { transform: rotate(1deg) scale(1.05); }
+      90% { transform: rotate(0deg) scale(1); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    #kpiStatus {
+      font-size: 1.2rem;
+      animation: tremble 0.6s ease-in-out infinite, pulse 1.2s ease-in-out infinite;
+      display: inline-block;
+    }
+
+    /* ===== RESIZABLE DIVIDER ===== */
+    .resizableDivider {
+      position: fixed;
+      width: 6px;
+      height: calc(100vh - 115px);
+      top: 115px;
+      cursor: col-resize;
+      background: linear-gradient(90deg, transparent, rgba(0, 168, 233, 0.3), transparent);
+      transition: background 0.2s;
+      z-index: 100;
+    }
+
+    .resizableDivider:hover {
+      background: linear-gradient(90deg, transparent, rgba(0, 168, 233, 0.8), transparent);
+    }
+
+    .feedbackMessage {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(10, 14, 39, 0.95) 100%);
+      color: #FFD700;
+      padding: 30px 50px;
+      border-radius: 12px;
+      font-size: 1.3rem;
+      font-weight: bold;
+      z-index: 1000;
+      display: none;
+      text-align: center;
+      border: 2px solid rgba(255, 215, 0, 0.3);
+      box-shadow: 0 0 40px rgba(255, 215, 0, 0.2);
+    }
+
+    @keyframes stampStamp {
+      0% {
+        transform: translate(-50%, -50%) scale(0.3) rotate(-15deg);
+        opacity: 0;
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(1.1) rotate(5deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(1) rotate(0deg);
+        opacity: 1;
+      }
+    }
+
+    .stamp {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      font-size: 8rem;
+      font-weight: bold;
+      z-index: 999;
+      pointer-events: none;
+      animation: stampStamp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    .stamp.accept {
+      color: #10B981;
+      text-shadow: 0 0 30px rgba(16, 185, 129, 0.8);
+      transform: translate(-50%, -50%) rotate(25deg);
+    }
+
+    .stamp.reject {
+      color: #EF4444;
+      text-shadow: 0 0 30px rgba(239, 68, 68, 0.8);
+      transform: translate(-50%, -50%) rotate(-25deg);
+    }
   </style>
 </head>
 <body>
-
-  <!-- END GAME SCREEN -->
-
-  <!-- LEADERBOARD -->
-  <div id="leaderboardScreen" class="modal-overlay hidden" style="background: linear-gradient(135deg, #0254A0 0%, #00A8E9 100%); align-items: center; justify-content: center;">
-    <div class="leaderboard-container">
-      <h1 style="text-align: center; font-size: 2.5rem; font-weight: 900; color: #FFD700; margin-bottom: 30px; text-shadow: 0 0 20px rgba(255, 215, 0, 0.6);">🏆 LEADERBOARD</h1>
-      
-      <div class="leaderboard-layout">
-        <div class="leaderboard-left">
-          <div class="your-score-box">
-            <div class="score-title">YOUR PERFORMANCE</div>
-            <div class="score-emoji" id="finalEmoji">🎯</div>
-            <div class="score-text" id="finalPlayerText">Amazing!</div>
-            <div class="score-value" id="finalPlayerScore">0</div>
-            <div class="score-ratio" id="finalPlayerRatio">0/0 = 0%</div>
-            <div style="font-size: 0.8rem; color: #00A8E9; margin-top: 8px; font-weight: 700;">QUALITY RATIO</div>
-          </div>
-        </div>
-        
-        <div class="leaderboard-right">
-          <div class="leaderboard-list" id="leaderboardList">
-          </div>
-        </div>
-      </div>
-      
-      <button class="btn-primary" style="margin-top: 30px; width: 100%;" onclick="window.showIntroScreenNow()">PLAY AGAIN</button>
-    </div>
-  </div>
-
-  <!-- INTRO SCREEN -->
+<!-- INTRO SCREEN -->
   <div id="introScreenAnimated" style="position: fixed; inset: 0; background: linear-gradient(135deg, #0254A0 0%, #00A8E9 100%); display: flex; z-index: 2000; align-items: center; justify-content: flex-start; flex-direction: column; padding: 40px 20px; overflow-y: auto;">
     
     <!-- TITRE AVEC LOGOS À GAUCHE ET DROITE -->
@@ -1604,7 +2300,15 @@
         
         document.body.appendChild(popup);
         return;
-      }};
+      }
+      
+      // Si le nom est validé, afficher l'overlay des règles
+      const intro = document.getElementById('introScreenAnimated');
+      const rulesOverlay = document.getElementById('rulesOverlay');
+      
+      if (intro) intro.style.display = 'none';
+      if (rulesOverlay) rulesOverlay.classList.remove('hidden');
+    };
 
     function FIRST_drawBlade(ctx, x, y) {
       // Turbine blade section
@@ -2077,7 +2781,1938 @@
     });
   </script>
 
-  <!-- Easter Egg Overlay -->
+  
+TYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Offshore Equipment Inspector</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: 'Poppins', sans-serif; 
+      background: linear-gradient(135deg, #0a0e27 0%, #1a1f2e 100%);
+      color: #ccc; 
+      overflow: hidden; 
+      height: 100vh;
+    }
+
+    /* ===== HEADER ===== */
+    .header {
+      background: linear-gradient(90deg, #0254A0 0%, #00A8E9 100%);
+      height: 45px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      border-bottom: 3px solid #00A8E9;
+      box-shadow: 0 4px 20px rgba(0, 168, 233, 0.4);
+    }
+
+    .headerTitle { 
+      font-size: 1rem; 
+      font-weight: 900; 
+      color: white;
+    }
+
+    .headerRight {
+      font-size: 0.75rem;
+      color: white;
+    }
+
+    /* ===== TIMER BAR ===== */
+    .gameStatusBar {
+      background: linear-gradient(90deg, #0254A0 0%, #00A8E9 100%);
+      height: 70px;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      padding: 0 20px;
+      gap: 8px;
+      border-bottom: 2px solid #00A8E9;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 4px 20px rgba(0, 168, 233, 0.2);
+    }
+
+    .timerDisplay {
+      font-size: 2rem;
+      font-weight: 900;
+      color: #FFD700;
+      font-family: 'Courier New', monospace;
+      letter-spacing: 2px;
+      min-width: 90px;
+      animation: electric-pulse 0.4s ease-in-out infinite;
+      filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.9));
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+    }
+
+    @keyframes electric-pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .windmill {
+      width: 45px;
+      height: 45px;
+      animation: spin 1.5s linear infinite;
+      filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.4));
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .timerBarContainer {
+      flex: 1;
+      max-width: none;
+      height: 20px;
+      background: linear-gradient(90deg, #000000 0%, rgba(0, 0, 0, 0.7) 50%, #000000 100%);
+      border-radius: 15px;
+      overflow: hidden;
+      border: 2px solid rgba(0, 168, 233, 0.7);
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 15px rgba(0, 168, 233, 0.3);
+    }
+
+    .timerFill {
+      height: 100%;
+      background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(0, 212, 255, 0.3) 20%,
+        rgba(0, 168, 233, 0.6) 50%, 
+        rgba(0, 212, 255, 0.3) 80%,
+        transparent 100%);
+      background-size: 200% 100%;
+      animation: electricity-flow 1.5s linear infinite;
+      width: 100%;
+      box-shadow: 
+        inset 0 0 30px rgba(0, 212, 255, 0.6),
+        inset -3px 0 15px rgba(0, 212, 255, 0.5),
+        0 0 30px rgba(0, 168, 233, 0.5);
+    }
+
+    @keyframes electricity-flow {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .windWave {
+      font-size: 1.3rem;
+      animation: wave 0.6s ease-in-out infinite;
+      margin-right: -8px;
+      margin-left: -5px;
+    }
+
+    @keyframes wave {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+
+    /* ===== GAME ZONE ===== */
+    .gameZone {
+      display: grid;
+      grid-template-columns: 1fr 18%;
+      gap: 15px;
+      padding: 15px;
+      height: calc(100vh - 115px);
+      background: linear-gradient(135deg, #0a0e27 0%, #1a1f2e 100%);
+    }
+
+    /* ===== INSPECTION ZONE (TABLEAU 2 COL) ===== */
+    .inspectionZone {
+      display: grid;
+      grid-template-columns: 1fr 140px;
+      grid-template-rows: auto auto 1fr;
+      gap: 12px;
+      background: rgba(2, 84, 160, 0.1);
+      border: 2px solid rgba(0, 168, 233, 0.25);
+      border-radius: 12px;
+      padding: 15px;
+      box-shadow: 0 4px 15px rgba(2, 84, 160, 0.15);
+    }
+
+    /* Ligne 1: INSPECTION | Give Up */
+    .inspectionHeader {
+      grid-column: 1 / 2;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .inspectionTitle {
+      font-size: 1rem;
+      font-weight: 900;
+      color: #FFD700;
+      text-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+    }
+
+    .giveUpBtn {
+      grid-column: 2 / 3;
+      grid-row: 1 / 2;
+      padding: 8px 14px;
+      background: linear-gradient(135deg, #7B7B7B 0%, #5C5C5C 100%);
+      color: white;
+      border: 1px solid #4a4a4a;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 0.8rem;
+      transition: all 0.2s;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .giveUpBtn:hover {
+      transform: translateY(-1px);
+      background: linear-gradient(135deg, #8A8A8A 0%, #6B6B6B 100%);
+    }
+
+    /* Ligne 2: Status | (vide) */
+    .statusBox {
+      grid-column: 1 / 2;
+      grid-row: 2 / 3;
+      background: linear-gradient(90deg, rgba(0, 168, 233, 0.15), rgba(0, 168, 233, 0.08));
+      border: 2px solid rgba(0, 168, 233, 0.35);
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+      min-height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 10px rgba(0, 168, 233, 0.1);
+    }
+
+    .statusMessage {
+      color: #00A8E9;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    /* Ligne 3-4: ZONE DESSIN (fusionnée 2 lignes) | BUTTONS */
+    .drawingZone {
+      grid-column: 1 / 2;
+      grid-row: 3 / 5;
+      background: linear-gradient(135deg, #001a33 0%, #003d66 100%);
+      border: 3px solid #10B981;
+      border-radius: 12px;
+      padding: 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: auto;
+      box-shadow: 0 8px 30px rgba(16, 185, 129, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+
+    #productCanvas {
+      max-width: 280px;
+      max-height: 280px;
+      background: linear-gradient(135deg, #001a33 0%, #003d66 100%);
+      border-radius: 8px;
+      cursor: none;
+    }
+
+    /* ===== LOUPE INTERACTIVE ===== */
+    .magnifyingGlass {
+      position: fixed;
+      width: 35px;
+      height: 35px;
+      border: 1.5px solid #FFD700;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 500;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.6), inset 0 0 10px rgba(255, 215, 0, 0.2);
+      display: none;
+    }
+
+    .magnifyingGlass.active {
+      display: block;
+    }
+
+    .magnifyingGlassHandle {
+      position: fixed;
+      width: 3px;
+      height: 12px;
+      background: linear-gradient(45deg, #FFD700, #FFA500);
+      pointer-events: none;
+      z-index: 500;
+      display: none;
+      transform: rotate(45deg);
+      bottom: -10px;
+      right: -10px;
+      box-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+    }
+
+    .magnifyingGlassHandle.active {
+      display: block;
+    }
+
+    .searchZone {
+      position: fixed;
+      background: rgba(0, 0, 0, 0.8);
+      border: 1px solid rgba(255, 215, 0, 0.4);
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-size: 0.6rem;
+      color: #FFD700;
+      pointer-events: none;
+      z-index: 501;
+      display: none;
+      white-space: nowrap;
+      text-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+    }
+
+    .searchZone.active {
+      display: block;
+    }
+
+    /* ===== OVERLAY RÈGLES ===== */
+    .rulesOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(2, 84, 160, 0.25) 100%);
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(3px);
+      padding: 20px;
+    }
+
+    .rulesContainer {
+      background: linear-gradient(135deg, rgba(2, 84, 160, 0.3) 0%, rgba(0, 168, 233, 0.2) 100%);
+      border: 2px solid rgba(0, 168, 233, 0.5);
+      border-radius: 16px;
+      padding: 25px;
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 0 50px rgba(0, 168, 233, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    @media (max-width: 768px) {
+      .rulesContainer {
+        grid-template-columns: 1fr;
+        padding: 20px;
+      }
+    }
+
+    .rulesTitle {
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: #FFD700;
+      margin-bottom: 12px;
+      text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+      letter-spacing: 1px;
+      grid-column: 1 / -1;
+    }
+
+    .rulesSection {
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .rulesSectionTitle {
+      font-size: 1rem;
+      font-weight: 900;
+      color: #FFD700;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .rulesContent {
+      color: #00A8E9;
+      font-size: 0.8rem;
+      line-height: 1.5;
+    }
+
+    .rulesContent ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .rulesContent li {
+      margin: 4px 0;
+      padding-left: 18px;
+      position: relative;
+    }
+
+    .rulesContent li:before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: #10B981;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+
+    .rulesStat {
+      background: rgba(0, 168, 233, 0.1);
+      border-left: 2px solid #FFD700;
+      padding: 6px;
+      margin: 4px 0;
+      border-radius: 3px;
+      font-weight: 600;
+      font-size: 0.78rem;
+    }
+
+    .startButton {
+      padding: 11px 40px;
+      background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+      color: white;
+      border: 2px solid #059669;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 900;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 6px 15px rgba(16, 185, 129, 0.3);
+      grid-column: 1 / -1;
+      margin-top: 10px;
+    }
+
+    .startButton:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.5);
+    }
+
+    .startButton:active {
+      transform: translateY(-1px);
+    }
+
+    .rulesOverlay.hidden {
+      display: none;
+    }
+
+    .rulesOverlay.hidden {
+      display: none;
+    }
+
+    /* Boutons côté droit */
+    .buttonColumn {
+      grid-column: 2 / 3;
+      grid-row: 3 / 5;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 0;
+      cursor: pointer;
+      font-weight: 900;
+      font-size: 0.75rem;
+      transition: all 0.2s;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      min-height: 50px;
+    }
+
+    .btn:first-child {
+      border-radius: 8px 8px 0 0;
+    }
+
+    .btn:last-child {
+      border-radius: 0 0 8px 8px;
+    }
+
+    .btnAccept {
+      background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+      color: white;
+      border: 1px solid #059669;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .btnAccept:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(16, 185, 129, 0.45);
+    }
+
+    .btnReject {
+      background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+      color: white;
+      border: 1px solid #DC2626;
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    }
+
+    .btnReject:hover {
+      transform: translateY(2px);
+      box-shadow: 0 6px 16px rgba(239, 68, 68, 0.45);
+    }
+
+    /* ===== KPI ZONE ===== */
+    .kpiZone {
+      background: linear-gradient(135deg, rgba(2, 84, 160, 0.2), rgba(0, 168, 233, 0.1));
+      border: 2px solid rgba(0, 168, 233, 0.35);
+      border-radius: 12px;
+      padding: 15px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(2, 84, 160, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .kpiZoneTitle {
+      font-size: 0.75rem;
+      font-weight: 900;
+      color: #FFD700;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      text-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+      text-align: center;
+      padding: 4px 0;
+      border-bottom: 1px solid rgba(0, 168, 233, 0.2);
+      margin-bottom: 6px;
+    }
+
+    .kpiSection {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .kpiSectionTitle {
+      font-size: 0.65rem;
+      font-weight: 900;
+      color: #FFD700;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      text-shadow: 0 0 6px rgba(255, 215, 0, 0.4);
+      margin-bottom: 3px;
+      line-height: 1;
+    }
+
+    .kpiBlock {
+      background: linear-gradient(135deg, rgba(0, 168, 233, 0.15) 0%, rgba(0, 168, 233, 0.05) 100%);
+      border: 1px solid rgba(0, 168, 233, 0.25);
+      border-radius: 5px;
+      padding: 5px 3px;
+      text-align: center;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+      margin-bottom: 3px;
+    }
+
+    .kpiLabel {
+      font-size: 0.6rem;
+      color: #00A8E9;
+      text-transform: uppercase;
+      margin-bottom: 1px;
+      letter-spacing: 0.1px;
+      font-weight: 600;
+      line-height: 1;
+    }
+
+    .kpiValue {
+      font-size: 1rem;
+      font-weight: 900;
+      color: #10B981;
+      text-shadow: 0 0 5px rgba(16, 185, 129, 0.4);
+      line-height: 1;
+      transition: all 0.3s ease;
+    }
+
+    .kpiBlockDecisions {
+      background: linear-gradient(135deg, rgba(0, 168, 233, 0.15) 0%, rgba(0, 168, 233, 0.05) 100%);
+      border: 1px solid rgba(0, 168, 233, 0.25);
+      border-radius: 5px;
+      padding: 4px 2px;
+      text-align: center;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+      margin-bottom: 2px;
+    }
+
+    .kpiDecisionsRow {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      margin-top: 2px;
+    }
+
+    .kpiDecisionItem {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 3px;
+      padding: 2px;
+    }
+
+    .kpiDecisionLabel {
+      font-size: 0.48rem;
+      color: #00A8E9;
+      text-transform: uppercase;
+      letter-spacing: 0.1px;
+      font-weight: 600;
+      line-height: 1;
+      margin-bottom: 1px;
+    }
+
+    .kpiLabel {
+      font-size: 0.52rem;
+      color: #00A8E9;
+      text-transform: uppercase;
+      margin-bottom: 0px;
+      letter-spacing: 0.1px;
+      font-weight: 600;
+      line-height: 1;
+    }
+
+    .kpiValue {
+      font-size: 0.85rem;
+      font-weight: 900;
+      color: #10B981;
+      text-shadow: 0 0 5px rgba(16, 185, 129, 0.4);
+      line-height: 1;
+      transition: all 0.3s ease;
+    }
+
+    /* Inspected - Gris */
+    #kpiInspected {
+      color: #888;
+      background: rgba(80, 80, 80, 0.15);
+      padding: 2px;
+      border-radius: 3px;
+    }
+
+    /* Quality - Vert vers Doré */
+    #kpiQuality {
+      transition: all 0.3s ease;
+    }
+
+    /* Wrong Decision - Orange/Rouge */
+    #kpiWrong {
+      color: #FF5716;
+      text-shadow: 0 0 5px rgba(255, 87, 22, 0.4);
+    }
+
+    /* Combo - Change couleur + animation */
+    #kpiCombo {
+      transition: all 0.3s ease;
+    }
+
+    @keyframes comboGlow {
+      0% { text-shadow: 0 0 5px rgba(16, 185, 129, 0.4); }
+      50% { text-shadow: 0 0 12px rgba(16, 185, 129, 0.8); }
+      100% { text-shadow: 0 0 5px rgba(16, 185, 129, 0.4); }
+    }
+
+    /* Average Time - Vert vers Noir */
+    #kpiAvgTime {
+      transition: all 0.3s ease;
+    }
+
+    @keyframes tremble {
+      0%, 100% { transform: rotate(0deg) scale(1); }
+      10% { transform: rotate(-2deg) scale(1.05); }
+      20% { transform: rotate(2deg) scale(1.05); }
+      30% { transform: rotate(-2deg) scale(1.05); }
+      40% { transform: rotate(2deg) scale(1.05); }
+      50% { transform: rotate(-1deg) scale(1.05); }
+      60% { transform: rotate(1deg) scale(1.05); }
+      70% { transform: rotate(-1deg) scale(1.05); }
+      80% { transform: rotate(1deg) scale(1.05); }
+      90% { transform: rotate(0deg) scale(1); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    #kpiStatus {
+      font-size: 1.2rem;
+      animation: tremble 0.6s ease-in-out infinite, pulse 1.2s ease-in-out infinite;
+      display: inline-block;
+    }
+
+    /* ===== RESIZABLE DIVIDER ===== */
+    .resizableDivider {
+      position: fixed;
+      width: 6px;
+      height: calc(100vh - 115px);
+      top: 115px;
+      cursor: col-resize;
+      background: linear-gradient(90deg, transparent, rgba(0, 168, 233, 0.3), transparent);
+      transition: background 0.2s;
+      z-index: 100;
+    }
+
+    .resizableDivider:hover {
+      background: linear-gradient(90deg, transparent, rgba(0, 168, 233, 0.8), transparent);
+    }
+
+    .feedbackMessage {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(10, 14, 39, 0.95) 100%);
+      color: #FFD700;
+      padding: 30px 50px;
+      border-radius: 12px;
+      font-size: 1.3rem;
+      font-weight: bold;
+      z-index: 1000;
+      display: none;
+      text-align: center;
+      border: 2px solid rgba(255, 215, 0, 0.3);
+      box-shadow: 0 0 40px rgba(255, 215, 0, 0.2);
+    }
+
+    @keyframes stampStamp {
+      0% {
+        transform: translate(-50%, -50%) scale(0.3) rotate(-15deg);
+        opacity: 0;
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(1.1) rotate(5deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(1) rotate(0deg);
+        opacity: 1;
+      }
+    }
+
+    .stamp {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      font-size: 8rem;
+      font-weight: bold;
+      z-index: 999;
+      pointer-events: none;
+      animation: stampStamp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    .stamp.accept {
+      color: #10B981;
+      text-shadow: 0 0 30px rgba(16, 185, 129, 0.8);
+      transform: translate(-50%, -50%) rotate(25deg);
+    }
+
+    .stamp.reject {
+      color: #EF4444;
+      text-shadow: 0 0 30px rgba(239, 68, 68, 0.8);
+      transform: translate(-50%, -50%) rotate(-25deg);
+    }
+  
+
+    /* ===== LEADERBOARD PAGE STYLES ===== */
+    #leaderboardPage {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #0254A0 0%, #00A8E9 100%);
+      z-index: 10000;
+      padding: 10px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .leaderboard-container {
+      background: rgba(0, 0, 0, 0.3);
+      border: 3px solid #FFD700;
+      border-radius: 15px;
+      padding: 15px;
+      max-width: 1200px;
+      width: 100%;
+      overflow: auto;
+      display: flex;
+      flex-direction: column;
+      max-height: 90vh;
+    }
+
+    .header-section {
+      position: relative;
+      width: 100%;
+      margin-bottom: 12px;
+    }
+
+    .header-section h1 {
+      text-align: center;
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: #FFD700;
+      margin: 0;
+      text-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+    }
+
+    .play-again-btn {
+      position: absolute;
+      top: 0;
+      right: 0;
+      padding: 4px 8px;
+      font-size: 0.6rem;
+      background: linear-gradient(135deg, #0254A0, #00A8E9);
+      border: 2px solid #FFD700;
+      color: #FFD700;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 900;
+    }
+
+    .play-again-btn:hover {
+      background: linear-gradient(135deg, #00A8E9, #0254A0);
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+    }
+
+    .main-layout {
+      display: grid;
+      grid-template-columns: 40% 60%;
+      gap: 12px;
+    }
+
+    .left-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .well-done {
+      color: #FFFFFF;
+      font-size: 1.3rem;
+      font-weight: 900;
+      text-align: center;
+      margin-bottom: 8px;
+      text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    }
+
+    .ranks-results-container { display: flex; flex-direction: column; gap: 8px; }
+    .ranks-table { width: 100%; border-collapse: collapse; background: rgba(0, 0, 0, 0.2); border-radius: 8px; overflow: hidden; border: 2px solid #FFD700; box-shadow: 0 0 15px rgba(255, 215, 0, 0.4); }
+    .ranks-table tr { border-bottom: 1px solid rgba(0, 168, 233, 0.2); height: 24px; }
+    .ranks-table tr:last-child { border-bottom: none; }
+    .ranks-table td { padding: 1px 6px; vertical-align: middle; }
+    .rank-letter-cell { width: 40px; text-align: center; }
+    .rank-letter { font-size: 2rem; font-weight: 900; font-style: italic; line-height: 1; opacity: 0.2; filter: brightness(0.4); cursor: pointer; }
+    .rank-letter:hover { opacity: 1; filter: brightness(1.2); }
+    .rank-letter.rank-s { color: #FF1493; opacity: 1 !important; }
+    .rank-word-cell { font-size: 0.85rem; font-weight: 700; font-style: italic; opacity: 0.2; filter: brightness(0.4); }
+    .rank-word-cell.rank-s-word { opacity: 1; color: #FF1493; }
+    .rank-word-cell.rank-a-word { color: #00BFFF; }
+    .rank-word-cell.rank-b-word { color: #00FF00; }
+    .rank-word-cell.rank-c-word { color: #ADFF2F; }
+    .rank-word-cell.rank-d-word { color: #FFD700; }
+    .rank-word-cell.rank-e-word { color: #808080; }
+
+    .ranks-score-box { background: rgba(0, 0, 0, 0.4); border: 2px solid #FFD700; border-radius: 8px; padding: 8px; display: flex; flex-direction: column; gap: 4px; text-align: center; box-shadow: 0 0 15px rgba(255, 215, 0, 0.3); }
+    .player-name-score { color: #00BFFF; font-weight: 900; font-size: 0.9rem; }
+    .score-emoji { font-size: 1.5rem; }
+    .score-label { color: #FFD700; font-weight: 700; font-size: 0.85rem; }
+    .score-value { color: #10B981; font-weight: 900; font-size: 1.5rem; text-shadow: 0 0 8px rgba(16, 185, 129, 0.5); }
+    .score-ratio { color: #00D4FF; font-weight: 700; font-size: 0.8rem; }
+
+    .ranks-results-box { background: rgba(0, 0, 0, 0.4); border: 2px solid #FFD700; border-radius: 8px; padding: 8px; box-shadow: 0 0 15px rgba(255, 215, 0, 0.3); }
+    .results-title { color: #FFD700; font-weight: 900; text-align: center; margin-bottom: 4px; font-size: 0.9rem; }
+    .results-list { display: flex; flex-direction: column; gap: 3px; }
+    .result-group { display: flex; gap: 3px; justify-content: center; }
+    .result-emoji { font-size: 0.9rem; font-weight: bold; }
+    .result-emoji.success { color: #10B981; text-shadow: 0 0 5px rgba(16, 185, 129, 0.5); }
+    .result-emoji.error { color: #EF4444; text-shadow: 0 0 5px rgba(239, 68, 68, 0.5); }
+
+    .right-panel { background: rgba(0, 0, 0, 0.2); border: 2px solid #00A8E9; border-radius: 8px; padding: 8px; overflow-y: auto; max-height: 350px; box-shadow: 0 0 15px rgba(0, 168, 233, 0.3); }
+    .leaderboard-row { display: flex; align-items: center; gap: 8px; padding: 6px 8px; background: rgba(0, 168, 233, 0.1); border-radius: 6px; margin-bottom: 4px; border-left: 3px solid #00A8E9; transition: all 0.3s; font-size: 0.85rem; }
+    .leaderboard-row:hover { background: rgba(0, 168, 233, 0.2); border-left-color: #FFD700; }
+    .leaderboard-row.top-3 { border-left-color: #FFD700; background: rgba(255, 215, 0, 0.1); }
+    .leaderboard-rank { color: #00BFFF; font-weight: 900; min-width: 30px; }
+    .leaderboard-medal { font-size: 1rem; min-width: 20px; text-align: center; }
+    .leaderboard-name { flex: 1; color: #fff; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .leaderboard-score { color: #10B981; font-weight: 900; min-width: 35px; text-align: right; }
+    .leaderboard-grade { color: #FFD700; font-weight: 900; min-width: 20px; text-align: center; }
+    .leaderboard-date { color: #00A8E9; font-size: 0.7rem; min-width: 70px; text-align: right; opacity: 0.8; }
+
+    </style>
+</head>
+  <!-- RULES OVERLAY -->
+  <div class="rulesOverlay hidden" id="rulesOverlay">
+    <div class="rulesContainer">
+      <div class="rulesTitle">⚡ Quality Inspector Simulator</div>
+
+      <div class="rulesSection">
+        <div class="rulesSectionTitle">🎯 YOUR MISSION</div>
+        <div class="rulesContent">
+          <ul>
+            <li>🔍 Scan components with magnifier</li>
+            
+            <li>✅ ACCEPT if no defects</li>
+            <li>❌ REJECT if defects found</li>
+            <li>⏱️ 2 minutes total time</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="rulesSection">
+        <div class="rulesSectionTitle">🏆 WIN CONDITIONS</div>
+        <div class="rulesContent">
+          <div class="rulesStat">✓ Correct = <strong>+Points</strong></div>
+          <div class="rulesStat">✗ Wrong = <strong>-50 Pts</strong></div>
+          <div class="rulesStat">🔥 Combo = <strong>Boost</strong></div>
+          <div class="rulesStat">🎯 Goal: <strong>≥75% Quality</strong></div>
+        </div>
+      </div>
+
+      <button class="startButton" onclick="startGame()">▶ START INSPECTING ▶</button>
+    </div>
+  </div>
+
+  <!-- FEEDBACK MESSAGE -->
+  <div class="feedbackMessage" id="feedbackMessage"></div>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div style="display: flex; align-items: center; gap: 15px;">
+      <img src="./img/COU.png" alt="COU Logo" style="height: 35px; filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.3));">
+      <div class="headerTitle">EDF POWER SOLUTIONS</div>
+    </div>
+    <div class="headerRight">⚡ QUALITY INSPECTOR SIMULATOR - Quality Week 2025</div>
+  </div>
+
+  <!-- GAME STATUS BAR -->
+  <div class="gameStatusBar">
+    <div class="timerDisplay" id="timerDisplay">2:00</div>
+    <svg class="windmill" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="45" fill="none" stroke="#FFD700" stroke-width="2"/>
+      <circle cx="50" cy="50" r="8" fill="#FFD700"/>
+      <ellipse cx="50" cy="25" rx="8" ry="18" fill="#FF5716" opacity="0.8"/>
+      <ellipse cx="50" cy="25" rx="8" ry="18" fill="#FF8C00" opacity="0.8" transform="rotate(120 50 50)"/>
+      <ellipse cx="50" cy="25" rx="8" ry="18" fill="#FFA500" opacity="0.8" transform="rotate(240 50 50)"/>
+    </svg>
+    <div class="windWave">💨</div>
+    <div class="timerBarContainer">
+      <div class="timerFill" id="timerFill" style="width: 100%;"></div>
+    </div>
+  </div>
+
+  <!-- GAME ZONE -->
+  <div class="gameZone" id="gameZone">
+    
+    <!-- INSPECTION ZONE (TABLEAU 2 COLONNES) -->
+    <div class="inspectionZone">
+      <!-- Ligne 1 -->
+      <div class="inspectionHeader">
+        <div class="inspectionTitle">🔍 INSPECTION</div>
+      </div>
+      <button class="giveUpBtn" onclick="window.quitGame()">🚪 I GIVE UP!</button>
+
+      <!-- Ligne 2 -->
+      <div class="statusBox">
+        <div class="statusMessage" id="productStatus">Inspect the equipment...</div>
+      </div>
+      <!-- Colonne 2 Row 2 vide -->
+
+      <!-- Ligne 3-4: Drawing Zone + Buttons -->
+      <div class="drawingZone">
+        <canvas id="productCanvas" width="400" height="300"></canvas>
+      </div>
+
+      <div class="buttonColumn">
+        <button class="btn btnAccept" onclick="window.makeDecision('accept')">✅ ACCEPT</button>
+        <button class="btn btnReject" onclick="window.makeDecision('reject')">❌ REJECT</button>
+      </div>
+    </div>
+
+    <!-- LOUPE INTERACTIVE -->
+    <div class="magnifyingGlass" id="magnifyingGlass"></div>
+    <div class="magnifyingGlassHandle" id="magnifyingGlassHandle"></div>
+    <div class="searchZone" id="searchZone"></div>
+
+    <!-- KPI ZONE -->
+    <div class="kpiZone" id="kpiZone">
+      <div class="kpiZoneTitle">📊 KPI Zone</div>
+
+      <!-- Quality KPI -->
+      <div class="kpiSection">
+        <div class="kpiSectionTitle">Quality KPI</div>
+        
+        <div class="kpiBlock">
+          <div class="kpiLabel">Inspected</div>
+          <div class="kpiValue" id="kpiInspected">0</div>
+        </div>
+
+        <div class="kpiBlock" style="padding: 8px 3px; margin-bottom: 4px; border-radius: 8px;">
+          <div class="kpiLabel" style="font-size: 0.58rem; margin-bottom: 2px;">Quality / Status</div>
+          <div class="kpiValue" style="font-size: 1.3rem; letter-spacing: 2px;">
+            <span id="kpiQuality">0%</span> <span id="kpiStatus" style="font-size: 1.2rem;">😐</span>
+          </div>
+        </div>
+
+        <div class="kpiBlockDecisions">
+          <div class="kpiLabel">Decisions</div>
+          <div class="kpiDecisionsRow">
+            <div class="kpiDecisionItem">
+              <div class="kpiDecisionLabel">Good</div>
+              <div class="kpiValue" id="kpiGood">0</div>
+            </div>
+            <div class="kpiDecisionItem">
+              <div class="kpiDecisionLabel">Wrong</div>
+              <div class="kpiValue" id="kpiWrong">0</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Performance KPI -->
+      <div class="kpiSection">
+        <div class="kpiSectionTitle">Performance KPI</div>
+
+        <div class="kpiBlock">
+          <div class="kpiLabel">Time Elapsed</div>
+          <div class="kpiValue" id="kpiTimer">2:00</div>
+        </div>
+
+        <div class="kpiBlock">
+          <div class="kpiLabel">Combo</div>
+          <div class="kpiValue" id="kpiCombo">0</div>
+        </div>
+
+        <div class="kpiBlock">
+          <div class="kpiLabel">Avg Time</div>
+          <div class="kpiValue" id="kpiAvgTime">0s</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    let gameActive = false;
+    let gameStartTime = 0;
+    let correctCombo = 0;
+    let currentProduct = null;
+    let currentProductIndex = 0;
+    let currentDefects = [];
+    let foundDefects = [];
+    let productStartTime = 0;
+    let allProducts = [];
+    
+    let gameStats = {
+      inspected: 0,
+      good: 0,
+      wrong: 0,
+      maxCombo: 0,
+      totalTime: 0
+    };
+
+    function showStamp(isAccept) {
+      const canvas = document.getElementById('productCanvas');
+      const rect = canvas.getBoundingClientRect();
+      
+      const stamp = document.createElement('div');
+      stamp.className = `stamp ${isAccept ? 'accept' : 'reject'}`;
+      stamp.textContent = isAccept ? '✓' : '✕';
+      stamp.style.left = (rect.left + rect.width / 2) + 'px';
+      stamp.style.top = (rect.top + rect.height / 2) + 'px';
+      document.body.appendChild(stamp);
+      
+      setTimeout(() => {
+        stamp.remove();
+      }, 600);
+    }
+
+    function showFeedback(msg, isCorrect) {
+      const status = document.getElementById('productStatus');
+      const productNum = currentProductIndex + 1;
+      
+      if (isCorrect) {
+        status.textContent = `✅ CORRECT!`;
+        status.style.color = '#10B981';
+      } else {
+        status.textContent = `❌ WRONG!`;
+        status.style.color = '#EF4444';
+      }
+      
+      setTimeout(() => {
+        status.textContent = `Scanning Product ${productNum + 1} : ...`;
+        status.style.color = '#00A8E9';
+      }, 800);
+    }
+
+    function updateKPI() {
+      document.getElementById('kpiInspected').textContent = gameStats.inspected;
+      document.getElementById('kpiGood').textContent = gameStats.good;
+      document.getElementById('kpiWrong').textContent = gameStats.wrong;
+      
+      const quality = gameStats.inspected > 0 ? Math.round((gameStats.good / gameStats.inspected) * 100) : 0;
+      const qualityEl = document.getElementById('kpiQuality');
+      qualityEl.textContent = quality + '%';
+      
+      // Quality: Vert vers Doré
+      if (quality >= 80) {
+        qualityEl.style.color = '#FFD700';
+        qualityEl.style.textShadow = '0 0 10px rgba(255, 215, 0, 0.6)';
+      } else if (quality >= 60) {
+        qualityEl.style.color = '#7BC92E';
+        qualityEl.style.textShadow = '0 0 8px rgba(123, 201, 46, 0.5)';
+      } else if (quality >= 40) {
+        qualityEl.style.color = '#FFA500';
+        qualityEl.style.textShadow = '0 0 8px rgba(255, 165, 0, 0.5)';
+      } else {
+        qualityEl.style.color = '#EF4444';
+        qualityEl.style.textShadow = '0 0 8px rgba(239, 68, 68, 0.5)';
+      }
+
+      document.getElementById('kpiCombo').textContent = gameStats.maxCombo;
+      
+      // Combo: change couleur selon valeur
+      const comboEl = document.getElementById('kpiCombo');
+      if (gameStats.maxCombo >= 10) {
+        comboEl.style.color = '#8B0000';
+        comboEl.style.textShadow = '0 0 10px rgba(139, 0, 0, 0.8)';
+      } else if (gameStats.maxCombo >= 7) {
+        comboEl.style.color = '#DC2626';
+        comboEl.style.textShadow = '0 0 8px rgba(220, 38, 38, 0.6)';
+      } else if (gameStats.maxCombo >= 4) {
+        comboEl.style.color = '#FF5716';
+        comboEl.style.textShadow = '0 0 8px rgba(255, 87, 22, 0.5)';
+      } else {
+        comboEl.style.color = '#10B981';
+        comboEl.style.textShadow = '0 0 8px rgba(16, 185, 129, 0.5)';
+      }
+      
+      const avgTime = gameStats.inspected > 0 ? Math.round(gameStats.totalTime / gameStats.inspected) : 0;
+      const timeEl = document.getElementById('kpiAvgTime');
+      timeEl.textContent = avgTime + 's';
+      
+      // Average Time: Vert -> Orange -> Rouge -> Noir avec fond adapté
+      if (avgTime <= 5) {
+        timeEl.style.color = '#10B981';
+        timeEl.style.textShadow = '0 0 8px rgba(16, 185, 129, 0.5)';
+        timeEl.style.background = 'rgba(16, 185, 129, 0.15)';
+        timeEl.style.borderColor = 'rgba(16, 185, 129, 0.4)';
+      } else if (avgTime <= 7) {
+        timeEl.style.color = '#7BC92E';
+        timeEl.style.textShadow = '0 0 8px rgba(123, 201, 46, 0.5)';
+        timeEl.style.background = 'rgba(123, 201, 46, 0.15)';
+        timeEl.style.borderColor = 'rgba(123, 201, 46, 0.4)';
+      } else if (avgTime <= 10) {
+        timeEl.style.color = '#FFA500';
+        timeEl.style.textShadow = '0 0 8px rgba(255, 165, 0, 0.5)';
+        timeEl.style.background = 'rgba(255, 165, 0, 0.15)';
+        timeEl.style.borderColor = 'rgba(255, 165, 0, 0.4)';
+      } else if (avgTime <= 15) {
+        timeEl.style.color = '#FF5716';
+        timeEl.style.textShadow = '0 0 8px rgba(255, 87, 22, 0.5)';
+        timeEl.style.background = 'rgba(255, 87, 22, 0.15)';
+        timeEl.style.borderColor = 'rgba(255, 87, 22, 0.4)';
+      } else {
+        timeEl.style.color = '#333';
+        timeEl.style.textShadow = '0 0 8px rgba(51, 51, 51, 0.5)';
+        timeEl.style.background = 'rgba(51, 51, 51, 0.15)';
+        timeEl.style.borderColor = 'rgba(51, 51, 51, 0.4)';
+      }
+
+      const quality_pct = gameStats.inspected > 0 ? Math.round((gameStats.good / gameStats.inspected) * 100) : 0;
+      if (quality_pct >= 90) document.getElementById('kpiStatus').textContent = '😍';
+      else if (quality_pct >= 75) document.getElementById('kpiStatus').textContent = '😊';
+      else if (quality_pct >= 50) document.getElementById('kpiStatus').textContent = '😐';
+      else if (quality_pct >= 25) document.getElementById('kpiStatus').textContent = '😕';
+      else document.getElementById('kpiStatus').textContent = '😡';
+    }
+
+    function updateProductStatus() {
+      const status = document.getElementById('productStatus');
+      if (!status) return;
+      
+      const inspectedPercent = gameStats.inspected > 0 ? Math.round((gameStats.inspected / allProducts.length) * 100) : 0;
+      const productNum = currentProductIndex + 1;
+      
+      if (currentDefects.length === 0) {
+        status.textContent = `Scanning Product ${productNum} : ...`;
+        status.style.color = '#00A8E9';
+      } else {
+        status.textContent = `Scanning Product ${productNum} : Defect Found !`;
+        status.style.color = '#EF4444';
+      }
+    }
+
+    let revealedDefects = [];
+
+    function drawProduct() {
+      const canvas = document.getElementById('productCanvas');
+      if (!canvas) return;
+      
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#003d66';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      // Dessiner en fonction du type de produit
+      if (!currentProduct) return;
+      
+      const productType = currentProduct.type || 'blade';
+      
+      ctx.save();
+      ctx.translate(canvas.width / 2, canvas.height / 2);
+      
+      if (productType === 'blade') {
+        drawBlade(ctx);
+      } else if (productType === 'gearbox') {
+        drawGearbox(ctx);
+      } else if (productType === 'generator') {
+        drawGenerator(ctx);
+      } else if (productType === 'tower') {
+        drawTower(ctx);
+      } else if (productType === 'foundation') {
+        drawFoundation(ctx);
+      } else if (productType === 'nacelle') {
+        drawNacelle(ctx);
+      } else if (productType === 'bearing') {
+        drawBearing(ctx);
+      } else if (productType === 'cable') {
+        drawCable(ctx);
+      }
+      
+      ctx.restore();
+      
+      // Dessiner les défauts EN TRANSPARENT (cachés) ou RÉVÉLÉS
+      if (currentDefects && currentDefects.length > 0) {
+        currentDefects.forEach((defect, i) => {
+          const pos = defect.pos;
+          if (pos) {
+            ctx.save();
+            ctx.translate(canvas.width / 2, canvas.height / 2);
+            
+            if (revealedDefects.includes(i)) {
+              // DÉFAUT RÉVÉLÉ - rouge bright avec glow
+              ctx.fillStyle = '#FF5716';
+              ctx.shadowColor = 'rgba(255, 87, 22, 0.9)';
+              ctx.shadowBlur = 15;
+            } else {
+              // DÉFAUT CACHÉ - très transparent
+              ctx.fillStyle = 'rgba(255, 87, 22, 0.1)';
+              ctx.shadowColor = 'rgba(255, 87, 22, 0.1)';
+              ctx.shadowBlur = 3;
+            }
+            ctx.beginPath();
+            ctx.arc(pos.x, pos.y, 7, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.restore();
+          }
+        });
+      }
+    }
+
+    function drawBlade(ctx) {
+      // Pale d'éolienne - PLUS GRANDE
+      ctx.fillStyle = 'rgba(100, 200, 255, 0.3)';
+      ctx.beginPath();
+      ctx.ellipse(0, 0, 70, 140, 0, 0, Math.PI * 2);
+      ctx.fill();
+      
+      ctx.strokeStyle = '#00A8E9';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+      
+      ctx.fillStyle = '#00A8E9';
+      ctx.font = 'bold 16px Poppins';
+      ctx.textAlign = 'center';
+      ctx.fillText('BLADE', 0, 5);
+    }
+
+    function drawGearbox(ctx) {
+      // Boîte de vitesse - PLUS GRANDE
+      ctx.fillStyle = 'rgba(150, 150, 150, 0.4)';
+      ctx.beginPath();
+      ctx.rect(-60, -50, 120, 100);
+      ctx.fill();
+      
+      ctx.strokeStyle = '#888';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+      
+      // Engrenages
+      for (let i = 0; i < 3; i++) {
+        ctx.fillStyle = 'rgba(200, 150, 0, 0.3)';
+        ctx.beginPath();
+        ctx.arc(-30 + i * 30, 0, 18, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+      }
+      
+      ctx.fillStyle = '#AAA';
+      ctx.font = 'bold 14px Poppins';
+      ctx.textAlign = 'center';
+      ctx.fillText('GEARBOX', 0, 5);
+    }
+
+    function drawGenerator(ctx) {
+      // Générateur - PLUS GRAND
+      ctx.fillStyle = 'rgba(200, 100, 50, 0.3)';
+      ctx.beginPath();
+      ctx.ellipse(0, 0, 70, 45, 0, 0, Math.PI * 2);
+      ctx.fill();
+      
+      ctx.strokeStyle = '#CC6633';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+      
+      // Bobines
+      ctx.strokeStyle = 'rgba(200, 100, 50, 0.6)';
+      for (let i = -3; i <= 3; i++) {
+        ctx.beginPath();
+        ctx.arc(i * 20, 0, 12, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+      
+      ctx.fillStyle = '#CC6633';
+      ctx.font = 'bold 14px Poppins';
+      ctx.textAlign = 'center';
+      ctx.fillText('GENERATOR', 0, 5);
+    }
+
+    function drawTower(ctx) {
+      // Tour - PLUS GRANDE
+      ctx.fillStyle = 'rgba(100, 100, 150, 0.3)';
+      ctx.beginPath();
+      ctx.moveTo(0, -110);
+      ctx.lineTo(60, 110);
+      ctx.lineTo(-60, 110);
+      ctx.closePath();
+      ctx.fill();
+      
+      ctx.strokeStyle = '#6666AA';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+      
+      // Boulons
+      ctx.fillStyle = 'rgba(150, 150, 150, 0.5)';
+      for (let i = -2; i <= 2; i++) {
+        ctx.beginPath();
+        ctx.arc(i * 20, 0, 4, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      
+      ctx.fillStyle = '#6666AA';
+      ctx.font = 'bold 14px Poppins';
+      ctx.textAlign = 'center';
+      ctx.fillText('TOWER', 0, 5);
+    }
+
+    function drawFoundation(ctx) {
+      // Fondation - PLUS GRANDE
+      ctx.fillStyle = 'rgba(150, 100, 50, 0.3)';
+      ctx.beginPath();
+      ctx.rect(-85, -55, 170, 110);
+      ctx.fill();
+      
+      ctx.strokeStyle = '#996633';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+      
+      // Pieux
+      for (let i = -1; i <= 1; i++) {
+        ctx.fillStyle = 'rgba(100, 50, 0, 0.4)';
+        ctx.beginPath();
+        ctx.rect(i * 35 - 10, 40, 20, 50);
+        ctx.fill();
+        ctx.stroke();
+      }
+      
+      ctx.fillStyle = '#996633';
+      ctx.font = 'bold 14px Poppins';
+      ctx.textAlign = 'center';
+      ctx.fillText('FOUNDATION', 0, 5);
+    }
+
+    function drawNacelle(ctx) {
+      // Nacelle - PLUS GRANDE
+      ctx.fillStyle = 'rgba(200, 200, 200, 0.3)';
+      ctx.beginPath();
+      ctx.ellipse(0, 0, 70, 50, 0.2, 0, Math.PI * 2);
+      ctx.fill();
+      
+      ctx.strokeStyle = '#CCCCCC';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+      
+      // Fenêtres
+      ctx.fillStyle = 'rgba(100, 150, 200, 0.5)';
+      ctx.beginPath();
+      ctx.rect(-40, -18, 20, 15);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.rect(-10, -18, 20, 15);
+      ctx.fill();
+      
+      ctx.fillStyle = '#CCCCCC';
+      ctx.font = 'bold 14px Poppins';
+      ctx.textAlign = 'center';
+      ctx.fillText('NACELLE', 0, 5);
+    }
+
+    function drawBearing(ctx) {
+      // Roulement - PLUS GRAND
+      ctx.fillStyle = 'rgba(100, 100, 100, 0.3)';
+      ctx.beginPath();
+      ctx.arc(0, 0, 65, 0, Math.PI * 2);
+      ctx.fill();
+      
+      ctx.strokeStyle = '#666';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+      
+      // Billes
+      for (let i = 0; i < 8; i++) {
+        const angle = (i / 8) * Math.PI * 2;
+        const x = Math.cos(angle) * 40;
+        const y = Math.sin(angle) * 40;
+        ctx.fillStyle = 'rgba(150, 150, 150, 0.5)';
+        ctx.beginPath();
+        ctx.arc(x, y, 8, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      
+      ctx.fillStyle = '#666';
+      ctx.font = 'bold 14px Poppins';
+      ctx.textAlign = 'center';
+      ctx.fillText('BEARING', 0, 5);
+    }
+
+    function drawCable(ctx) {
+      // Câble - PLUS GROS
+      ctx.strokeStyle = 'rgba(200, 150, 50, 0.5)';
+      ctx.lineWidth = 10;
+      ctx.beginPath();
+      ctx.moveTo(-60, -80);
+      ctx.quadraticCurveTo(0, 30, 60, 80);
+      ctx.stroke();
+      
+      // Torsade
+      ctx.strokeStyle = 'rgba(100, 75, 25, 0.6)';
+      ctx.lineWidth = 5;
+      for (let i = 0; i < 6; i++) {
+        const t = i / 6;
+        const x = -60 + t * 120;
+        const y = -80 + t * 160;
+        ctx.beginPath();
+        ctx.arc(x, y, 4, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+      
+      ctx.fillStyle = 'rgba(200, 150, 50, 0.8)';
+      ctx.font = 'bold 14px Poppins';
+      ctx.textAlign = 'center';
+      ctx.fillText('CABLE', 0, 5);
+    }
+
+    function loadNextProduct() {
+      if (currentProductIndex >= allProducts.length || !gameActive) {
+        endGame();
+        return;
+      }
+      
+      currentProduct = allProducts[currentProductIndex];
+      currentDefects = currentProduct.defects || [];
+      revealedDefects = [];
+      productStartTime = Date.now();
+      
+      drawProduct();
+      updateProductStatus();
+    }
+
+    window.makeDecision = function(decision) {
+      if (!gameActive || !currentProduct) return;
+      
+      // Vérifier que les défauts révélés sont valides
+      const validDefects = revealedDefects.filter(i => isDefectInObject(currentDefects[i].pos));
+      
+      const hasDefects = validDefects.length > 0;
+      const isCorrect = (decision === 'accept' && !hasDefects) || (decision === 'reject' && hasDefects);
+
+      const productTime = (Date.now() - productStartTime) / 1000;
+      gameStats.totalTime += productTime;
+      gameStats.inspected++;
+
+      if (isCorrect) {
+        correctCombo++;
+        if (correctCombo > gameStats.maxCombo) gameStats.maxCombo = correctCombo;
+        gameStats.good++;
+      } else {
+        correctCombo = 0;
+        gameStats.wrong++;
+      }
+
+      showStamp(isCorrect);
+      showFeedback(isCorrect ? '✅ CORRECT!' : '❌ WRONG!', isCorrect);
+      updateKPI();
+      currentProductIndex++;
+      setTimeout(() => loadNextProduct(), 800);
+    };
+
+    function isDefectInObject(defectPos) {
+      if (!defectPos) return false;
+      
+      // Vérifier si le défaut est dans une zone raisonnable (pas trop loin du centre)
+      const dist = Math.hypot(defectPos.x, defectPos.y);
+      return dist < 100; // Les défauts sont générés dans une zone de 80px, on accepte 100
+    }
+
+    window.quitGame = function() {
+      gameActive = false;
+      console.log('OPEN FINAL LEADERBOARD');
+      alert(`GAME OVER!\n\nGood: ${gameStats.good}\nWrong: ${gameStats.wrong}\nQuality: ${gameStats.inspected > 0 ? Math.round((gameStats.good / gameStats.inspected) * 100) : 0}%`);
+      location.reload();
+    };
+
+    function startTimer() {
+      const timerInterval = setInterval(() => {
+        if (!gameActive) {
+          clearInterval(timerInterval);
+          return;
+        }
+
+        const elapsed = Date.now() - gameStartTime;
+        const remaining = Math.max(0, 120 - Math.floor(elapsed / 1000));
+        
+        const mins = Math.floor(remaining / 60);
+        const secs = remaining % 60;
+        document.getElementById('timerDisplay').textContent = String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+        
+        // Update Time Elapsed in KPI avec décimales
+        const elapsedSecs = elapsed / 1000;
+        const elapsedMins = Math.floor(elapsedSecs / 60);
+        const displaySecs = (elapsedSecs % 60).toFixed(1);
+        document.getElementById('kpiTimer').textContent = String(elapsedMins).padStart(2, '0') + ':' + String(parseFloat(displaySecs)).padStart(4, '0');
+        
+        // Update Avg Time en live avec décimales
+        if (gameStats.inspected > 0) {
+          const totalProductTime = gameStats.totalTime + ((Date.now() - productStartTime) / 1000);
+          const avgTime = (totalProductTime / gameStats.inspected).toFixed(1);
+          const timeEl = document.getElementById('kpiAvgTime');
+          timeEl.textContent = avgTime + 's';
+          
+          // Average Time: Vert -> Orange -> Rouge -> Noir
+          const avgNum = parseFloat(avgTime);
+          if (avgNum <= 5) {
+            timeEl.style.color = '#10B981';
+            timeEl.style.textShadow = '0 0 8px rgba(16, 185, 129, 0.5)';
+          } else if (avgNum <= 7) {
+            timeEl.style.color = '#7BC92E';
+            timeEl.style.textShadow = '0 0 8px rgba(123, 201, 46, 0.5)';
+          } else if (avgNum <= 10) {
+            timeEl.style.color = '#FFA500';
+            timeEl.style.textShadow = '0 0 8px rgba(255, 165, 0, 0.5)';
+          } else if (avgNum <= 15) {
+            timeEl.style.color = '#FF5716';
+            timeEl.style.textShadow = '0 0 8px rgba(255, 87, 22, 0.5)';
+          } else {
+            timeEl.style.color = '#333';
+            timeEl.style.textShadow = '0 0 8px rgba(51, 51, 51, 0.5)';
+          }
+        }
+        
+        const fillPercent = (remaining / 120) * 100;
+        document.getElementById('timerFill').style.width = fillPercent + '%';
+
+        if (remaining <= 0) {
+          gameActive = false;
+          clearInterval(timerInterval);
+          endGame();
+        }
+      }, 100);
+    }
+
+    function endGame() {
+      gameActive = false;
+      const quality = gameStats.inspected > 0 ? Math.round((gameStats.good / gameStats.inspected) * 100) : 0;
+      saveGameScoreAndShowLeaderboard(gameStats.good, gameStats.inspected, quality);
+    }
+    
+    async function saveGameScoreAndShowLeaderboard(good, total, quality) {
+      const grade = calculateGrade(quality);
+      const score = Math.round(quality * 100);
+      const playerName = 'DenisSOARES';
+      
+      // Objet de score à sauvegarder
+      const gameScore = {
+        name: playerName,
+        score: score,
+        grade: grade,
+        good: good,
+        total: total,
+        quality: quality,
+        timestamp: new Date().toISOString()
+      };
+      
+      // Sauvegarder localement d'abord (toujours)
+      try {
+        const scores = JSON.parse(localStorage.getItem('gameScores')) || [];
+        scores.unshift(gameScore);
+        localStorage.setItem('gameScores', JSON.stringify(scores.slice(0, 100))); // Garder les 100 derniers
+        console.log('✅ Score sauvegardé localement');
+      } catch (e) {
+        console.error('Erreur localStorage:', e);
+      }
+      
+      // Essayer de sauvegarder sur Supabase
+      try {
+        const { error } = await supabase
+          .from('leaderboard')
+          .insert([gameScore]);
+        
+        if (error) {
+          console.warn('⚠️ Supabase indisponible, utilisé localStorage');
+        } else {
+          console.log('✅ Score sauvegardé sur Supabase');
+        }
+      } catch (err) {
+        console.warn('⚠️ Supabase indisponible, utilisé localStorage');
+      }
+      
+      // Afficher la page leaderboard
+      await showLeaderboardPage(gameScore);
+    }
+    
+    async function showLeaderboardPage(currentScore) {
+      // Masquer le jeu
+      document.getElementById('rulesOverlay').classList.add('hidden');
+      
+      // Afficher la page leaderboard (avec display flex)
+      const leaderboardPage = document.getElementById('leaderboardPage');
+      if (leaderboardPage) {
+        console.log('📊 Affichage de la page leaderboard');
+        leaderboardPage.style.display = 'flex';
+        leaderboardPage.style.alignItems = 'center';
+        leaderboardPage.style.justifyContent = 'center';
+      } else {
+        console.error('❌ leaderboardPage non trouvée');
+      }
+      
+      // Mettre à jour les infos du joueur actuel
+      updatePlayerInfo(currentScore);
+      
+      // Charger et afficher le leaderboard
+      await loadAndDisplayLeaderboard();
+    }
+    
+    function updatePlayerInfo(score) {
+      document.getElementById('playerNameScore').textContent = score.name;
+      document.getElementById('scoreGrade').textContent = score.grade;
+      document.getElementById('scoreValue').textContent = score.score;
+      document.getElementById('scoreRatio').textContent = `${score.good}/${score.total} = ${score.quality}%`;
+      document.getElementById('resultsTotal').textContent = `${score.good}/${score.total}`;
+      
+      // Générer les emojis de résultats
+      let resultEmojis = '';
+      for (let i = 0; i < score.total; i += 5) {
+        resultEmojis += '<div class="result-group">';
+        for (let j = 0; j < 5 && i + j < score.total; j++) {
+          const emoji = i + j < score.good ? '✔' : '✖';
+          const className = i + j < score.good ? 'success' : 'error';
+          resultEmojis += `<span class="result-emoji ${className}">${emoji}</span>`;
+        }
+        resultEmojis += '</div>';
+      }
+      document.getElementById('resultsEmojis').innerHTML = resultEmojis;
+    }
+    
+    async function loadAndDisplayLeaderboard() {
+      let leaderboardData = [];
+      
+      // Essayer Supabase d'abord
+      try {
+        const { data, error } = await supabase
+          .from('leaderboard')
+          .select('*')
+          .order('score', { ascending: false })
+          .limit(12);
+        
+        if (!error && data) {
+          leaderboardData = data;
+          console.log('✅ Leaderboard chargé depuis Supabase');
+        }
+      } catch (err) {
+        console.warn('⚠️ Supabase indisponible');
+      }
+      
+      // Si Supabase est vide, utiliser localStorage
+      if (leaderboardData.length === 0) {
+        try {
+          leaderboardData = JSON.parse(localStorage.getItem('gameScores')) || [];
+          console.log('✅ Leaderboard chargé depuis localStorage');
+        } catch (e) {
+          console.error('Erreur localStorage:', e);
+        }
+      }
+      
+      // Afficher le leaderboard
+      const leaderboardPanel = document.querySelector('#leaderboardPage .right-panel');
+      if (leaderboardPanel && leaderboardData.length > 0) {
+        let html = '';
+        leaderboardData.slice(0, 12).forEach((entry, index) => {
+          const isTop3 = index < 3;
+          const medals = ['🥇', '🥈', '🥉', '🎖️'];
+          const medal = medals[Math.min(index, 3)];
+          
+          // Formater la date
+          const date = new Date(entry.timestamp || entry.created_at);
+          const dateStr = date.toLocaleDateString('fr-FR') + ' ' + date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+          
+          html += `<div class="leaderboard-row ${isTop3 ? 'top-3' : ''}">
+            <div class="leaderboard-rank">#${index + 1}</div>
+            <div class="leaderboard-medal">${medal}</div>
+            <div class="leaderboard-name">${entry.name || 'Anonymous'}</div>
+            <div class="leaderboard-score">${entry.score}</div>
+            <div class="leaderboard-grade">${entry.grade}</div>
+            <div class="leaderboard-date">${dateStr}</div>
+          </div>`;
+        });
+        leaderboardPanel.innerHTML = html;
+      }
+    }
+    
+    function calculateGrade(quality) {
+      if (quality >= 90) return 'S';
+      if (quality >= 80) return 'A';
+      if (quality >= 70) return 'B';
+      if (quality >= 60) return 'C';
+      if (quality >= 50) return 'D';
+      return 'E';
+    }
+    
+    function returnToMenu() {
+      console.log('📌 Retour au menu');
+      
+      // Masquer le leaderboard
+      const leaderboardPage = document.getElementById('leaderboardPage');
+      if (leaderboardPage) {
+        leaderboardPage.style.display = 'none';
+        console.log('✅ Leaderboard masqué');
+      }
+      
+      // Afficher les règles
+      const rulesOverlay = document.getElementById('rulesOverlay');
+      if (rulesOverlay) {
+        rulesOverlay.classList.remove('hidden');
+        console.log('✅ Overlay des règles affiché');
+      }
+      
+      // Réinitialiser le jeu
+      gameActive = false;
+      gameStats = { inspected: 0, good: 0, wrong: 0, maxCombo: 0, totalTime: 0 };
+      currentProductIndex = 0;
+      revealedDefects = [];
+      console.log('✅ Jeu réinitialisé');
+    }
+
+    window.addEventListener('load', () => {
+      const productTypes = ['blade', 'gearbox', 'generator', 'tower', 'foundation', 'nacelle', 'bearing', 'cable'];
+      const defectTypes = [
+        { name: 'Crack', severity: 'high' },
+        { name: 'Corrosion', severity: 'medium' },
+        { name: 'Fatigue', severity: 'high' },
+        { name: 'Misalignment', severity: 'medium' },
+        { name: 'Wear', severity: 'low' },
+        { name: 'Deformation', severity: 'high' },
+        { name: 'Rust', severity: 'medium' },
+        { name: 'Fracture', severity: 'high' }
+      ];
+      
+      allProducts = [];
+      for (let i = 0; i < 30; i++) {
+        const hasDefects = Math.random() > 0.65;
+        const defects = [];
+        
+        if (hasDefects) {
+          const numDefects = Math.floor(Math.random() * 3) + 1;
+          for (let d = 0; d < numDefects; d++) {
+            const defect = defectTypes[Math.floor(Math.random() * defectTypes.length)];
+            defects.push({
+              name: defect.name,
+              severity: defect.severity,
+              pos: {
+                x: (Math.random() - 0.5) * 80,
+                y: (Math.random() - 0.5) * 80
+              }
+            });
+          }
+        }
+        
+        allProducts.push({
+          name: 'Offshore Component ' + (i + 1),
+          id: i,
+          type: productTypes[i % productTypes.length],
+          value: 150 + Math.random() * 200,
+          defects: defects
+        });
+      }
+
+      // L'overlay de règles s'affiche automatiquement
+      // Le jeu ne démarre que quand on clique sur "Start My Inspection"
+      setupResizableDivider();
+    });
+
+    function setupResizableDivider() {
+      const gameZone = document.getElementById('gameZone');
+      const divider = document.createElement('div');
+      divider.className = 'resizableDivider';
+      divider.id = 'resizableDivider';
+      document.body.appendChild(divider);
+
+      updateDividerPosition();
+
+      let isResizing = false;
+      let startX = 0;
+
+      divider.addEventListener('mousedown', (e) => {
+        isResizing = true;
+        startX = e.clientX;
+        document.body.style.userSelect = 'none';
+      });
+
+      document.addEventListener('mousemove', (e) => {
+        if (!isResizing) return;
+
+        const diff = e.clientX - startX;
+        const gameRect = gameZone.getBoundingClientRect();
+        
+        const kpiZone = document.getElementById('kpiZone');
+        const currentKpiPercent = (kpiZone.offsetWidth / gameRect.width) * 100;
+        const newKpiPercent = Math.max(12, Math.min(40, currentKpiPercent - (diff / gameRect.width) * 100));
+        
+        const inspectionPercent = 100 - newKpiPercent;
+        gameZone.style.gridTemplateColumns = `${inspectionPercent}fr ${newKpiPercent}%`;
+        updateDividerPosition();
+        startX = e.clientX;
+      });
+
+      document.addEventListener('mouseup', () => {
+        isResizing = false;
+        document.body.style.userSelect = 'auto';
+      });
+
+      window.addEventListener('resize', updateDividerPosition);
+    }
+
+    function updateDividerPosition() {
+      const divider = document.getElementById('resizableDivider');
+      const kpiZone = document.getElementById('kpiZone');
+      if (!divider || !kpiZone) return;
+      
+      const kpiRect = kpiZone.getBoundingClientRect();
+      divider.style.left = (kpiRect.left - 3) + 'px';
+    }
+
+    function startGame() {
+      document.getElementById('rulesOverlay').classList.add('hidden');
+      gameActive = true;
+      gameStartTime = Date.now();
+      gameStats = { inspected: 0, good: 0, wrong: 0, maxCombo: 0, totalTime: 0 };
+      
+      loadNextProduct();
+      updateKPI();
+      startTimer();
+      setupMagnifyingGlass();
+    }
+
+    function setupMagnifyingGlass() {
+      const canvas = document.getElementById('productCanvas');
+      const magnifyingGlass = document.getElementById('magnifyingGlass');
+      const handle = document.getElementById('magnifyingGlassHandle');
+      const searchZone = document.getElementById('searchZone');
+
+      canvas.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        // Vérifier si on est dans le canvas
+        if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
+          magnifyingGlass.classList.add('active');
+          handle.classList.add('active');
+          searchZone.classList.add('active');
+
+          // Position la loupe
+          magnifyingGlass.style.left = (e.clientX - 17.5) + 'px';
+          magnifyingGlass.style.top = (e.clientY - 17.5) + 'px';
+          handle.style.right = (window.innerWidth - e.clientX - 15) + 'px';
+          handle.style.bottom = (window.innerHeight - e.clientY - 15) + 'px';
+
+          // Zone de recherche
+          searchZone.style.left = (e.clientX + 20) + 'px';
+          searchZone.style.top = (e.clientY - 20) + 'px';
+
+          // Vérifier les défauts sous la loupe
+          let defectUnder = null;
+          if (currentDefects && currentDefects.length > 0) {
+            currentDefects.forEach((defect, i) => {
+              if (defect.pos) {
+                const canvasRect = canvas.getBoundingClientRect();
+                const defectScreenX = canvasRect.left + (200 + defect.pos.x);
+                const defectScreenY = canvasRect.top + (150 + defect.pos.y);
+
+                const dist = Math.hypot(e.clientX - defectScreenX, e.clientY - defectScreenY);
+                if (dist < 40) {
+                  defectUnder = { name: defect.name, index: i, screenX: defectScreenX, screenY: defectScreenY };
+                  
+                  // RÉVÉLER LE DÉFAUT
+                  if (!revealedDefects.includes(i)) {
+                    revealedDefects.push(i);
+                    drawProduct();
+                  }
+                }
+              }
+            });
+          }
+
+          if (defectUnder) {
+            searchZone.textContent = '🔍 DEFECT FOUND!';
+            searchZone.style.color = '#EF4444';
+            magnifyingGlass.style.boxShadow = '0 0 40px rgba(239, 68, 68, 1), inset 0 0 20px rgba(239, 68, 68, 0.5), 0 0 60px rgba(239, 68, 68, 0.6)';
+            canvas.style.cursor = 'default';
+            
+            // Update le message du haut
+            const productNum = currentProductIndex + 1;
+            const status = document.getElementById('productStatus');
+            status.textContent = `Scanning Product ${productNum} : Defect Found !`;
+            status.style.color = '#EF4444';
+          } else {
+            searchZone.textContent = '🔍 Scanning...';
+            searchZone.style.color = '#FFD700';
+            magnifyingGlass.style.boxShadow = '0 0 20px rgba(255, 215, 0, 0.6), inset 0 0 15px rgba(255, 215, 0, 0.2)';
+            canvas.style.cursor = 'default';
+          }
+        } else {
+          magnifyingGlass.classList.remove('active');
+          handle.classList.remove('active');
+          searchZone.classList.remove('active');
+          canvas.style.cursor = 'auto';
+        }
+      });
+
+      canvas.addEventListener('mouseleave', () => {
+        magnifyingGlass.classList.remove('active');
+        handle.classList.remove('active');
+        searchZone.classList.remove('active');
+        canvas.style.cursor = 'auto';
+      });
+    }
+  </script>
+
+
+<!-- Easter Egg Overlay -->
   <div id="easterOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(10, 14, 39, 0.98) 0%, rgba(20, 30, 60, 0.98) 100%); z-index: 9999; align-items: center; justify-content: center; flex-direction: column;">
     <div style="display: flex; align-items: center; gap: 40px; max-width: 950px;">
       <div style="position: relative; padding: 8px; background: linear-gradient(135deg, #FFD700 0%, #FF6B00 50%, #FFD700 100%); border-radius: 16px; box-shadow: 0 0 30px rgba(255, 107, 0, 0.8), inset 0 0 20px rgba(255, 215, 0, 0.3);">
@@ -2095,5 +4730,174 @@
 
   </script>
 
+
+  <!-- LEADERBOARD PAGE -->
+  <div id="leaderboardPage" style="display: none;">
+<div class="leaderboard-container">
+        <div class="header-section">
+            <h1>🏆 LEADERBOARD</h1>
+            <button class="play-again-btn" onclick="returnToMenu()">▶ AGAIN</button>
+        </div>
+
+        <div class="main-layout">
+            <!-- LEFT PANEL -->
+            <div class="left-panel">
+                <div class="well-done">Well Done! 👍</div>
+
+                <div class="ranks-results-container">
+                    <!-- TABLE RANGS -->
+                    <table class="ranks-table">
+                        <tr>
+                            <td class="rank-letter-cell"><div class="rank-letter rank-s">S</div></td>
+                            <td class="rank-word-cell rank-s-word">tylish</td>
+                        </tr>
+                        <tr>
+                            <td class="rank-letter-cell"><div class="rank-letter rank-a">A</div></td>
+                            <td class="rank-word-cell rank-a-word">bsolute</td>
+                        </tr>
+                        <tr>
+                            <td class="rank-letter-cell"><div class="rank-letter rank-b">B</div></td>
+                            <td class="rank-word-cell rank-b-word">ravo</td>
+                        </tr>
+                        <tr>
+                            <td class="rank-letter-cell"><div class="rank-letter rank-c">C</div></td>
+                            <td class="rank-word-cell rank-c-word">ool</td>
+                        </tr>
+                        <tr>
+                            <td class="rank-letter-cell"><div class="rank-letter rank-d">D</div></td>
+                            <td class="rank-word-cell rank-d-word">ull</td>
+                        </tr>
+                        <tr>
+                            <td class="rank-letter-cell"><div class="rank-letter rank-e">E</div></td>
+                            <td class="rank-word-cell rank-e-word">mpty</td>
+                        </tr>
+                    </table>
+
+                    <!-- SCORE BOX -->
+                    <div class="ranks-score-box">
+                        <span class="player-name-score" id="playerNameScore">DenisSOARES</span>
+                        <span class="score-emoji">👑</span>
+                        <span class="score-label" id="scoreGrade">STYLISH!</span>
+                        <span class="score-value" id="scoreValue">1500</span>
+                        <span class="score-ratio" id="scoreRatio">18/20 = 90%</span>
+                    </div>
+                </div>
+
+                <!-- RESULTS BOX -->
+                <div class="ranks-results-box">
+                    <div class="results-title">RESULTS: <span id="resultsTotal">18/20</span></div>
+                    <div class="results-list" id="resultsEmojis">
+                        <div class="result-group"><span class="result-emoji success">✔</span><span class="result-emoji success">✔</span><span class="result-emoji success">✔</span><span class="result-emoji success">✔</span><span class="result-emoji success">✔</span></div>
+                        <div class="result-group"><span class="result-emoji success">✔</span><span class="result-emoji success">✔</span><span class="result-emoji success">✔</span><span class="result-emoji success">✔</span><span class="result-emoji error">✖</span></div>
+                        <div class="result-group"><span class="result-emoji success">✔</span><span class="result-emoji success">✔</span><span class="result-emoji success">✔</span><span class="result-emoji success">✔</span><span class="result-emoji success">✔</span></div>
+                        <div class="result-group"><span class="result-emoji success">✔</span><span class="result-emoji success">✔</span><span class="result-emoji success">✔</span><span class="result-emoji success">✔</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT PANEL: LEADERBOARD -->
+            <div class="right-panel">
+                <div class="leaderboard-row top-3">
+                    <div class="leaderboard-rank">#1</div>
+                    <div class="leaderboard-medal">🥇</div>
+                    <div class="leaderboard-name">DenisSOARES</div>
+                    <div class="leaderboard-score">1500</div>
+                    <div class="leaderboard-grade">S</div>
+                    <div class="leaderboard-date">24/10/25 14:32</div>
+                </div>
+                <div class="leaderboard-row top-3">
+                    <div class="leaderboard-rank">#2</div>
+                    <div class="leaderboard-medal">🥈</div>
+                    <div class="leaderboard-name">Alexandre</div>
+                    <div class="leaderboard-score">1350</div>
+                    <div class="leaderboard-grade">A</div>
+                    <div class="leaderboard-date">24/10/25 14:28</div>
+                </div>
+                <div class="leaderboard-row top-3">
+                    <div class="leaderboard-rank">#3</div>
+                    <div class="leaderboard-medal">🥉</div>
+                    <div class="leaderboard-name">Sophie</div>
+                    <div class="leaderboard-score">1200</div>
+                    <div class="leaderboard-grade">A</div>
+                    <div class="leaderboard-date">24/10/25 14:25</div>
+                </div>
+                <div class="leaderboard-row">
+                    <div class="leaderboard-rank">#4</div>
+                    <div class="leaderboard-medal">🎖️</div>
+                    <div class="leaderboard-name">Michel</div>
+                    <div class="leaderboard-score">1050</div>
+                    <div class="leaderboard-grade">B</div>
+                    <div class="leaderboard-date">24/10/25 14:20</div>
+                </div>
+                <div class="leaderboard-row">
+                    <div class="leaderboard-rank">#5</div>
+                    <div class="leaderboard-medal">🎖️</div>
+                    <div class="leaderboard-name">Claire</div>
+                    <div class="leaderboard-score">950</div>
+                    <div class="leaderboard-grade">B</div>
+                    <div class="leaderboard-date">24/10/25 14:18</div>
+                </div>
+                <div class="leaderboard-row">
+                    <div class="leaderboard-rank">#6</div>
+                    <div class="leaderboard-medal">🎖️</div>
+                    <div class="leaderboard-name">Pierre</div>
+                    <div class="leaderboard-score">850</div>
+                    <div class="leaderboard-grade">C</div>
+                    <div class="leaderboard-date">24/10/25 14:15</div>
+                </div>
+                <div class="leaderboard-row">
+                    <div class="leaderboard-rank">#7</div>
+                    <div class="leaderboard-medal">🎖️</div>
+                    <div class="leaderboard-name">Isabelle</div>
+                    <div class="leaderboard-score">750</div>
+                    <div class="leaderboard-grade">C</div>
+                    <div class="leaderboard-date">24/10/25 14:10</div>
+                </div>
+                <div class="leaderboard-row">
+                    <div class="leaderboard-rank">#8</div>
+                    <div class="leaderboard-medal">🎖️</div>
+                    <div class="leaderboard-name">Francois</div>
+                    <div class="leaderboard-score">650</div>
+                    <div class="leaderboard-grade">D</div>
+                    <div class="leaderboard-date">24/10/25 14:08</div>
+                </div>
+                <div class="leaderboard-row">
+                    <div class="leaderboard-rank">#9</div>
+                    <div class="leaderboard-medal">🎖️</div>
+                    <div class="leaderboard-name">Marie</div>
+                    <div class="leaderboard-score">550</div>
+                    <div class="leaderboard-grade">D</div>
+                    <div class="leaderboard-date">24/10/25 14:05</div>
+                </div>
+                <div class="leaderboard-row">
+                    <div class="leaderboard-rank">#10</div>
+                    <div class="leaderboard-medal">🎖️</div>
+                    <div class="leaderboard-name">Jean</div>
+                    <div class="leaderboard-score">450</div>
+                    <div class="leaderboard-grade">E</div>
+                    <div class="leaderboard-date">24/10/25 14:02</div>
+                </div>
+                <div class="leaderboard-row">
+                    <div class="leaderboard-rank">#11</div>
+                    <div class="leaderboard-medal">🎖️</div>
+                    <div class="leaderboard-name">Luc</div>
+                    <div class="leaderboard-score">400</div>
+                    <div class="leaderboard-grade">E</div>
+                    <div class="leaderboard-date">24/10/25 13:58</div>
+                </div>
+                <div class="leaderboard-row">
+                    <div class="leaderboard-rank">#12</div>
+                    <div class="leaderboard-medal">🎖️</div>
+                    <div class="leaderboard-name">Monique</div>
+                    <div class="leaderboard-score">350</div>
+                    <div class="leaderboard-grade">E</div>
+                    <div class="leaderboard-date">24/10/25 13:55</div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+
 </body>
+
 </html>
