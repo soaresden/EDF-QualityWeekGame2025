@@ -2063,10 +2063,10 @@
         <div class="collapsible-header" onclick="window.FIRST_toggleCollapse('hallContent')" style="justify-content: space-between;">
           <div style="display: flex; align-items: center; gap: 8px;">
             <span class="chevron collapsed" id="hallChevron">▶</span>
-            <span style="color: white; font-weight: 900; text-shadow: 0 2px 8px rgba(0,0,0,0.3);" id="leaderboardTitle">🏆 HALL OF FAME</span>
+            <span style="color: white; font-weight: 900; text-shadow: 0 2px 8px rgba(0,0,0,0.3);">🏆 HALL OF FAME</span>
+            <span id="hallSourceIcon" style="font-size: 1rem; cursor: pointer; transition: transform 0.3s;" title="Source des données - Cliquez pour actualiser" onclick="event.stopPropagation(); document.getElementById('hallSourceIcon').style.transform='rotate(360deg)'; setTimeout(() => document.getElementById('hallSourceIcon').style.transform='rotate(0deg)', 500); FIRST_loadLeaderboard();">💻</span>
           </div>
-          <div id="hallUpdateTime" style="font-size: 0.65rem; color: #FFD700; font-weight: 700; background: rgba(255, 215, 0, 0.12); padding: 5px 12px; border-radius: 20px; border: 1.5px solid rgba(255, 215, 0, 0.3); letter-spacing: 0.3px; display: flex; align-items: center; gap: 6px; transition: all 0.3s ease; box-shadow: 0 0 10px rgba(255, 215, 0, 0.15);">
-            <span style="font-size: 0.75rem; display: inline-block; animation: spin 2s linear infinite;">🔄</span>
+          <div id="hallUpdateTime" style="font-size: 0.65rem; color: #FFD700; font-weight: 700; background: rgba(255, 215, 0, 0.12); padding: 5px 12px; border-radius: 20px; border: 1.5px solid rgba(255, 215, 0, 0.3); letter-spacing: 0.3px; transition: all 0.3s ease; box-shadow: 0 0 10px rgba(255, 215, 0, 0.15);">
             <span id="updateTimeText" style="font-family: 'Courier New', monospace; white-space: nowrap;">--:--:--</span>
           </div>
         </div>
@@ -2308,10 +2308,6 @@
       // Si le nom est validé, afficher l'overlay des règles
       const intro = document.getElementById('introScreenAnimated');
       const rulesOverlay = document.getElementById('rulesOverlay');
-      
-      // Supprimer l'icône de la page 1
-      const firstIcon = document.getElementById('firstSourceIcon');
-      if (firstIcon) firstIcon.remove();
       
       if (intro) intro.style.display = 'none';
       if (rulesOverlay) rulesOverlay.classList.remove('hidden');
@@ -2714,30 +2710,14 @@
     }
     
     function FIRST_displaySourceIcon(isCloud) {
-      // Supprimer l'ancienne icône si elle existe
-      const oldIcon = document.getElementById('firstSourceIcon');
-      if (oldIcon) oldIcon.remove();
-      
       const icon = isCloud ? '☁️' : '💻';
-      const tooltip = isCloud ? 'Données cloud (Supabase)' : 'Données locales (localStorage)';
+      const tooltip = isCloud ? 'Données cloud (Supabase) - Cliquez pour actualiser' : 'Données locales (localStorage) - Cliquez pour actualiser';
       
-      const iconEl = document.createElement('div');
-      iconEl.id = 'firstSourceIcon';
-      iconEl.style.cssText = 'position: fixed; bottom: 20px; right: 20px; font-size: 2.5rem; cursor: pointer; z-index: 2001; filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.6)); transition: transform 0.3s;';
-      iconEl.textContent = icon;
-      iconEl.title = tooltip + ' - Cliquez pour actualiser';
-      iconEl.onclick = function() {
-        console.log('🔄 Rafraîchissement des données...');
-        iconEl.style.transform = 'rotate(360deg) scale(1.3)';
-        setTimeout(() => {
-          iconEl.style.transform = 'rotate(0deg) scale(1)';
-        }, 500);
-        FIRST_loadLeaderboard();
-      };
-      iconEl.onmouseover = () => iconEl.style.transform = 'scale(1.3) rotate(10deg)';
-      iconEl.onmouseout = () => iconEl.style.transform = 'scale(1) rotate(0deg)';
-      
-      document.body.appendChild(iconEl);
+      const iconEl = document.getElementById('hallSourceIcon');
+      if (iconEl) {
+        iconEl.textContent = icon;
+        iconEl.title = tooltip;
+      }
     }
 
     function FIRST_updateTimestamp(isCloud) {
@@ -3836,6 +3816,16 @@ TYPE html>
     #leaderboardPage .rank-letter:hover {
             opacity: 1;
             filter: brightness(1.2);
+        }
+
+    #leaderboardPage .rank-letter.active-rank {
+            opacity: 1 !important;
+            filter: brightness(1.2) !important;
+        }
+
+    #leaderboardPage .rank-word-cell.active-rank {
+            opacity: 1 !important;
+            filter: brightness(1.2) !important;
         }
 
     #leaderboardPage .rank-letter.rank-s {
@@ -4943,33 +4933,33 @@ TYPE html>
     
     
     function displaySourceIcon() {
-      if (document.getElementById('sourceIcon')) return;
-      
       let icon = '💻';
-      let tooltip = 'Données locales (localStorage)';
+      let tooltip = 'Données locales (localStorage) - Cliquez pour actualiser';
       
       if (typeof supabase !== 'undefined') {
         icon = '☁️';
-        tooltip = 'Données cloud (Supabase)';
+        tooltip = 'Données cloud (Supabase) - Cliquez pour actualiser';
       }
       
-      const iconEl = document.createElement('div');
-      iconEl.id = 'sourceIcon';
-      iconEl.style.cssText = 'position: fixed; bottom: 20px; right: 20px; font-size: 2.5rem; cursor: pointer; z-index: 10001; filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.6)); transition: transform 0.3s;';
-      iconEl.textContent = icon;
-      iconEl.title = tooltip + ' - Cliquez pour actualiser';
-      iconEl.onclick = async function() {
-        console.log('🔄 Rafraîchissement du leaderboard...');
-        iconEl.style.transform = 'rotate(360deg) scale(1.3)';
-        setTimeout(() => {
-          iconEl.style.transform = 'rotate(0deg) scale(1)';
-        }, 500);
-        await loadAndDisplayLeaderboard();
-      };
-      iconEl.onmouseover = () => iconEl.style.transform = 'scale(1.3) rotate(10deg)';
-      iconEl.onmouseout = () => iconEl.style.transform = 'scale(1) rotate(0deg)';
+      const iconEl = document.getElementById('leaderboardSourceIcon');
+      if (iconEl) {
+        iconEl.textContent = icon;
+        iconEl.title = tooltip;
+      }
       
-      document.body.appendChild(iconEl);
+      // Mettre à jour le timestamp
+      const date = new Date();
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = String(date.getFullYear()).slice(-2);
+      const hours = String(date.getHours()).padStart(2, '0');
+      const mins = String(date.getMinutes()).padStart(2, '0');
+      const secs = String(date.getSeconds()).padStart(2, '0');
+      
+      const timestampEl = document.getElementById('leaderboardUpdateTime');
+      if (timestampEl) {
+        timestampEl.textContent = `Updated ${day}/${month}/${year} ${hours}:${mins}:${secs}`;
+      }
     }
 
     async function showLeaderboardPage(currentScore) {
@@ -5017,25 +5007,27 @@ TYPE html>
       const rankMap = { 'S': 'rank-s', 'A': 'rank-a', 'B': 'rank-b', 'C': 'rank-c', 'D': 'rank-d', 'E': 'rank-e' };
       const rankClass = rankMap[score.grade];
       
+      // Retirer la classe 'active' de tous les rangs d'abord
       document.querySelectorAll('#leaderboardPage .rank-letter').forEach(el => {
-        el.style.opacity = '0.2';
-        el.style.filter = 'brightness(0.4)';
+        el.classList.remove('active-rank');
+        el.style.opacity = '';
+        el.style.filter = '';
       });
       document.querySelectorAll('#leaderboardPage .rank-word-cell').forEach(el => {
-        el.style.opacity = '0.2';
-        el.style.filter = 'brightness(0.4)';
+        el.classList.remove('active-rank');
+        el.style.opacity = '';
+        el.style.filter = '';
       });
       
+      // Ajouter la classe 'active' au rang obtenu
       if (rankClass) {
         const rankLetter = document.querySelector(`#leaderboardPage .${rankClass}`);
         const rankWord = document.querySelector(`#leaderboardPage .${rankClass}-word`);
         if (rankLetter) {
-          rankLetter.style.opacity = '1';
-          rankLetter.style.filter = 'brightness(1.2)';
+          rankLetter.classList.add('active-rank');
         }
         if (rankWord) {
-          rankWord.style.opacity = '1';
-          rankWord.style.filter = 'brightness(1.2)';
+          rankWord.classList.add('active-rank');
         }
       }
       
@@ -5123,10 +5115,6 @@ TYPE html>
       // Masquer la page leaderboard
       const leaderboardPage = document.getElementById('leaderboardPage');
       if (leaderboardPage) leaderboardPage.style.display = 'none';
-      
-      // Supprimer l'icône source
-      const sourceIcon = document.getElementById('sourceIcon');
-      if (sourceIcon) sourceIcon.remove();
       
       // Masquer l'overlay des règles
       const rulesOverlay = document.getElementById('rulesOverlay');
@@ -5420,7 +5408,13 @@ TYPE html>
   <div id="leaderboardPage" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #0254A0 0%, #00A8E9 100%); align-items: center; justify-content: center; z-index: 10000;">
     <div class="leaderboard-container">
         <div class="header-section">
-            <h1>🏆 LEADERBOARD</h1>
+            <h1 style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+              <span>🏆 LEADERBOARD</span>
+              <span id="leaderboardSourceIcon" style="font-size: 1.2rem; cursor: pointer; transition: transform 0.3s;" title="Source des données - Cliquez pour actualiser" onclick="event.stopPropagation(); this.style.transform='rotate(360deg)'; setTimeout(() => this.style.transform='rotate(0deg)', 500); loadAndDisplayLeaderboard();">💻</span>
+            </h1>
+            <div style="position: absolute; top: 0; right: 120px; font-size: 0.65rem; color: #FFD700; font-weight: 700; background: rgba(255, 215, 0, 0.12); padding: 5px 12px; border-radius: 20px; border: 1.5px solid rgba(255, 215, 0, 0.3);">
+              <span id="leaderboardUpdateTime">--:--:--</span>
+            </div>
             <button class="play-again-btn" onclick="returnToMenu()">▶ AGAIN</button>
         </div>
 
