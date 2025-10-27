@@ -2411,7 +2411,7 @@
     // Configuration Supabase
     const SUPABASE_URL = 'https://xhntnoyhcnqpjntcbzsk.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhobnRub3loY25xcGpudGNienNrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEzMzU4OTMsImV4cCI6MjA3NjkxMTg5M30.6B3-TZNUermMdSoEGOuE7VSut6I0bDeaGREd53kr2Ro';
-    
+      
     console.log('🔌 Initialisation Supabase...');
     console.log('📍 URL:', SUPABASE_URL);
     
@@ -3438,14 +3438,21 @@ TYPE html>
       border: 2px solid rgba(0, 168, 233, 0.5);
       border-radius: 16px;
       padding: 25px;
-      max-width: 600px;
+      max-width: 95vw;
+      max-height: 65vh;
       width: 100%;
       text-align: center;
       box-shadow: 0 0 50px rgba(0, 168, 233, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr;
       gap: 20px;
       align-items: start;
+    }
+
+    @media (max-width: 1200px) {
+      .rulesContainer {
+        grid-template-columns: 1fr 1fr;
+      }
     }
 
     @media (max-width: 768px) {
@@ -3955,6 +3962,14 @@ TYPE html>
     .ranks-table { width: 100%; border-collapse: collapse; background: rgba(0, 0, 0, 0.2); border-radius: 8px; overflow: hidden; border: 2px solid #FFD700; box-shadow: 0 0 15px rgba(255, 215, 0, 0.4); }
     .ranks-table tr { border-bottom: 1px solid rgba(0, 168, 233, 0.2); height: 24px; }
     .ranks-table tr:last-child { border-bottom: none; }
+    .ranks-table tbody tr:hover .rank-letter,
+    .ranks-table tbody tr:hover .rank-word-cell {
+      opacity: 1 !important;
+      filter: brightness(1.3) !important;
+    }
+    .ranks-table tbody tr:hover .rank-letter {
+      filter: brightness(1.5) drop-shadow(0 0 10px currentColor) !important;
+    }
     .ranks-table td { padding: 1px 6px; vertical-align: middle; }
     .rank-letter-cell { width: 40px; text-align: center; }
     .rank-letter { font-size: 2.5rem; font-weight: 900; font-style: italic; line-height: 1; opacity: 0.2; filter: brightness(0.4); cursor: pointer; transition: all 0.3s ease; }
@@ -4059,7 +4074,7 @@ TYPE html>
 
     .ranks-results-box { background: rgba(0, 0, 0, 0.4); border: 2px solid #FFD700; border-radius: 8px; padding: 8px; box-shadow: 0 0 15px rgba(255, 215, 0, 0.3); }
     .results-title { color: #FFD700; font-weight: 900; text-align: center; margin-bottom: 4px; font-size: 0.9rem; }
-    .results-list { display: flex; flex-direction: column; gap: 3px; }
+    .results-list { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; width: 100%; }
     .result-group { display: flex; gap: 3px; justify-content: center; }
     .result-emoji { font-size: 0.9rem; font-weight: bold; }
     .result-emoji.success { color: #10B981; text-shadow: 0 0 5px rgba(16, 185, 129, 0.5); }
@@ -4159,6 +4174,28 @@ TYPE html>
             font-family: 'Poppins', sans-serif;
             padding: 10px;
         }
+
+    .gaussian-chart-container {
+      background: rgba(0, 0, 0, 0.3);
+      border: 2px solid #FF6B00;
+      border-radius: 10px;
+      padding: 15px;
+      margin-top: 15px;
+      box-shadow: 0 0 15px rgba(255, 107, 0, 0.3);
+    }
+    
+    .gaussian-chart-title {
+      color: #FFD700;
+      font-weight: 900;
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 0.95rem;
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+    }
+    
+    #gaussianChart {
+      max-height: 220px;
+    }
 
     #leaderboardPage .leaderboard-container {
             background: rgba(0, 0, 0, 0.3);
@@ -4828,6 +4865,9 @@ TYPE html>
     let allProducts = [];
     
     let gameStats = {
+        responseTimes: [],
+        responseTimesCorrect: [],
+        
       inspected: 0,
       good: 0,
       wrong: 0,
@@ -5259,6 +5299,8 @@ TYPE html>
       const isCorrect = (decision === 'accept' && !hasDefects) || (decision === 'reject' && hasDefects);
 
       const productTime = (Date.now() - productStartTime) / 1000;
+      gameStats.responseTimes.push(productTime);
+      if (isCorrect) gameStats.responseTimesCorrect.push(productTime);
       gameStats.totalTime += productTime;
       gameStats.inspected++;
 
@@ -5482,6 +5524,8 @@ TYPE html>
       
       // Charger et afficher le leaderboard
       await loadAndDisplayLeaderboard();
+      drawQualityChart();
+      drawGaussianChart();
       
       // Afficher l'icône source
       displaySourceIcon();
@@ -5655,7 +5699,10 @@ TYPE html>
       
       // Réinitialiser le jeu
       gameActive = false;
-      gameStats = { inspected: 0, good: 0, wrong: 0, maxCombo: 0, totalTime: 0 };
+      gameStats = {
+        responseTimes: [],
+        responseTimesCorrect: [],
+         inspected: 0, good: 0, wrong: 0, maxCombo: 0, totalTime: 0 };
       currentProductIndex = 0;
       revealedDefects = [];
       
@@ -5698,7 +5745,7 @@ TYPE html>
       
       allProducts = [];
       for (let i = 0; i < 30; i++) {
-        const hasDefects = Math.random() > 0.65;
+        const hasDefects = Math.random() > 0.4;
         const defects = [];
         
         if (hasDefects) {
@@ -5729,6 +5776,128 @@ TYPE html>
       // Le jeu ne démarre que quand on clique sur "Start My Inspection"
       setupResizableDivider();
     });
+
+    
+    function drawResponseTimeChart() {
+      if (!gameStats.responseTimes || gameStats.responseTimes.length === 0) return;
+      
+      const times = gameStats.responseTimes;
+      const mean = times.reduce((a, b) => a + b, 0) / times.length;
+      const variance = times.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / times.length;
+      const stdDev = Math.sqrt(variance);
+      
+      document.getElementById('avgTime').textContent = mean.toFixed(2) + ' s';
+      document.getElementById('stdDeviation').textContent = stdDev.toFixed(2) + ' s';
+      
+      const ctx = document.getElementById('responseTimeChart');
+      if (!ctx) return;
+      
+      if (window.responseTimeChart) window.responseTimeChart.destroy();
+      
+      const timePoints = times.map((t, i) => ({ x: i + 1, y: t }));
+      
+      window.responseTimeChart = new Chart(ctx, {
+        type: 'scatter',
+        data: {
+          datasets: [
+            {
+              label: 'Response Times',
+              data: timePoints,
+              backgroundColor: 'rgba(0, 168, 233, 0.5)',
+              borderColor: '#00A8E9',
+              borderWidth: 2,
+              pointRadius: 3
+            },
+            {
+              label: 'x̄ = ' + mean.toFixed(2) + 's',
+              type: 'line',
+              data: [{ x: 1, y: mean }, { x: times.length, y: mean }],
+              borderColor: '#10B981',
+              borderWidth: 3,
+              borderDash: [5, 5],
+              fill: false,
+              pointRadius: 0
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: true, labels: { color: '#FFD700', font: { size: 11 } } },
+            tooltip: { backgroundColor: 'rgba(0, 0, 0, 0.9)', titleColor: '#FFD700', bodyColor: '#00A8E9' }
+          },
+          scales: {
+            x: { ticks: { color: '#00D4FF' }, grid: { color: 'rgba(0, 168, 233, 0.1)' } },
+            y: { ticks: { color: '#00D4FF' }, grid: { color: 'rgba(0, 168, 233, 0.1)' } }
+          }
+        }
+      });
+    }
+
+    function drawGaussChart() {
+      if (!gameStats.responseTimes || gameStats.responseTimes.length === 0) return;
+      
+      const times = gameStats.responseTimes;
+      const mean = times.reduce((a, b) => a + b, 0) / times.length;
+      const variance = times.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / times.length;
+      const stdDev = Math.sqrt(variance);
+      
+      const ctx = document.getElementById('gaussChart');
+      if (!ctx) return;
+      
+      if (window.gaussChart) window.gaussChart.destroy();
+      
+      const minX = mean - 3 * stdDev;
+      const maxX = mean + 3 * stdDev;
+      const step = (maxX - minX) / 100;
+      
+      const gaussData = [];
+      for (let x = minX; x <= maxX; x += step) {
+        const z = (x - mean) / stdDev;
+        const y = (1 / (stdDev * Math.sqrt(2 * Math.PI))) * Math.exp(-0.5 * z * z);
+        gaussData.push({ x: parseFloat(x.toFixed(2)), y: parseFloat(y.toFixed(4)) });
+      }
+      
+      window.gaussChart = new Chart(ctx, {
+        type: 'scatter',
+        data: {
+          datasets: [
+            {
+              label: 'Normal Distribution',
+              data: gaussData,
+              backgroundColor: 'rgba(16, 185, 129, 0.1)',
+              borderColor: '#10B981',
+              borderWidth: 3,
+              pointRadius: 0,
+              fill: true,
+              showLine: true
+            },
+            {
+              label: 'μ = ' + mean.toFixed(2) + 's',
+              type: 'line',
+              data: [{ x: mean, y: 0 }, { x: mean, y: (1 / (stdDev * Math.sqrt(2 * Math.PI))) }],
+              borderColor: '#FFD700',
+              borderWidth: 2,
+              borderDash: [3, 3],
+              pointRadius: 0
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: true, labels: { color: '#FFD700', font: { size: 10 } } },
+            tooltip: { enabled: false }
+          },
+          scales: {
+            x: { ticks: { color: '#00D4FF' }, grid: { color: 'rgba(0, 168, 233, 0.1)' } },
+            y: { ticks: { color: '#00D4FF' }, grid: { color: 'rgba(0, 168, 233, 0.1)' } }
+          }
+        }
+      });
+    }
 
     function setupResizableDivider() {
       const gameZone = document.getElementById('gameZone');
@@ -5785,7 +5954,10 @@ TYPE html>
       document.getElementById('rulesOverlay').classList.add('hidden');
       gameActive = true;
       gameStartTime = Date.now();
-      gameStats = { inspected: 0, good: 0, wrong: 0, maxCombo: 0, totalTime: 0 };
+      gameStats = {
+        responseTimes: [],
+        responseTimesCorrect: [],
+         inspected: 0, good: 0, wrong: 0, maxCombo: 0, totalTime: 0 };
       
       loadNextProduct();
       updateKPI();
@@ -6000,21 +6172,294 @@ TYPE html>
                 </div>
             </div>
 
-            <!-- RIGHT PANEL: LEADERBOARD -->
+            <!-- RIGHT PANEL: GRAPHIQUES + LEADERBOARD -->
             <div class="right-panel">
-                <div class="leaderboard-row top-3">
-                    <div class="leaderboard-rank"></div>
-                    <div class="leaderboard-medal"></div>
-                    <div class="leaderboard-name"></div>
-                    <div class="leaderboard-score"></div>
-                    <div class="leaderboard-grade"></div>
-                    <div class="leaderboard-date"></div>
+                <div style="background: rgba(0, 0, 0, 0.3); border: 2px solid #FFD700; border-radius: 8px; padding: 12px; margin-bottom: 12px; text-align: center; color: #00D4FF; font-weight: 700; font-size: 0.9rem;">
+                    <div>⏱️ Avg Time: <span id="avgTime">--</span></div>
+                    <div>📊 Std Dev: <span id="stdDeviation">--</span></div>
+                </div>
+                <div style="background: rgba(0, 0, 0, 0.3); border: 2px solid #00A8E9; border-radius: 8px; padding: 8px; margin-bottom: 12px; height: 250px;">
+                    <canvas id="responseTimeChart" width="100" height="50"></canvas>
+                </div>
+                <div style="background: rgba(0, 0, 0, 0.3); border: 2px solid #10B981; border-radius: 8px; padding: 8px; margin-bottom: 12px; height: 200px;">
+                    <canvas id="gaussChart" width="100" height="50"></canvas>
+                </div>
+                <div style="flex: 1; overflow-y: auto;">
+                    <div class="leaderboard-row top-3">
+                        <div class="leaderboard-rank"></div>
+                        <div class="leaderboard-medal"></div>
+                        <div class="leaderboard-name"></div>
+                        <div class="leaderboard-score"></div>
+                        <div class="leaderboard-grade"></div>
+                        <div class="leaderboard-date"></div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js">
+    function drawGaussianChart() {
+      if (!gameStats.responseTimes || gameStats.responseTimes.length === 0) return;
+      
+      // Calculer moyenne et écart type
+      const mean = gameStats.responseTimes.reduce((a, b) => a + b) / gameStats.responseTimes.length;
+      const variance = gameStats.responseTimes.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / gameStats.responseTimes.length;
+      const stdDev = Math.sqrt(variance);
+      
+      // Générer les points de la courbe de Gauss
+      const gaussPoints = [];
+      const xMin = mean - 4 * stdDev;
+      const xMax = mean + 4 * stdDev;
+      const step = (xMax - xMin) / 100;
+      
+      for (let x = xMin; x <= xMax; x += step) {
+        // Formule de la distribution normale: f(x) = (1/(σ√(2π))) * e^(-(x-μ)²/(2σ²))
+        const coefficient = 1 / (stdDev * Math.sqrt(2 * Math.PI));
+        const exponent = -Math.pow(x - mean, 2) / (2 * stdDev * stdDev);
+        const y = coefficient * Math.exp(exponent);
+        gaussPoints.push({ x: x.toFixed(2), y: y.toFixed(6) });
+      }
+      
+      const ctx = document.getElementById('gaussianChart');
+      if (!ctx) return;
+      
+      // Détruire le graphique existant
+      if (window.gaussChart) {
+        window.gaussChart.destroy();
+      }
+      
+      window.gaussChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          datasets: [
+            {
+              label: 'Normal Distribution',
+              data: gaussPoints,
+              borderColor: '#FF6B00',
+              borderWidth: 3,
+              backgroundColor: 'rgba(255, 107, 0, 0.1)',
+              fill: true,
+              pointRadius: 0,
+              tension: 0.3
+            },
+            {
+              label: 'Mean (μ)',
+              type: 'line',
+              data: [
+                { x: mean.toFixed(2), y: 0 },
+                { x: mean.toFixed(2), y: 1 / (stdDev * Math.sqrt(2 * Math.PI)) }
+              ],
+              borderColor: '#10B981',
+              borderWidth: 2,
+              borderDash: [5, 5],
+              pointRadius: 0,
+              fill: false
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          plugins: {
+            legend: {
+              display: true,
+              labels: {
+                color: '#FFD700',
+                font: { weight: 'bold', size: 11 },
+                padding: 12
+              }
+            },
+            tooltip: {
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              titleColor: '#FFD700',
+              bodyColor: '#00A8E9',
+              borderColor: '#FF6B00',
+              borderWidth: 1,
+              callbacks: {
+                title: function(context) {
+                  return 'Time: ' + context[0].raw.x + ' sec';
+                },
+                label: function(context) {
+                  return 'Probability: ' + (context.raw.y * 100).toFixed(2) + '%';
+                },
+                afterLabel: function(context) {
+                  if (Math.abs(context.raw.x - mean.toFixed(2)) < 0.1) {
+                    return 'σ = ' + stdDev.toFixed(2);
+                  }
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              type: 'linear',
+              title: {
+                display: true,
+                text: 'Response Time (seconds)',
+                color: '#FFD700',
+                font: { weight: 'bold', size: 12 }
+              },
+              ticks: {
+                color: '#00D4FF',
+                callback: function(value) {
+                  return value.toFixed(1);
+                }
+              },
+              grid: {
+                color: 'rgba(0, 168, 233, 0.1)'
+              }
+            },
+            y: {
+              title: {
+                display: true,
+                text: 'Probability Density',
+                color: '#FFD700',
+                font: { weight: 'bold', size: 12 }
+              },
+              ticks: {
+                color: '#00D4FF',
+                callback: function(value) {
+                  return (value * 100).toFixed(1) + '%';
+                }
+              },
+              grid: {
+                color: 'rgba(0, 168, 233, 0.1)'
+              }
+            }
+          }
+        }
+      });
+    }
+
+  
+    function drawQualityChart() {
+      if (!gameStats.responseTimes || gameStats.responseTimes.length === 0) return;
+      
+      const mean = gameStats.responseTimes.reduce((a, b) => a + b) / gameStats.responseTimes.length;
+      const variance = gameStats.responseTimes.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / gameStats.responseTimes.length;
+      const stdDev = Math.sqrt(variance);
+      
+      document.getElementById('avgTime').textContent = mean.toFixed(2) + ' s';
+      document.getElementById('stdDeviation').textContent = stdDev.toFixed(2) + ' s';
+      
+      const ctx = document.getElementById('responseTimeChart');
+      if (!ctx || !window.Chart) return;
+      
+      if (window.responseTimeChart) window.responseTimeChart.destroy();
+      
+      const timePoints = gameStats.responseTimes.map((t, i) => ({ x: i + 1, y: t }));
+      
+      window.responseTimeChart = new Chart(ctx, {
+        type: 'scatter',
+        data: {
+          datasets: [
+            {
+              label: 'Response Times',
+              data: timePoints,
+              backgroundColor: 'rgba(0, 168, 233, 0.6)',
+              borderColor: '#00A8E9',
+              borderWidth: 2,
+              pointRadius: 3,
+              pointHoverRadius: 5
+            },
+            {
+              label: 'Average (x̄)',
+              type: 'line',
+              data: [{ x: 1, y: mean }, { x: gameStats.responseTimes.length, y: mean }],
+              borderColor: '#10B981',
+              borderWidth: 2,
+              borderDash: [5, 5],
+              fill: false,
+              pointRadius: 0
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { labels: { color: '#FFD700', font: { size: 10 } } },
+            tooltip: { backgroundColor: 'rgba(0,0,0,0.8)', titleColor: '#FFD700', bodyColor: '#00A8E9' }
+          },
+          scales: {
+            x: { title: { display: true, text: 'Item', color: '#FFD700' }, ticks: { color: '#00D4FF' }, grid: { color: 'rgba(0,168,233,0.1)' } },
+            y: { title: { display: true, text: 'Time (sec)', color: '#FFD700' }, ticks: { color: '#00D4FF' }, grid: { color: 'rgba(0,168,233,0.1)' } }
+          }
+        }
+      });
+    }
+
+    function drawGaussianChart() {
+      if (!gameStats.responseTimes || gameStats.responseTimes.length === 0) return;
+      
+      const mean = gameStats.responseTimes.reduce((a, b) => a + b) / gameStats.responseTimes.length;
+      const variance = gameStats.responseTimes.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / gameStats.responseTimes.length;
+      const stdDev = Math.sqrt(variance);
+      
+      const gaussPoints = [];
+      const xMin = Math.max(0, mean - 3 * stdDev);
+      const xMax = mean + 3 * stdDev;
+      const step = (xMax - xMin) / 80;
+      
+      for (let x = xMin; x <= xMax; x += step) {
+        const coefficient = 1 / (stdDev * Math.sqrt(2 * Math.PI));
+        const exponent = -Math.pow(x - mean, 2) / (2 * stdDev * stdDev);
+        const y = coefficient * Math.exp(exponent);
+        gaussPoints.push({ x: x.toFixed(2), y: y.toFixed(6) });
+      }
+      
+      const ctx = document.getElementById('gaussChart');
+      if (!ctx || !window.Chart) return;
+      
+      if (window.gaussChart) window.gaussChart.destroy();
+      
+      window.gaussChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          datasets: [
+            {
+              label: 'Quality Distribution',
+              data: gaussPoints,
+              borderColor: '#FF6B00',
+              borderWidth: 2,
+              backgroundColor: 'rgba(255,107,0,0.1)',
+              fill: true,
+              pointRadius: 0,
+              tension: 0.3
+            },
+            {
+              label: 'Mean (μ = ' + mean.toFixed(2) + 's)',
+              type: 'line',
+              data: [
+                { x: mean.toFixed(2), y: 0 },
+                { x: mean.toFixed(2), y: 1 / (stdDev * Math.sqrt(2 * Math.PI)) }
+              ],
+              borderColor: '#10B981',
+              borderWidth: 2,
+              borderDash: [5, 5],
+              pointRadius: 0,
+              fill: false
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { labels: { color: '#FFD700', font: { size: 10 } } },
+            tooltip: { backgroundColor: 'rgba(0,0,0,0.8)', titleColor: '#FF6B00', bodyColor: '#00A8E9', callbacks: { label: (c) => 'σ=' + stdDev.toFixed(2) + 's' } }
+          },
+          scales: {
+            x: { title: { display: true, text: 'Time (sec)', color: '#FFD700' }, ticks: { color: '#00D4FF' }, grid: { color: 'rgba(0,168,233,0.1)' } },
+            y: { title: { display: true, text: 'Probability', color: '#FFD700' }, ticks: { color: '#00D4FF' }, grid: { color: 'rgba(0,168,233,0.1)' } }
+          }
+        }
+      });
+    }
+
+  </script>
 </body>
 
 </html>
