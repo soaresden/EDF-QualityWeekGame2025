@@ -858,12 +858,13 @@
       display: grid;
       grid-template-columns: 50px 1fr 80px 50px;
       gap: 10px;
-      padding: 10px;
+      padding: 18px;
       background: rgba(0, 168, 233, 0.1);
       border-radius: 6px;
       align-items: center;
       border-left: 3px solid #00A8E9;
       transition: all 0.2s;
+      min-height: 50px;
     }
 
     .leaderboard-row:hover {
@@ -889,12 +890,14 @@
       font-weight: 700;
       overflow: hidden;
       text-overflow: ellipsis;
+      font-size: 1.1rem;
     }
 
     .leaderboard-score {
       color: #10B981;
       font-weight: 900;
       text-align: right;
+      font-size: 1.3rem;
     }
 
     .leaderboard-grade {
@@ -1589,26 +1592,168 @@
       padding: 20px;
     }
 
-    .rulesContainer {
-      background: linear-gradient(135deg, rgba(2, 84, 160, 0.3) 0%, rgba(0, 168, 233, 0.2) 100%);
-      border: 2px solid rgba(0, 168, 233, 0.5);
-      border-radius: 16px;
-      padding: 25px;
-      max-width: 600px;
+        .rulesContainer {
+      background: linear-gradient(135deg, rgba(2, 84, 160, 0.6) 0%, rgba(0, 168, 233, 0.4) 100%);
+      border: 4px solid rgba(255, 215, 0, 0.8);
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 95%;
       width: 100%;
       text-align: center;
-      box-shadow: 0 0 50px rgba(0, 168, 233, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      box-shadow: 0 0 80px rgba(0, 168, 233, 0.6), 0 0 40px rgba(255, 215, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 30px;
       align-items: start;
+    }
+
+    @media (max-width: 1024px) {
+      .rulesContainer {
+        grid-template-columns: 1fr 1fr;
+        padding: 30px;
+        gap: 25px;
+      }
     }
 
     @media (max-width: 768px) {
       .rulesContainer {
         grid-template-columns: 1fr;
-        padding: 20px;
+        padding: 30px;
+        gap: 30px;
       }
+    }
+
+    .rulesTitle {
+      grid-column: 1 / -1;
+      font-size: 3rem;
+      font-weight: 900;
+      color: #FFD700;
+      text-shadow: 0 0 30px rgba(255, 215, 0, 0.8), 0 0 60px rgba(0, 168, 233, 0.6);
+      margin-bottom: 30px;
+      letter-spacing: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    .rulesTitle::before {
+      content: '⚡';
+      font-size: 3.5rem;
+      animation: lightning-glow 2s ease-in-out infinite;
+      filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.8));
+    }
+
+    @keyframes lightning-glow {
+      0%, 100% { opacity: 1; filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.6)); }
+      50% { opacity: 0.7; filter: drop-shadow(0 0 30px rgba(255, 215, 0, 1)) drop-shadow(0 0 50px rgba(0, 168, 233, 0.8)); }
+    }
+
+    .rankTable {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .rankRow {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 15px;
+      background: rgba(0, 0, 0, 0.3);
+      border-left: 5px solid;
+      border-radius: 6px;
+      font-weight: 900;
+      font-size: 0.95rem;
+    }
+
+    .rankRow.rank-s { border-left-color: #FF1493; }
+    .rankRow.rank-a { border-left-color: #00BFFF; }
+    .rankRow.rank-b { border-left-color: #00FF00; }
+    .rankRow.rank-c { border-left-color: #ADFF2F; }
+    .rankRow.rank-d { border-left-color: #FFD700; }
+    .rankRow.rank-e { border-left-color: #C0C0C0; }
+
+    .rankLetter {
+      min-width: 30px;
+      text-align: center;
+      font-size: 1.3rem;
+    }
+
+    .rankRange {
+      flex: 1;
+      text-align: left;
+      color: #00D4FF;
+      font-size: 0.9rem;
+    }
+
+    .rulesSection {
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 2px solid rgba(255, 215, 0, 0.5);
+      border-radius: 15px;
+      padding: 25px;
+      backdrop-filter: blur(10px);
+    }
+
+    .rulesSectionTitle {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: #FFD700;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+      letter-spacing: 1px;
+    }
+
+    .rulesContent {
+      color: #00D4FF;
+      font-size: 1.1rem;
+      line-height: 1.8;
+      font-weight: 700;
+    }
+
+    .rulesContent ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .rulesContent li {
+      padding: 12px 15px;
+      background: rgba(0, 212, 255, 0.1);
+      border-left: 4px solid #00D4FF;
+      border-radius: 8px;
+      font-size: 1.05rem;
+    }
+
+    .rulesStat {
+      background: linear-gradient(90deg, rgba(255, 215, 0, 0.15) 0%, rgba(0, 212, 255, 0.15) 100%);
+      border-left: 5px solid #FFD700;
+      border-right: 2px solid #00D4FF;
+      padding: 18px 20px;
+      margin: 12px 0;
+      border-radius: 8px;
+      font-weight: 900;
+      font-size: 1.15rem;
+      color: #FFFFFF;
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .rulesStat strong {
+      color: #FFD700;
+      font-size: 1.2rem;
+      text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
     }
 
     .rulesTitle {
@@ -1675,20 +1820,30 @@
     }
 
     .startButton {
-      padding: 11px 40px;
+      padding: 25px 60px;
       background: linear-gradient(135deg, #10B981 0%, #059669 100%);
       color: white;
-      border: 2px solid #059669;
-      border-radius: 8px;
-      font-size: 0.95rem;
+      border: 3px solid #FFD700;
+      border-radius: 12px;
+      font-size: 1.6rem;
       font-weight: 900;
       cursor: pointer;
       transition: all 0.3s;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      box-shadow: 0 6px 15px rgba(16, 185, 129, 0.3);
+      letter-spacing: 2px;
+      box-shadow: 0 10px 40px rgba(16, 185, 129, 0.6), 0 0 30px rgba(255, 215, 0, 0.4);
       grid-column: 1 / -1;
-      margin-top: 10px;
+      margin-top: 30px;
+      text-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    }
+
+    .startButton:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 50px rgba(16, 185, 129, 0.8), 0 0 40px rgba(255, 215, 0, 0.6);
+    }
+
+    .startButton:active {
+      transform: translateY(-1px);
     }
 
     .startButton:hover {
@@ -2109,7 +2264,7 @@
 
         <!-- OPTION 2: FAST -->
         <div style="flex: 1; background: linear-gradient(135deg, rgba(239,68,68,0.2) 0%, rgba(239,68,68,0.05) 100%); border: 2px solid #EF4444; border-radius: 12px; padding: 18px; text-align: center; box-shadow: 0 6px 15px rgba(239, 68, 68, 0.2);">
-          <div style="font-size: 1.8rem; margin-bottom: 10px; animation: spin 3s linear infinite;">🤩</div>
+          <div style="font-size: 1.8rem; margin-bottom: 10px; animation: spin 3s linear infinite;">⚡</div>
           <div style="font-size: 0.95rem; font-weight: 900; color: #EF4444; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;">FAST</div>
           <div style="font-size: 0.75rem; color: #FFFFFF; margin-bottom: 12px; line-height: 1.4;">Maximize output</div>
           <div style="background: rgba(239, 68, 68, 0.15); border-left: 3px solid #EF4444; padding: 10px; border-radius: 6px; text-align: left; font-size: 0.7rem;">
@@ -2168,7 +2323,7 @@
 
           <div style="background: rgba(239,68,68,0.25); border: 2px solid #EF4444; border-radius: 8px; padding: 12px;">
             <div style="text-align: center; margin-bottom: 10px;">
-              <div style="font-size: 2rem; margin-bottom: 4px;">🤩 💨</div>
+              <div style="font-size: 2rem; margin-bottom: 4px;">⚡ 💨</div>
               <div style="font-size: 0.85rem; font-weight: 900; color: #FFD700;">FAST & CARELESS</div>
             </div>
             <div style="font-size: 0.75rem; color: #FFFFFF; font-weight: 700; line-height: 1.8; text-shadow: 0 1px 3px rgba(0,0,0,0.5);">
@@ -2279,8 +2434,8 @@
     let currentLanguage = 'en';
     let gameTimer = null;
     const RANK_MESSAGES = {
-      fr: { E: { emoji: '😅', messages: ['Continue à pratiquer!'] }, D: { emoji: '😐', messages: ['Pas mal!'] }, C: { emoji: '👍', messages: ['Pas mal!'] }, B: { emoji: '😊', messages: ['Brilliant!'] }, A: { emoji: '🤩', messages: ['Awesome!'] }, S: { emoji: '👑', messages: ['SPLENDID!'] } },
-      en: { E: { emoji: '😅', messages: ['Keep practicing!'] }, D: { emoji: '😐', messages: ['Not bad!'] }, C: { emoji: '👍', messages: ['Pretty good!'] }, B: { emoji: '😊', messages: ['Brilliant!'] }, A: { emoji: '🤩', messages: ['Awesome!'] }, S: { emoji: '👑', messages: ['SPLENDID!'] } }
+      fr: { E: { emoji: '😅', messages: ['Continue à pratiquer!'] }, D: { emoji: '😐', messages: ['Pas mal!'] }, C: { emoji: '👍', messages: ['Pas mal!'] }, B: { emoji: '😊', messages: ['Brilliant!'] }, A: { emoji: '⚡', messages: ['Awesome!'] }, S: { emoji: '👑', messages: ['SPLENDID!'] } },
+      en: { E: { emoji: '😅', messages: ['Keep practicing!'] }, D: { emoji: '😐', messages: ['Not bad!'] }, C: { emoji: '👍', messages: ['Pretty good!'] }, B: { emoji: '😊', messages: ['Brilliant!'] }, A: { emoji: '⚡', messages: ['Awesome!'] }, S: { emoji: '👑', messages: ['SPLENDID!'] } }
     };
 
     function formatTimeOnly(date) {
@@ -2623,13 +2778,9 @@
       const status = document.getElementById('productStatus');
       if (!status) return;
       
-      if (currentDefects.length === 0) {
-        status.textContent = '✅ Equipment is good!';
-        status.style.color = '#10B981';
-      } else {
-        status.textContent = `⚠️ Found ${currentDefects.length - foundDefects.length} defect(s)`;
-        status.style.color = '#FF5716';
-      }
+      // Message neutre - ne pas révéler s'il y a des défauts
+      status.textContent = '🔍 Inspect the product...';
+      status.style.color = '#00D4FF';
     }
     
     // Gérer les clics sur le canvas pour trouver les défauts
@@ -3804,7 +3955,7 @@ TYPE html>
     .ranks-table tr:last-child { border-bottom: none; }
     .ranks-table td { padding: 1px 6px; vertical-align: middle; }
     .rank-letter-cell { width: 40px; text-align: center; }
-    .rank-letter { font-size: 2rem; font-weight: 900; font-style: italic; line-height: 1; opacity: 0.2; filter: brightness(0.4); cursor: pointer; transition: all 0.3s ease; }
+    .rank-letter { font-size: 2.5rem; font-weight: 900; font-style: italic; line-height: 1; opacity: 0.2; filter: brightness(0.4); cursor: pointer; transition: all 0.3s ease; }
     .rank-letter:hover { opacity: 1; filter: brightness(1.2); }
     .rank-letter.rank-s { color: #FF1493; }
     .rank-letter.active-rank { opacity: 1 !important; filter: brightness(1.3) drop-shadow(0 0 8px currentColor) !important; }
@@ -3842,10 +3993,10 @@ TYPE html>
       background: rgba(0, 0, 0, 0.4); 
       border: 2px solid #FFD700; 
       border-radius: 8px; 
-      padding: 12px 8px; 
+      padding: 20px 15px; 
       display: flex; 
       flex-direction: column; 
-      gap: 8px; 
+      gap: 12px; 
       text-align: center; 
       box-shadow: 0 0 15px rgba(255, 215, 0, 0.3); 
     }
@@ -4134,7 +4285,7 @@ TYPE html>
         }
 
     #leaderboardPage .rank-word-cell {
-            font-size: 0.85rem;
+            font-size: 1rem;
             font-weight: 700;
             font-style: italic;
             transition: color 0.3s;
@@ -4479,7 +4630,7 @@ TYPE html>
   <!-- RULES OVERLAY -->
   <div class="rulesOverlay hidden" id="rulesOverlay">
     <div class="rulesContainer">
-      <div class="rulesTitle">🤩 Quality Inspector Simulator</div>
+      <div class="rulesTitle">⚡ Quality Inspector Simulator</div>
 
       <div class="rulesSection">
         <div class="rulesSectionTitle">🎯 YOUR MISSION</div>
@@ -4499,9 +4650,44 @@ TYPE html>
         <div class="rulesContent">
           <div class="rulesStat">✅ Correct Answer: <strong>+10 Points</strong></div>
           <div class="rulesStat">❌ Wrong Answer: <strong>-20 Points</strong></div>
-          <div class="rulesStat">🔥 Combo (5 Correct): <strong>+5, +10, +15, +20... Bonus</strong></div>
-          <div class="rulesStat">💎 Grades: <strong>S (2250+) / A (1800+) / B (1350+) / C (900+) / D (450+) / E</strong></div>
-          <div class="rulesStat">🎯 Max Score: <strong>2700 POINTS!</strong></div>
+          <div class="rulesStat">🔥 Combo (5 Correct): <strong>+5, +10, +15, +20...</strong></div>
+          <div class="rulesStat">💎 Grades: <strong>S / A / B / C / D / E</strong></div>
+        </div>
+      </div>
+
+      <div class="rulesSection">
+        <div class="rulesSectionTitle">📊 RANK TABLE</div>
+        <div class="rankTable">
+          <div class="rankRow rank-s">
+            <div class="rankLetter">👑</div>
+            <div class="rankRange"><strong>S</strong><br>2250-2700</div>
+            <div style="color: #FF1493; font-weight: 900;">STYLISH!</div>
+          </div>
+          <div class="rankRow rank-a">
+            <div class="rankLetter">⭐</div>
+            <div class="rankRange"><strong>A</strong><br>1800-2249</div>
+            <div style="color: #00BFFF; font-weight: 900;">ABSOLUTE!</div>
+          </div>
+          <div class="rankRow rank-b">
+            <div class="rankLetter">🎯</div>
+            <div class="rankRange"><strong>B</strong><br>1350-1799</div>
+            <div style="color: #00FF00; font-weight: 900;">BRAVO!</div>
+          </div>
+          <div class="rankRow rank-c">
+            <div class="rankLetter">💪</div>
+            <div class="rankRange"><strong>C</strong><br>900-1349</div>
+            <div style="color: #ADFF2F; font-weight: 900;">COOL!</div>
+          </div>
+          <div class="rankRow rank-d">
+            <div class="rankLetter">👌</div>
+            <div class="rankRange"><strong>D</strong><br>450-899</div>
+            <div style="color: #FFD700; font-weight: 900;">DULL!</div>
+          </div>
+          <div class="rankRow rank-e">
+            <div class="rankLetter">🤔</div>
+            <div class="rankRange"><strong>E</strong><br>0-449</div>
+            <div style="color: #C0C0C0; font-weight: 900;">EMPTY!</div>
+          </div>
         </div>
       </div>
 
@@ -4518,7 +4704,7 @@ TYPE html>
       <img src="./img/COU.png" alt="COU Logo" style="height: 35px; filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.3));">
       <div class="headerTitle">EDF POWER SOLUTIONS</div>
     </div>
-    <div class="headerRight">🤩 QUALITY INSPECTOR SIMULATOR - Quality Week 2025</div>
+    <div class="headerRight">⚡ QUALITY INSPECTOR SIMULATOR - Quality Week 2025</div>
   </div>
 
   <!-- GAME STATUS BAR -->
