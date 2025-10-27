@@ -1357,10 +1357,6 @@
       text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
     }
 
-    @keyframes electric-pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-    }
 
     .windmill {
       width: 45px;
@@ -2186,7 +2182,7 @@
   </style>
 </head>
 
-<script src="leaderboard-manager.js"></script>
+
 
 <body>
 <!-- INTRO SCREEN -->
@@ -2276,7 +2272,7 @@
           <div style="font-size: 0.95rem; font-weight: 900; color: #EF4444; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;">FAST</div>
           <div style="font-size: 0.75rem; color: #FFFFFF; margin-bottom: 12px; line-height: 1.4;">Maximize output</div>
           <div style="background: rgba(239, 68, 68, 0.15); border-left: 3px solid #EF4444; padding: 10px; border-radius: 6px; text-align: left; font-size: 0.7rem;">
-            <div style="color: #10B981; font-weight: 900; margin-bottom: 5px;">✅ PROS:</div>
+            <div style="color: #10B981; font-weight: 900; margin-bottom: 5px;"><span style="animation: electric-pulse 1s ease-in-out infinite; display: inline-block;">⚡</span> PROS:</div>
             <div style="color: #FFFFFF; margin-bottom: 8px; line-height: 1.3;">• High score • Many products</div>
             <div style="color: #EF4444; font-weight: 900; margin-bottom: 5px;">⚠️ CONS:</div>
             <div style="color: #FFFFFF;">• Miss defects</div>
@@ -2331,7 +2327,10 @@
 
           <div style="background: rgba(239,68,68,0.25); border: 2px solid #EF4444; border-radius: 8px; padding: 12px;">
             <div style="text-align: center; margin-bottom: 10px;">
-              <div style="font-size: 2rem; margin-bottom: 4px;">⚡ 💨</div>
+              <div style="font-size: 2rem; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                <span style="animation: electric-pulse 3s linear infinite;">⚡</span>
+                <span>💨</span>
+              </div>
               <div style="font-size: 0.85rem; font-weight: 900; color: #FFD700;">FAST & CARELESS</div>
             </div>
             <div style="font-size: 0.75rem; color: #FFFFFF; font-weight: 700; line-height: 1.8; text-shadow: 0 1px 3px rgba(0,0,0,0.5);">
@@ -2416,23 +2415,19 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     // Configuration Supabase
-    const SUPABASE_URL = 'https://tqwrsakylbyqmxwyhoar.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRxd3JzYWt5bGJ5cW14d3lob2FyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEwNjE4NTUsImV4cCI6MjA3NjYzNzg1NX0.WIo9YUtJnxfgsZmnPluGexBAztB7dJG6uYKnNe7o_6A';
+    const SUPABASE_URL = 'https://xhntnoyhcnqpjntcbzsk.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhobnRub3loY25xcGpudGNienNrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEzMzU4OTMsImV4cCI6MjA3NjkxMTg5M30.6B3-TZNUermMdSoEGOuE7VSut6I0bDeaGREd53kr2Ro';
     
-    console.log('🔌 Initialisation Supabase...');
-    console.log('📍 URL:', SUPABASE_URL);
     
     let supabase = null;
     try {
       supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-      console.log('✅ Client Supabase créé avec succès');
       
       // Test de connexion
       supabase.from('leaderboard').select('*', { count: 'exact', head: true }).then(({ error, count }) => {
         if (error) {
           console.error('❌ Erreur de connexion Supabase:', error.message);
         } else {
-          console.log(`✅ Connexion Supabase OK - ${count || 0} entrées dans la table`);
         }
       });
     } catch (err) {
@@ -3006,7 +3001,6 @@
           }
         }
       } catch (err) {
-        console.log('Supabase non disponible, utilisation localStorage');
       }
       
       // Fallback sur localStorage
@@ -3205,10 +3199,6 @@ TYPE html>
       text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
     }
 
-    @keyframes electric-pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-    }
 
     .windmill {
       width: 45px;
@@ -3983,6 +3973,101 @@ TYPE html>
     .rank-letter:hover { opacity: 1; filter: brightness(1.2); }
     .rank-letter.rank-s { color: #FF1493; }
     .rank-letter.active-rank { opacity: 1 !important; filter: brightness(1.3) drop-shadow(0 0 8px currentColor) !important; }
+
+    /* ===== RANKS TABLE - NEW LIST FORMAT ===== */
+    .ranks-table-list {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 2px solid #FFD700;
+      padding: 8px;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+    }
+
+    .rank-row {
+      display: grid;
+      grid-template-columns: 30px 40px 95px 1fr;
+      gap: 12px;
+      align-items: center;
+      justify-items: start;
+      padding: 12px 12px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(20, 30, 50, 0.6) 0%, rgba(15, 23, 42, 0.6) 100%);
+      border: 1px solid rgba(0, 168, 233, 0.2);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      opacity: 0.5;
+      filter: brightness(0.6);
+    }
+
+    .rank-row:hover {
+      opacity: 1 !important;
+      filter: brightness(1) !important;
+      border-color: rgba(0, 168, 233, 0.6) !important;
+      box-shadow: 0 0 15px rgba(0, 168, 233, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+      transform: translateX(4px);
+    }
+
+    .rank-row.active-rank {
+      opacity: 1 !important;
+      filter: brightness(1) !important;
+      border-color: #FFD700 !important;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    }
+
+    .rank-emoji {
+      font-size: 1.5rem;
+      flex-shrink: 0;
+      text-align: center;
+    }
+
+    .rank-letter {
+      font-size: 1.8rem;
+      font-weight: 900;
+      font-style: italic;
+      text-align: center;
+      flex-shrink: 0;
+      transition: all 0.3s ease;
+    }
+
+    .rank-range {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #00D4FF;
+      text-align: center;
+      flex-shrink: 0;
+      transition: all 0.3s ease;
+      min-width: 80px;
+    }
+
+    .rank-word {
+      font-size: 1rem;
+      font-weight: 900;
+      font-style: italic;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: all 0.3s ease;
+      text-align: left;
+    }
+
+    /* Color definitions for each rank */
+    .rank-s-row .rank-letter { color: #FF1493; }
+    .rank-a-row .rank-letter { color: #00A8E9; }
+    .rank-b-row .rank-letter { color: #10B981; }
+    .rank-c-row .rank-letter { color: #ADFF2F; }
+    .rank-d-row .rank-letter { color: #FFD700; }
+    .rank-e-row .rank-letter { color: #E8E8E8; }
+
+    .rank-s-row .rank-word { color: #FF1493; text-shadow: 0 0 8px rgba(255, 20, 147, 0.6); }
+    .rank-a-row .rank-word { color: #00A8E9; text-shadow: 0 0 8px rgba(0, 168, 233, 0.6); }
+    .rank-b-row .rank-word { color: #10B981; text-shadow: 0 0 8px rgba(16, 185, 129, 0.6); }
+    .rank-c-row .rank-word { color: #ADFF2F; text-shadow: 0 0 8px rgba(173, 255, 47, 0.6); }
+    .rank-d-row .rank-word { color: #FFD700; text-shadow: 0 0 8px rgba(255, 215, 0, 0.6); }
+    .rank-e-row .rank-word { color: #E8E8E8; text-shadow: 0 0 8px rgba(232, 232, 232, 0.4); }
     .rank-letter.active-rank.rank-s { color: #FF1493; text-shadow: 0 0 15px rgba(255, 20, 147, 0.8); }
     .rank-letter.active-rank.rank-a { color: #00BFFF; text-shadow: 0 0 15px rgba(0, 191, 255, 0.8); }
     .rank-letter.active-rank.rank-b { color: #00FF00; text-shadow: 0 0 15px rgba(0, 255, 0, 0.8); }
@@ -4342,26 +4427,38 @@ TYPE html>
     #leaderboardPage .rank-word-cell.rank-s-word {
             color: #FF1493;
             filter: drop-shadow(0 0 1px #FF69B4);
+            opacity: 1 !important;
         }
 
     #leaderboardPage .rank-word-cell.rank-a-word {
-            color: #00BFFF;
+            color: #00A8E9;
+            opacity: 1 !important;
+            filter: brightness(1) !important;
         }
 
     #leaderboardPage .rank-word-cell.rank-b-word {
-            color: #00FF00;
+            color: #10B981;
+            opacity: 1 !important;
+            filter: brightness(1) !important;
         }
 
     #leaderboardPage .rank-word-cell.rank-c-word {
             color: #ADFF2F;
+            opacity: 1 !important;
+            filter: brightness(1) !important;
         }
 
     #leaderboardPage .rank-word-cell.rank-d-word {
             color: #FFD700;
+            opacity: 1 !important;
+            filter: brightness(1) !important;
         }
 
     #leaderboardPage .rank-word-cell.rank-e-word {
             color: #E8E8E8;
+            opacity: 1 !important;
+            filter: brightness(1) !important;
+        }
         }
 
         /* Hover sur les rangs */
@@ -4705,12 +4802,42 @@ TYPE html>
       <div class="rulesSection">
         <div class="rulesSectionTitle">📊 RANK TABLE</div>
         <div class="rankTable">
-          <div class="rankRow rank-s"><span class="rankLetter">👑</span><strong>S</strong> 2250-2700 <span style="color: #FF1493; font-weight: 900;">STYLISH!</span></div>
-          <div class="rankRow rank-a"><span class="rankLetter">⭐</span><strong>A</strong> 1800-2249 <span style="color: #00BFFF; font-weight: 900;">ABSOLUTE!</span></div>
-          <div class="rankRow rank-b"><span class="rankLetter">🎯</span><strong>B</strong> 1350-1799 <span style="color: #00FF00; font-weight: 900;">BRAVO!</span></div>
-          <div class="rankRow rank-c"><span class="rankLetter">💪</span><strong>C</strong> 900-1349 <span style="color: #ADFF2F; font-weight: 900;">COOL!</span></div>
-          <div class="rankRow rank-d"><span class="rankLetter">👌</span><strong>D</strong> 450-899 <span style="color: #FF8C00; font-weight: 900;">DULL!</span></div>
-          <div class="rankRow rank-e"><span class="rankLetter">🤔</span><strong>E</strong> 0-449 <span style="color: #E8E8E8; font-weight: 900;">EMPTY!</span></div>
+          <div class="rankRow rank-s" style="display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+            <span class="rankLetter" style="min-width: 20px;">👑</span>
+            <strong style="min-width: 15px;">S</strong>
+            <span style="min-width: 85px; text-align: center; color: #00D4FF;">2250-2700</span>
+            <span style="color: #FF1493; font-weight: 900; flex-grow: 1; text-align: right;">STYLISH!</span>
+          </div>
+          <div class="rankRow rank-a" style="display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+            <span class="rankLetter" style="min-width: 20px;">⭐</span>
+            <strong style="min-width: 15px;">A</strong>
+            <span style="min-width: 85px; text-align: center; color: #00D4FF;">1800-2249</span>
+            <span style="color: #00A8E9; font-weight: 900; flex-grow: 1; text-align: right;">ABSOLUTE!</span>
+          </div>
+          <div class="rankRow rank-b" style="display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+            <span class="rankLetter" style="min-width: 20px;">🎯</span>
+            <strong style="min-width: 15px;">B</strong>
+            <span style="min-width: 85px; text-align: center; color: #00D4FF;">1350-1799</span>
+            <span style="color: #10B981; font-weight: 900; flex-grow: 1; text-align: right;">BRAVO!</span>
+          </div>
+          <div class="rankRow rank-c" style="display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+            <span class="rankLetter" style="min-width: 20px;">💪</span>
+            <strong style="min-width: 15px;">C</strong>
+            <span style="min-width: 85px; text-align: center; color: #00D4FF;">900-1349</span>
+            <span style="color: #ADFF2F; font-weight: 900; flex-grow: 1; text-align: right;">COOL!</span>
+          </div>
+          <div class="rankRow rank-d" style="display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+            <span class="rankLetter" style="min-width: 20px;">👌</span>
+            <strong style="min-width: 15px;">D</strong>
+            <span style="min-width: 85px; text-align: center; color: #00D4FF;">450-899</span>
+            <span style="color: #FFD700; font-weight: 900; flex-grow: 1; text-align: right;">DULL!</span>
+          </div>
+          <div class="rankRow rank-e" style="display: flex; align-items: center; gap: 12px; padding: 10px 0;">
+            <span class="rankLetter" style="min-width: 20px;">🤔</span>
+            <strong style="min-width: 15px;">E</strong>
+            <span style="min-width: 85px; text-align: center; color: #00D4FF;">0-449</span>
+            <span style="color: #E8E8E8; font-weight: 900; flex-grow: 1; text-align: right;">EMPTY!</span>
+          </div>
         </div>
       </div>
 
@@ -5314,10 +5441,8 @@ TYPE html>
     }
 
     window.quitGame = function() {
-      console.log('🚪 GIVE UP clicked!');
       gameActive = false;
       const quality = gameStats.inspected > 0 ? Math.round((gameStats.good / gameStats.inspected) * 100) : 0;
-      console.log('Stats:', { good: gameStats.good, inspected: gameStats.inspected, quality });
       saveGameScoreAndShowLeaderboard(gameStats.good, gameStats.inspected, quality);
     };
 
@@ -5416,7 +5541,6 @@ TYPE html>
       const grade = calculateGradeFromScore(score);
       const playerName = FIRST_playerName || 'Anonymous';
       
-      console.log(`💾 Sauvegarde du score: ${playerName} - ${score} pts (${grade})`);
       
       // Objet de score à sauvegarder
       const gameScore = {
@@ -5434,7 +5558,6 @@ TYPE html>
         const scores = JSON.parse(localStorage.getItem('gameScores')) || [];
         scores.unshift(gameScore);
         localStorage.setItem('gameScores', JSON.stringify(scores.slice(0, 100))); // Garder les 100 derniers
-        console.log('✅ Score sauvegardé localement');
       } catch (e) {
         console.error('Erreur localStorage:', e);
       }
@@ -5447,11 +5570,13 @@ TYPE html>
         
         if (error) {
           console.warn('⚠️ Supabase indisponible, utilisé localStorage');
+          window.lastSupabaseSuccess = false;
         } else {
-          console.log('✅ Score sauvegardé sur Supabase');
+          window.lastSupabaseSuccess = true;  // ✅ Supabase fonctionne!
         }
       } catch (err) {
         console.warn('⚠️ Supabase indisponible, utilisé localStorage');
+        window.lastSupabaseSuccess = false;
       }
       
       // Afficher la page leaderboard
@@ -5460,10 +5585,12 @@ TYPE html>
     
     
     function displaySourceIcon() {
+      // Par défaut: 💻 (localStorage) - C'EST LE COMPORTEMENT PAR DÉFAUT!
       let icon = '💻';
       let tooltip = 'Données locales (localStorage) - Cliquez pour actualiser';
       
-      if (typeof supabase !== 'undefined') {
+      // SEULEMENT afficher ☁️ si Supabase a VRAIMENT fonctionné
+      if (window.lastSupabaseSuccess === true) {
         icon = '☁️';
         tooltip = 'Données cloud (Supabase) - Cliquez pour actualiser';
       }
@@ -5496,7 +5623,6 @@ TYPE html>
       // Afficher la page leaderboard (avec display flex)
       const leaderboardPage = document.getElementById('leaderboardPage');
       if (leaderboardPage) {
-        console.log('📊 Affichage de la page leaderboard');
         leaderboardPage.style.display = 'flex';
         leaderboardPage.style.alignItems = 'center';
         leaderboardPage.style.justifyContent = 'center';
@@ -5509,8 +5635,23 @@ TYPE html>
       
       // Charger et afficher le leaderboard
       await loadAndDisplayLeaderboard();
-      drawQualityChart();
-      drawGaussianChart();
+      
+      // Dessiner les graphiques de qualité - avec vérification
+      try {
+        if (typeof drawQualityChart === 'function') {
+          drawQualityChart();
+        }
+      } catch(e) {
+        console.warn('⚠️ drawQualityChart non disponible:', e);
+      }
+      
+      try {
+        if (typeof drawGaussianChart === 'function') {
+          drawGaussianChart();
+        }
+      } catch(e) {
+        console.warn('⚠️ drawGaussianChart non disponible:', e);
+      }
       
       // Afficher l'icône source
       displaySourceIcon();
@@ -5558,11 +5699,14 @@ TYPE html>
       const rankMap = { 'S': 'rank-s', 'A': 'rank-a', 'B': 'rank-b', 'C': 'rank-c', 'D': 'rank-d', 'E': 'rank-e' };
       const rankClass = rankMap[score.grade];
       
-      // ÉTAPE 1: Retirer la classe 'active-rank' de TOUS les rangs
+      // ÉTAPE 1: Retirer la classe 'active-rank' de TOUS les rangs (anciens et nouveaux)
       document.querySelectorAll('#leaderboardPage .rank-letter').forEach(el => {
         el.classList.remove('active-rank');
       });
       document.querySelectorAll('#leaderboardPage .rank-word-cell').forEach(el => {
+        el.classList.remove('active-rank');
+      });
+      document.querySelectorAll('#leaderboardPage .rank-row').forEach(el => {
         el.classList.remove('active-rank');
       });
       
@@ -5570,11 +5714,16 @@ TYPE html>
       if (rankClass) {
         const rankLetter = document.querySelector(`#leaderboardPage .rank-letter.${rankClass}`);
         const rankWord = document.querySelector(`#leaderboardPage .rank-word-cell.${rankClass}-word`);
+        const rankRow = document.querySelector(`#leaderboardPage .rank-row.${rankClass}-row`);
+        
         if (rankLetter) {
           rankLetter.classList.add('active-rank');
         }
         if (rankWord) {
           rankWord.classList.add('active-rank');
+        }
+        if (rankRow) {
+          rankRow.classList.add('active-rank');
         }
       }
       
@@ -5605,17 +5754,18 @@ TYPE html>
         
         if (!error && data) {
           leaderboardData = data;
-          console.log('✅ Leaderboard chargé depuis Supabase');
+          window.lastSupabaseSuccess = true;  // ✅ Supabase fonctionne!
         }
       } catch (err) {
         console.warn('⚠️ Supabase indisponible');
+        window.lastSupabaseSuccess = false;
       }
       
       // Si Supabase est vide, utiliser localStorage
       if (leaderboardData.length === 0) {
         try {
           leaderboardData = JSON.parse(localStorage.getItem('gameScores')) || [];
-          console.log('✅ Leaderboard chargé depuis localStorage');
+          window.lastSupabaseSuccess = false;  // ❌ On utilise localStorage
         } catch (e) {
           console.error('Erreur localStorage:', e);
         }
@@ -5668,7 +5818,6 @@ TYPE html>
     }
     
     function returnToMenu() {
-      console.log('🔄 Retour au menu (page 1)');
       
       // Masquer la page leaderboard
       const leaderboardPage = document.getElementById('leaderboardPage');
@@ -5811,70 +5960,6 @@ TYPE html>
           plugins: {
             legend: { display: true, labels: { color: '#FFD700', font: { size: 11 } } },
             tooltip: { backgroundColor: 'rgba(0, 0, 0, 0.9)', titleColor: '#FFD700', bodyColor: '#00A8E9' }
-          },
-          scales: {
-            x: { ticks: { color: '#00D4FF' }, grid: { color: 'rgba(0, 168, 233, 0.1)' } },
-            y: { ticks: { color: '#00D4FF' }, grid: { color: 'rgba(0, 168, 233, 0.1)' } }
-          }
-        }
-      });
-    }
-
-    function drawGaussChart() {
-      if (!gameStats.responseTimes || gameStats.responseTimes.length === 0) return;
-      
-      const times = gameStats.responseTimes;
-      const mean = times.reduce((a, b) => a + b, 0) / times.length;
-      const variance = times.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / times.length;
-      const stdDev = Math.sqrt(variance);
-      
-      const ctx = document.getElementById('gaussChart');
-      if (!ctx) return;
-      
-      if (window.gaussChart) window.gaussChart.destroy();
-      
-      const minX = mean - 3 * stdDev;
-      const maxX = mean + 3 * stdDev;
-      const step = (maxX - minX) / 100;
-      
-      const gaussData = [];
-      for (let x = minX; x <= maxX; x += step) {
-        const z = (x - mean) / stdDev;
-        const y = (1 / (stdDev * Math.sqrt(2 * Math.PI))) * Math.exp(-0.5 * z * z);
-        gaussData.push({ x: parseFloat(x.toFixed(2)), y: parseFloat(y.toFixed(4)) });
-      }
-      
-      window.gaussChart = new Chart(ctx, {
-        type: 'scatter',
-        data: {
-          datasets: [
-            {
-              label: 'Normal Distribution',
-              data: gaussData,
-              backgroundColor: 'rgba(16, 185, 129, 0.1)',
-              borderColor: '#10B981',
-              borderWidth: 3,
-              pointRadius: 0,
-              fill: true,
-              showLine: true
-            },
-            {
-              label: 'μ = ' + mean.toFixed(2) + 's',
-              type: 'line',
-              data: [{ x: mean, y: 0 }, { x: mean, y: (1 / (stdDev * Math.sqrt(2 * Math.PI))) }],
-              borderColor: '#FFD700',
-              borderWidth: 2,
-              borderDash: [3, 3],
-              pointRadius: 0
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { display: true, labels: { color: '#FFD700', font: { size: 10 } } },
-            tooltip: { enabled: false }
           },
           scales: {
             x: { ticks: { color: '#00D4FF' }, grid: { color: 'rgba(0, 168, 233, 0.1)' } },
@@ -6111,32 +6196,44 @@ TYPE html>
 
                 <div class="ranks-results-container">
                     <!-- TABLE RANGS -->
-                    <table class="ranks-table">
-                        <tr>
-                            <td class="rank-letter-cell"><div class="rank-letter rank-s">S</div></td>
-                            <td class="rank-word-cell rank-s-word">tylish</td>
-                        </tr>
-                        <tr>
-                            <td class="rank-letter-cell"><div class="rank-letter rank-a">A</div></td>
-                            <td class="rank-word-cell rank-a-word">bsolute</td>
-                        </tr>
-                        <tr>
-                            <td class="rank-letter-cell"><div class="rank-letter rank-b">B</div></td>
-                            <td class="rank-word-cell rank-b-word">ravo</td>
-                        </tr>
-                        <tr>
-                            <td class="rank-letter-cell"><div class="rank-letter rank-c">C</div></td>
-                            <td class="rank-word-cell rank-c-word">ool</td>
-                        </tr>
-                        <tr>
-                            <td class="rank-letter-cell"><div class="rank-letter rank-d">D</div></td>
-                            <td class="rank-word-cell rank-d-word">ull</td>
-                        </tr>
-                        <tr>
-                            <td class="rank-letter-cell"><div class="rank-letter rank-e">E</div></td>
-                            <td class="rank-word-cell rank-e-word">mpty</td>
-                        </tr>
-                    </table>
+                    <div class="ranks-table-list">
+                        <div class="rank-row rank-s-row">
+                            <span class="rank-emoji">👑</span>
+                            <span class="rank-letter rank-s">S</span>
+                            <span class="rank-range">2250-2700</span>
+                            <span class="rank-word rank-s-word">STYLISH!</span>
+                        </div>
+                        <div class="rank-row rank-a-row">
+                            <span class="rank-emoji">⭐</span>
+                            <span class="rank-letter rank-a">A</span>
+                            <span class="rank-range">1800-2249</span>
+                            <span class="rank-word rank-a-word">ABSOLUTE!</span>
+                        </div>
+                        <div class="rank-row rank-b-row">
+                            <span class="rank-emoji">🎯</span>
+                            <span class="rank-letter rank-b">B</span>
+                            <span class="rank-range">1350-1799</span>
+                            <span class="rank-word rank-b-word">BRAVO!</span>
+                        </div>
+                        <div class="rank-row rank-c-row">
+                            <span class="rank-emoji">💪</span>
+                            <span class="rank-letter rank-c">C</span>
+                            <span class="rank-range">900-1349</span>
+                            <span class="rank-word rank-c-word">COOL!</span>
+                        </div>
+                        <div class="rank-row rank-d-row">
+                            <span class="rank-emoji">👌</span>
+                            <span class="rank-letter rank-d">D</span>
+                            <span class="rank-range">450-899</span>
+                            <span class="rank-word rank-d-word">DULL!</span>
+                        </div>
+                        <div class="rank-row rank-e-row">
+                            <span class="rank-emoji">🤔</span>
+                            <span class="rank-letter rank-e">E</span>
+                            <span class="rank-range">0-449</span>
+                            <span class="rank-word rank-e-word">EMPTY!</span>
+                        </div>
+                    </div>
 
                     <!-- SCORE BOX -->
                     <div class="ranks-score-box">
