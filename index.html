@@ -604,7 +604,7 @@
     .grade-a { color: #00BFFF; font-weight: 900; }
     .grade-b { color: #00FF00; font-weight: 900; }
     .grade-c { color: #ADFF2F; font-weight: 900; }
-    .grade-d { color: #FFD700; font-weight: 900; }
+    .grade-d { color: #FF8C00; font-weight: 900; }
     .grade-e { color: #C0C0C0; font-weight: 900; }
 
     .rules-buttons {
@@ -1651,8 +1651,8 @@
     }
 
     .rankTable {
-      display: flex;
-      flex-direction: column;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
       gap: 8px;
     }
 
@@ -1673,7 +1673,14 @@
     .rankRow.rank-b { border-left-color: #00FF00; }
     .rankRow.rank-c { border-left-color: #ADFF2F; }
     .rankRow.rank-d { border-left-color: #FFD700; }
-    .rankRow.rank-e { border-left-color: #C0C0C0; }
+    .rankRow.rank-e { border-left-color: #E8E8E8; }
+
+    /* Hover: juste un effet visuel, pas d'override de couleur */
+    .rankRow:hover {
+      background: rgba(0, 0, 0, 0.5);
+      transform: translateX(4px);
+      transition: all 0.2s ease;
+    }
 
     .rankLetter {
       min-width: 30px;
@@ -2265,7 +2272,7 @@
 
         <!-- OPTION 2: FAST -->
         <div style="flex: 1; background: linear-gradient(135deg, rgba(239,68,68,0.2) 0%, rgba(239,68,68,0.05) 100%); border: 2px solid #EF4444; border-radius: 12px; padding: 18px; text-align: center; box-shadow: 0 6px 15px rgba(239, 68, 68, 0.2);">
-          <div style="font-size: 1.8rem; margin-bottom: 10px; animation: spin 3s linear infinite;">⚡</div>
+          <div style="font-size: 1.8rem; margin-bottom: 10px; animation: electric-pulse 3s linear infinite;">⚡</div>
           <div style="font-size: 0.95rem; font-weight: 900; color: #EF4444; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;">FAST</div>
           <div style="font-size: 0.75rem; color: #FFFFFF; margin-bottom: 12px; line-height: 1.4;">Maximize output</div>
           <div style="background: rgba(239, 68, 68, 0.15); border-left: 3px solid #EF4444; padding: 10px; border-radius: 6px; text-align: left; font-size: 0.7rem;">
@@ -2409,9 +2416,9 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     // Configuration Supabase
-    const SUPABASE_URL = 'https://xhntnoyhcnqpjntcbzsk.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhobnRub3loY25xcGpudGNienNrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEzMzU4OTMsImV4cCI6MjA3NjkxMTg5M30.6B3-TZNUermMdSoEGOuE7VSut6I0bDeaGREd53kr2Ro';
-      
+    const SUPABASE_URL = 'https://tqwrsakylbyqmxwyhoar.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRxd3JzYWt5bGJ5cW14d3lob2FyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEwNjE4NTUsImV4cCI6MjA3NjYzNzg1NX0.WIo9YUtJnxfgsZmnPluGexBAztB7dJG6uYKnNe7o_6A';
+    
     console.log('🔌 Initialisation Supabase...');
     console.log('📍 URL:', SUPABASE_URL);
     
@@ -3981,7 +3988,7 @@ TYPE html>
     .rank-letter.active-rank.rank-b { color: #00FF00; text-shadow: 0 0 15px rgba(0, 255, 0, 0.8); }
     .rank-letter.active-rank.rank-c { color: #ADFF2F; text-shadow: 0 0 15px rgba(173, 255, 47, 0.8); }
     .rank-letter.active-rank.rank-d { color: #FFD700; text-shadow: 0 0 15px rgba(255, 215, 0, 0.8); }
-    .rank-letter.active-rank.rank-e { color: #C0C0C0; text-shadow: 0 0 15px rgba(192, 192, 192, 0.8); }
+    .rank-letter.active-rank.rank-e { color: #E8E8E8; text-shadow: 0 0 15px rgba(232, 232, 232, 0.8); }
     .rank-word-cell.rank-s-word { 
       color: #FF1493; 
     }
@@ -3995,10 +4002,10 @@ TYPE html>
       color: #ADFF2F; 
     }
     .rank-word-cell.rank-d-word { 
-      color: #FFD700; 
+      color: #FF8C00; 
     }
     .rank-word-cell.rank-e-word { 
-      color: #808080; 
+      color: #E8E8E8; 
     }
     .rank-word-cell.active-rank { 
       opacity: 1 !important; 
@@ -4056,8 +4063,8 @@ TYPE html>
       text-shadow: 0 0 15px rgba(255, 215, 0, 0.8); 
     }
     .score-label.rank-e { 
-      color: #C0C0C0; 
-      text-shadow: 0 0 15px rgba(192, 192, 192, 0.8); 
+      color: #E8E8E8; 
+      text-shadow: 0 0 15px rgba(232, 232, 232, 0.8); 
     }
     .score-value { 
       color: #10B981; 
@@ -4354,7 +4361,7 @@ TYPE html>
         }
 
     #leaderboardPage .rank-word-cell.rank-e-word {
-            color: #808080;
+            color: #E8E8E8;
         }
 
         /* Hover sur les rangs */
@@ -4375,17 +4382,17 @@ TYPE html>
 
         .rank-letter:hover ~ .rank-word-cell,
     #leaderboardPage .ranks-table tr:hover .rank-word-cell {
-            color: #FFD700;
+            color: inherit !important;
         }
 
     #leaderboardPage .rank-letter.rank-e {
-            color: #808080;
+            color: #E8E8E8;
             text-shadow: 3px 3px 0px rgba(255, 255, 255, 0.2), 2px 2px 0px rgba(0, 0, 0, 0.5);
         }
 
     #leaderboardPage .rank-letter.rank-d {
             color: #FFD700;
-            filter: drop-shadow(0 0 2px #FFFF00) drop-shadow(0 0 1px #FFD700);
+            filter: drop-shadow(0 0 2px #FFD700) drop-shadow(0 0 1px #FFD700);
         }
 
     #leaderboardPage .rank-letter.rank-c {
@@ -4566,7 +4573,8 @@ TYPE html>
             border-radius: 8px;
             padding: 10px;
             overflow-y: auto;
-            max-height: 400px;
+            max-height: calc(100vh - 350px);
+            flex: 1;
         }
 
     .right-panel::-webkit-scrollbar {
@@ -4669,7 +4677,7 @@ TYPE html>
   <!-- RULES OVERLAY -->
   <div class="rulesOverlay hidden" id="rulesOverlay">
     <div class="rulesContainer">
-      <div class="rulesTitle">⚡ Quality Inspector Simulator</div>
+      <div class="rulesTitle">Quality Inspector Simulator</div>
 
       <div class="rulesSection">
         <div class="rulesSectionTitle">🎯 YOUR MISSION</div>
@@ -4697,36 +4705,12 @@ TYPE html>
       <div class="rulesSection">
         <div class="rulesSectionTitle">📊 RANK TABLE</div>
         <div class="rankTable">
-          <div class="rankRow rank-s">
-            <div class="rankLetter">👑</div>
-            <div class="rankRange"><strong>S</strong><br>2250-2700</div>
-            <div style="color: #FF1493; font-weight: 900;">STYLISH!</div>
-          </div>
-          <div class="rankRow rank-a">
-            <div class="rankLetter">⭐</div>
-            <div class="rankRange"><strong>A</strong><br>1800-2249</div>
-            <div style="color: #00BFFF; font-weight: 900;">ABSOLUTE!</div>
-          </div>
-          <div class="rankRow rank-b">
-            <div class="rankLetter">🎯</div>
-            <div class="rankRange"><strong>B</strong><br>1350-1799</div>
-            <div style="color: #00FF00; font-weight: 900;">BRAVO!</div>
-          </div>
-          <div class="rankRow rank-c">
-            <div class="rankLetter">💪</div>
-            <div class="rankRange"><strong>C</strong><br>900-1349</div>
-            <div style="color: #ADFF2F; font-weight: 900;">COOL!</div>
-          </div>
-          <div class="rankRow rank-d">
-            <div class="rankLetter">👌</div>
-            <div class="rankRange"><strong>D</strong><br>450-899</div>
-            <div style="color: #FFD700; font-weight: 900;">DULL!</div>
-          </div>
-          <div class="rankRow rank-e">
-            <div class="rankLetter">🤔</div>
-            <div class="rankRange"><strong>E</strong><br>0-449</div>
-            <div style="color: #C0C0C0; font-weight: 900;">EMPTY!</div>
-          </div>
+          <div class="rankRow rank-s"><span class="rankLetter">👑</span><strong>S</strong> 2250-2700 <span style="color: #FF1493; font-weight: 900;">STYLISH!</span></div>
+          <div class="rankRow rank-a"><span class="rankLetter">⭐</span><strong>A</strong> 1800-2249 <span style="color: #00BFFF; font-weight: 900;">ABSOLUTE!</span></div>
+          <div class="rankRow rank-b"><span class="rankLetter">🎯</span><strong>B</strong> 1350-1799 <span style="color: #00FF00; font-weight: 900;">BRAVO!</span></div>
+          <div class="rankRow rank-c"><span class="rankLetter">💪</span><strong>C</strong> 900-1349 <span style="color: #ADFF2F; font-weight: 900;">COOL!</span></div>
+          <div class="rankRow rank-d"><span class="rankLetter">👌</span><strong>D</strong> 450-899 <span style="color: #FF8C00; font-weight: 900;">DULL!</span></div>
+          <div class="rankRow rank-e"><span class="rankLetter">🤔</span><strong>E</strong> 0-449 <span style="color: #E8E8E8; font-weight: 900;">EMPTY!</span></div>
         </div>
       </div>
 
@@ -5295,7 +5279,8 @@ TYPE html>
       // Vérifier que les défauts révélés sont valides
       const validDefects = revealedDefects.filter(i => isDefectInObject(currentDefects[i].pos));
       
-      const hasDefects = validDefects.length > 0;
+      // ✅ FIX: Le produit a des défauts s'il y en a SUR LE PRODUIT, pas juste ceux trouvés!
+      const hasDefects = currentDefects.length > 0;
       const isCorrect = (decision === 'accept' && !hasDefects) || (decision === 'reject' && hasDefects);
 
       const productTime = (Date.now() - productStartTime) / 1000;
@@ -6178,12 +6163,15 @@ TYPE html>
                     <div>⏱️ Avg Time: <span id="avgTime">--</span></div>
                     <div>📊 Std Dev: <span id="stdDeviation">--</span></div>
                 </div>
-                <div style="background: rgba(0, 0, 0, 0.3); border: 2px solid #00A8E9; border-radius: 8px; padding: 8px; margin-bottom: 12px; height: 250px;">
+                <div style="background: rgba(0, 0, 0, 0.3); border: 2px solid #00A8E9; border-radius: 8px; padding: 12px; margin-bottom: 12px; height: 320px;">
+                    <div style="color: #00D4FF; font-weight: 900; margin-bottom: 8px; font-size: 0.9rem;">📈 RESPONSE TIME (Correct Only)</div>
                     <canvas id="responseTimeChart" width="100" height="50"></canvas>
                 </div>
-                <div style="background: rgba(0, 0, 0, 0.3); border: 2px solid #10B981; border-radius: 8px; padding: 8px; margin-bottom: 12px; height: 200px;">
+                <div style="background: rgba(0, 0, 0, 0.3); border: 2px solid #FF6B00; border-radius: 8px; padding: 12px; margin-bottom: 12px; height: 320px;">
+                    <div style="color: #FF6B00; font-weight: 900; margin-bottom: 8px; font-size: 0.9rem;">🔔 GAUSSIAN DISTRIBUTION (σ Spread)</div>
                     <canvas id="gaussChart" width="100" height="50"></canvas>
                 </div>
+                <div style="color: #FFD700; font-weight: 900; margin-bottom: 8px; font-size: 0.9rem;">📊 LEADERBOARD TOP 20:</div>
                 <div style="flex: 1; overflow-y: auto;">
                     <div class="leaderboard-row top-3">
                         <div class="leaderboard-rank"></div>
@@ -6201,17 +6189,18 @@ TYPE html>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js">
     function drawGaussianChart() {
-      if (!gameStats.responseTimes || gameStats.responseTimes.length === 0) return;
+      if (!gameStats.responseTimesCorrect || gameStats.responseTimesCorrect.length === 0) return;
       
-      // Calculer moyenne et écart type
-      const mean = gameStats.responseTimes.reduce((a, b) => a + b) / gameStats.responseTimes.length;
-      const variance = gameStats.responseTimes.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / gameStats.responseTimes.length;
+      // Utiliser UNIQUEMENT les temps de réponse CORRECTS
+      const correctTimes = gameStats.responseTimesCorrect;
+      const mean = correctTimes.reduce((a, b) => a + b) / correctTimes.length;
+      const variance = correctTimes.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / correctTimes.length;
       const stdDev = Math.sqrt(variance);
       
       // Générer les points de la courbe de Gauss
       const gaussPoints = [];
-      const xMin = mean - 4 * stdDev;
-      const xMax = mean + 4 * stdDev;
+      const xMin = Math.max(0, mean - 3 * stdDev);
+      const xMax = mean + 3 * stdDev;
       const step = (xMax - xMin) / 100;
       
       for (let x = xMin; x <= xMax; x += step) {
@@ -6222,7 +6211,7 @@ TYPE html>
         gaussPoints.push({ x: x.toFixed(2), y: y.toFixed(6) });
       }
       
-      const ctx = document.getElementById('gaussianChart');
+      const ctx = document.getElementById('gaussChart');
       if (!ctx) return;
       
       // Détruire le graphique existant
@@ -6230,30 +6219,58 @@ TYPE html>
         window.gaussChart.destroy();
       }
       
+      const maxY = 1 / (stdDev * Math.sqrt(2 * Math.PI));
+      
       window.gaussChart = new Chart(ctx, {
         type: 'line',
         data: {
           datasets: [
             {
-              label: 'Normal Distribution',
+              label: 'Distribution (μ = ' + mean.toFixed(2) + 's)',
               data: gaussPoints,
               borderColor: '#FF6B00',
               borderWidth: 3,
-              backgroundColor: 'rgba(255, 107, 0, 0.1)',
+              backgroundColor: 'rgba(255, 107, 0, 0.15)',
               fill: true,
               pointRadius: 0,
-              tension: 0.3
+              tension: 0.4
             },
             {
               label: 'Mean (μ)',
               type: 'line',
               data: [
                 { x: mean.toFixed(2), y: 0 },
-                { x: mean.toFixed(2), y: 1 / (stdDev * Math.sqrt(2 * Math.PI)) }
+                { x: mean.toFixed(2), y: maxY }
               ],
               borderColor: '#10B981',
+              borderWidth: 3,
+              borderDash: [8, 4],
+              pointRadius: 0,
+              fill: false
+            },
+            {
+              label: '+σ = ' + (mean + stdDev).toFixed(2) + 's',
+              type: 'line',
+              data: [
+                { x: (mean + stdDev).toFixed(2), y: 0 },
+                { x: (mean + stdDev).toFixed(2), y: maxY * Math.exp(-0.5) }
+              ],
+              borderColor: '#FF69B4',
               borderWidth: 2,
-              borderDash: [5, 5],
+              borderDash: [4, 4],
+              pointRadius: 0,
+              fill: false
+            },
+            {
+              label: '-σ = ' + Math.max(0, mean - stdDev).toFixed(2) + 's',
+              type: 'line',
+              data: [
+                { x: Math.max(0, mean - stdDev).toFixed(2), y: 0 },
+                { x: Math.max(0, mean - stdDev).toFixed(2), y: maxY * Math.exp(-0.5) }
+              ],
+              borderColor: '#FF69B4',
+              borderWidth: 2,
+              borderDash: [4, 4],
               pointRadius: 0,
               fill: false
             }
@@ -6261,7 +6278,7 @@ TYPE html>
         },
         options: {
           responsive: true,
-          maintainAspectRatio: true,
+          maintainAspectRatio: false,
           plugins: {
             legend: {
               display: true,
@@ -6273,21 +6290,13 @@ TYPE html>
             },
             tooltip: {
               backgroundColor: 'rgba(0, 0, 0, 0.8)',
-              titleColor: '#FFD700',
-              bodyColor: '#00A8E9',
+              titleColor: '#FF6B00',
+              bodyColor: '#10B981',
               borderColor: '#FF6B00',
               borderWidth: 1,
               callbacks: {
-                title: function(context) {
-                  return 'Time: ' + context[0].raw.x + ' sec';
-                },
                 label: function(context) {
-                  return 'Probability: ' + (context.raw.y * 100).toFixed(2) + '%';
-                },
-                afterLabel: function(context) {
-                  if (Math.abs(context.raw.x - mean.toFixed(2)) < 0.1) {
-                    return 'σ = ' + stdDev.toFixed(2);
-                  }
+                  return 'σ = ' + stdDev.toFixed(3);
                 }
               }
             }
@@ -6321,7 +6330,7 @@ TYPE html>
               ticks: {
                 color: '#00D4FF',
                 callback: function(value) {
-                  return (value * 100).toFixed(1) + '%';
+                  return (value * 100).toFixed(2) + '%';
                 }
               },
               grid: {
@@ -6335,10 +6344,12 @@ TYPE html>
 
   
     function drawQualityChart() {
-      if (!gameStats.responseTimes || gameStats.responseTimes.length === 0) return;
+      if (!gameStats.responseTimesCorrect || gameStats.responseTimesCorrect.length === 0) return;
       
-      const mean = gameStats.responseTimes.reduce((a, b) => a + b) / gameStats.responseTimes.length;
-      const variance = gameStats.responseTimes.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / gameStats.responseTimes.length;
+      // Utiliser UNIQUEMENT les temps de réponse CORRECTS
+      const correctTimes = gameStats.responseTimesCorrect;
+      const mean = correctTimes.reduce((a, b) => a + b) / correctTimes.length;
+      const variance = correctTimes.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / correctTimes.length;
       const stdDev = Math.sqrt(variance);
       
       document.getElementById('avgTime').textContent = mean.toFixed(2) + ' s';
@@ -6349,28 +6360,55 @@ TYPE html>
       
       if (window.responseTimeChart) window.responseTimeChart.destroy();
       
-      const timePoints = gameStats.responseTimes.map((t, i) => ({ x: i + 1, y: t }));
+      // Créer les points avec index comme X (jusqu'à 120s max sur l'axe)
+      const timePoints = correctTimes.map((t, i) => ({ x: i + 1, y: t }));
       
       window.responseTimeChart = new Chart(ctx, {
         type: 'scatter',
         data: {
           datasets: [
             {
-              label: 'Response Times',
+              label: 'Inspection Times (Correct)',
               data: timePoints,
               backgroundColor: 'rgba(0, 168, 233, 0.6)',
               borderColor: '#00A8E9',
               borderWidth: 2,
-              pointRadius: 3,
-              pointHoverRadius: 5
+              pointRadius: 4,
+              pointHoverRadius: 6
             },
             {
-              label: 'Average (x̄)',
+              label: 'Mean (x̄) = ' + mean.toFixed(2) + 's',
               type: 'line',
-              data: [{ x: 1, y: mean }, { x: gameStats.responseTimes.length, y: mean }],
+              data: [{ x: 1, y: mean }, { x: correctTimes.length, y: mean }],
               borderColor: '#10B981',
-              borderWidth: 2,
-              borderDash: [5, 5],
+              borderWidth: 3,
+              borderDash: [8, 4],
+              fill: false,
+              pointRadius: 0
+            },
+            {
+              label: 'σ = ' + stdDev.toFixed(2) + 's',
+              type: 'line',
+              data: [
+                { x: 1, y: mean + stdDev },
+                { x: correctTimes.length, y: mean + stdDev }
+              ],
+              borderColor: '#FF6B00',
+              borderWidth: 1,
+              borderDash: [3, 3],
+              fill: false,
+              pointRadius: 0
+            },
+            {
+              label: 'σ lower',
+              type: 'line',
+              data: [
+                { x: 1, y: Math.max(0, mean - stdDev) },
+                { x: correctTimes.length, y: Math.max(0, mean - stdDev) }
+              ],
+              borderColor: '#FF6B00',
+              borderWidth: 1,
+              borderDash: [3, 3],
               fill: false,
               pointRadius: 0
             }
@@ -6380,80 +6418,33 @@ TYPE html>
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
-            legend: { labels: { color: '#FFD700', font: { size: 10 } } },
-            tooltip: { backgroundColor: 'rgba(0,0,0,0.8)', titleColor: '#FFD700', bodyColor: '#00A8E9' }
-          },
-          scales: {
-            x: { title: { display: true, text: 'Item', color: '#FFD700' }, ticks: { color: '#00D4FF' }, grid: { color: 'rgba(0,168,233,0.1)' } },
-            y: { title: { display: true, text: 'Time (sec)', color: '#FFD700' }, ticks: { color: '#00D4FF' }, grid: { color: 'rgba(0,168,233,0.1)' } }
-          }
-        }
-      });
-    }
-
-    function drawGaussianChart() {
-      if (!gameStats.responseTimes || gameStats.responseTimes.length === 0) return;
-      
-      const mean = gameStats.responseTimes.reduce((a, b) => a + b) / gameStats.responseTimes.length;
-      const variance = gameStats.responseTimes.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / gameStats.responseTimes.length;
-      const stdDev = Math.sqrt(variance);
-      
-      const gaussPoints = [];
-      const xMin = Math.max(0, mean - 3 * stdDev);
-      const xMax = mean + 3 * stdDev;
-      const step = (xMax - xMin) / 80;
-      
-      for (let x = xMin; x <= xMax; x += step) {
-        const coefficient = 1 / (stdDev * Math.sqrt(2 * Math.PI));
-        const exponent = -Math.pow(x - mean, 2) / (2 * stdDev * stdDev);
-        const y = coefficient * Math.exp(exponent);
-        gaussPoints.push({ x: x.toFixed(2), y: y.toFixed(6) });
-      }
-      
-      const ctx = document.getElementById('gaussChart');
-      if (!ctx || !window.Chart) return;
-      
-      if (window.gaussChart) window.gaussChart.destroy();
-      
-      window.gaussChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          datasets: [
-            {
-              label: 'Quality Distribution',
-              data: gaussPoints,
-              borderColor: '#FF6B00',
-              borderWidth: 2,
-              backgroundColor: 'rgba(255,107,0,0.1)',
-              fill: true,
-              pointRadius: 0,
-              tension: 0.3
+            legend: { 
+              labels: { 
+                color: '#FFD700', 
+                font: { size: 11, weight: 'bold' },
+                padding: 10
+              } 
             },
-            {
-              label: 'Mean (μ = ' + mean.toFixed(2) + 's)',
-              type: 'line',
-              data: [
-                { x: mean.toFixed(2), y: 0 },
-                { x: mean.toFixed(2), y: 1 / (stdDev * Math.sqrt(2 * Math.PI)) }
-              ],
-              borderColor: '#10B981',
-              borderWidth: 2,
-              borderDash: [5, 5],
-              pointRadius: 0,
-              fill: false
+            tooltip: { 
+              backgroundColor: 'rgba(0,0,0,0.8)', 
+              titleColor: '#00A8E9', 
+              bodyColor: '#10B981',
+              borderColor: '#00A8E9',
+              borderWidth: 1
             }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { labels: { color: '#FFD700', font: { size: 10 } } },
-            tooltip: { backgroundColor: 'rgba(0,0,0,0.8)', titleColor: '#FF6B00', bodyColor: '#00A8E9', callbacks: { label: (c) => 'σ=' + stdDev.toFixed(2) + 's' } }
           },
           scales: {
-            x: { title: { display: true, text: 'Time (sec)', color: '#FFD700' }, ticks: { color: '#00D4FF' }, grid: { color: 'rgba(0,168,233,0.1)' } },
-            y: { title: { display: true, text: 'Probability', color: '#FFD700' }, ticks: { color: '#00D4FF' }, grid: { color: 'rgba(0,168,233,0.1)' } }
+            x: { 
+              title: { display: true, text: 'Inspection #', color: '#FFD700', font: { weight: 'bold' } }, 
+              ticks: { color: '#00D4FF' }, 
+              grid: { color: 'rgba(0,168,233,0.1)' } 
+            },
+            y: { 
+              title: { display: true, text: 'Time (seconds)', color: '#FFD700', font: { weight: 'bold' } }, 
+              max: 120,
+              ticks: { color: '#00D4FF' }, 
+              grid: { color: 'rgba(0,168,233,0.1)' } 
+            }
           }
         }
       });
