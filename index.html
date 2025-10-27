@@ -5650,8 +5650,12 @@ TYPE html>
       return dist < 100; // Les défauts sont générés dans une zone de 80px, on accepte 100
     }
 
+    let gameScoreSaved = false;
+
     window.quitGame = function() {
+      if (gameScoreSaved) return; // Empêcher les doublons
       gameActive = false;
+      gameScoreSaved = true;
       const quality = gameStats.inspected > 0 ? Math.round((gameStats.good / gameStats.inspected) * 100) : 0;
       saveGameScoreAndShowLeaderboard(gameStats.good, gameStats.inspected, quality);
     };
@@ -5715,7 +5719,9 @@ TYPE html>
     }
 
     function endGame() {
+      if (gameScoreSaved) return; // Empêcher les doublons
       gameActive = false;
+      gameScoreSaved = true;
       const quality = gameStats.inspected > 0 ? Math.round((gameStats.good / gameStats.inspected) * 100) : 0;
       saveGameScoreAndShowLeaderboard(gameStats.good, gameStats.inspected, quality);
     }
@@ -5851,6 +5857,14 @@ TYPE html>
       await loadAndDisplayLeaderboard();
       
       // Dessiner les graphiques de qualité - avec vérification
+      try {
+        if (typeof drawResponseTimeChart === 'function') {
+          drawResponseTimeChart();
+        }
+      } catch(e) {
+        console.warn('⚠️ drawResponseTimeChart non disponible:', e);
+      }
+      
       try {
         if (typeof drawQualityChart === 'function') {
           drawQualityChart();
@@ -6262,9 +6276,9 @@ TYPE html>
 
     
     function drawResponseTimeChart() {
-      if (!gameStats.responseTimes || gameStats.responseTimes.length === 0) return;
+      if (!gameStats.responseTimesCorrect || gameStats.responseTimesCorrect.length === 0) return;
       
-      const times = gameStats.responseTimes;
+      const times = gameStats.responseTimesCorrect;
       const mean = times.reduce((a, b) => a + b, 0) / times.length;
       const variance = times.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / times.length;
       const stdDev = Math.sqrt(variance);
