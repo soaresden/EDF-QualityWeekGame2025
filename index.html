@@ -1604,7 +1604,8 @@
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
       gap: 30px;
-      align-items: start;
+      align-items: stretch;
+      grid-auto-rows: 1fr;
     }
 
     @media (max-width: 1024px) {
@@ -3891,7 +3892,8 @@ TYPE html>
       overflow: auto;
       display: flex;
       flex-direction: column;
-      max-height: 90vh;
+      max-height: 95vh;
+      min-height: 80vh;
     }
 
     .header-section {
@@ -4956,13 +4958,9 @@ TYPE html>
       const inspectedPercent = gameStats.inspected > 0 ? Math.round((gameStats.inspected / allProducts.length) * 100) : 0;
       const productNum = currentProductIndex + 1;
       
-      if (currentDefects.length === 0) {
-        status.textContent = `Scanning Product ${productNum} : ...`;
-        status.style.color = '#00A8E9';
-      } else {
-        status.textContent = `Scanning Product ${productNum} : Defect Found !`;
-        status.style.color = '#EF4444';
-      }
+      // Message neutre - ne pas révéler s'il y a des défauts
+      status.textContent = `Scanning Product ${productNum}`;
+      status.style.color = '#00A8E9';
     }
 
     let revealedDefects = [];
