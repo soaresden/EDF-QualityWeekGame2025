@@ -2223,6 +2223,20 @@
     .grade-c { color: #ADFF2F; background: rgba(173, 255, 47, 0.2); box-shadow: 0 0 12px rgba(173, 255, 47, 0.5); }
     .grade-d { color: #FFD700; background: rgba(255, 215, 0, 0.2); box-shadow: 0 0 12px rgba(255, 215, 0, 0.5); }
     .grade-e { color: #E8E8E8; background: rgba(232, 232, 232, 0.2); box-shadow: 0 0 12px rgba(232, 232, 232, 0.5); }
+
+    /* Animations Inspection Dilemma */
+    @keyframes electrified {
+      0% { transform: scale(1) rotate(0deg); opacity: 1; filter: brightness(1); }
+      25% { transform: scale(1.2) rotate(-5deg); opacity: 0.8; filter: brightness(1.3) drop-shadow(0 0 20px rgba(255, 215, 0, 1)); }
+      50% { transform: scale(1) rotate(5deg); opacity: 1; filter: brightness(1); }
+      75% { transform: scale(1.15) rotate(-3deg); opacity: 0.9; filter: brightness(1.2) drop-shadow(0 0 15px rgba(255, 215, 0, 0.8)); }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; filter: brightness(1); }
+    }
+
+    @keyframes chrono-pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.3); }
+    }
   </style>
 </head>
 
@@ -2293,7 +2307,7 @@
         
         <!-- OPTION 1: SLOW -->
         <div style="flex: 1; background: linear-gradient(135deg, rgba(16,185,129,0.2) 0%, rgba(16,185,129,0.05) 100%); border: 2px solid #10B981; border-radius: 12px; padding: 18px; text-align: center; box-shadow: 0 6px 15px rgba(16, 185, 129, 0.2);">
-          <div style="font-size: 1.8rem; margin-bottom: 10px; animation: bounce 2s infinite;">⏱️</div>
+          <div style="font-size: 1.8rem; margin-bottom: 10px; animation: chrono-pulse 1.2s ease-in-out infinite;">⏱️</div>
           <div style="font-size: 0.95rem; font-weight: 900; color: #10B981; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;">SLOW</div>
           <div style="font-size: 0.75rem; color: #FFFFFF; margin-bottom: 12px; line-height: 1.4;">Take your time</div>
           <div style="background: rgba(16, 185, 129, 0.15); border-left: 3px solid #10B981; padding: 10px; border-radius: 6px; text-align: left; font-size: 0.7rem;">
@@ -2312,7 +2326,7 @@
 
         <!-- OPTION 2: FAST -->
         <div style="flex: 1; background: linear-gradient(135deg, rgba(239,68,68,0.2) 0%, rgba(239,68,68,0.05) 100%); border: 2px solid #EF4444; border-radius: 12px; padding: 18px; text-align: center; box-shadow: 0 6px 15px rgba(239, 68, 68, 0.2);">
-          <div style="font-size: 1.8rem; margin-bottom: 10px; animation: electric-pulse 3s linear infinite;">⚡</div>
+          <div style="font-size: 1.8rem; margin-bottom: 10px; animation: electrified 0.8s ease-in-out infinite;">⚡</div>
           <div style="font-size: 0.95rem; font-weight: 900; color: #EF4444; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;">FAST</div>
           <div style="font-size: 0.75rem; color: #FFFFFF; margin-bottom: 12px; line-height: 1.4;">Maximize output</div>
           <div style="background: rgba(239, 68, 68, 0.15); border-left: 3px solid #EF4444; padding: 10px; border-radius: 6px; text-align: left; font-size: 0.7rem;">
@@ -3055,6 +3069,10 @@
             .order('score', { ascending: false })
             .limit(20);
           
+          if (error) {
+            console.error('❌ Erreur Supabase READ:', error.message, error.code);
+          }
+          
           if (!error && data && data.length > 0) {
             // Formater les données pour l'affichage
             const formattedData = data.map(item => ({
@@ -3074,6 +3092,7 @@
           }
         }
       } catch (err) {
+        console.error('❌ Erreur Supabase (catch):', err);
       }
       
       // Fallback sur localStorage
@@ -5623,7 +5642,7 @@ TYPE html>
         good: good,
         total: total,
         quality: quality,
-        timestamp: new Date().toISOString()
+        created_at: new Date().toISOString()
       };
       
       // Sauvegarder localement d'abord (toujours)
@@ -5642,12 +5661,16 @@ TYPE html>
           .insert([gameScore]);
         
         if (error) {
+          console.error('❌ Erreur Supabase INSERT:', error.message, error.code, error.details);
           console.warn('⚠️ Supabase indisponible, utilisé localStorage');
           window.lastSupabaseSuccess = false;
         } else {
+          console.log('✅ Score sauvegardé sur Supabase!');
           window.lastSupabaseSuccess = true;  // ✅ Supabase fonctionne!
         }
       } catch (err) {
+        console.error('❌ Erreur Supabase INSERT (catch):', err);
+        window.lastSupabaseSuccess = false;
         console.warn('⚠️ Supabase indisponible, utilisé localStorage');
         window.lastSupabaseSuccess = false;
       }
