@@ -2451,7 +2451,7 @@
 
     <!-- Historique des games de l'utilisateur -->
     <div id="gameHistoryContainer" style="display: none; margin-top: 30px; width: 90%; max-width: 650px; margin-left: auto; margin-right: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);">
-      <h3 id="gameHistoryTitle" style="color: #0254A0; text-align: center; margin-bottom: 15px; font-size: 1.1rem;">📊 Game History</h3>
+      <h3 id="gameHistoryTitle" style="color: #0254A0; text-align: center; margin-bottom: 15px; font-size: 1.1rem;">📊 Game History <span id="gameHistorySourceEmoji" style="font-size: 1.3rem; margin-left: 10px; cursor: pointer; transition: transform 0.2s;" title="Cliquez pour rafraîchir">💻</span></h3>
       <table style="width: 100%; border-collapse: collapse; background: white;">
         <thead>
           <tr style="background: linear-gradient(90deg, #0254A0 0%, #00A8E9 100%); color: white;">
@@ -2530,32 +2530,65 @@
     };
 
     window.FIRST_loadGameHistory = async function(username) {
+      let gamesData = [];
+      let fromSupabase = false;
+      
+      // Essayer Supabase d'abord
       try {
         const { data, error } = await supabase
           .from('leaderboard')
           .select('*')
           .eq('name', username)
-          .order('date', { ascending: false })
+          .order('created_at', { ascending: false })
           .limit(20);
         
-        if (error) throw error;
-        
-        FIRST_displayGameHistory(username, data || []);
-      } catch (err) {FIRST_displayGameHistory(username, []);
+        if (!error && data && data.length > 0) {
+          gamesData = data;
+          fromSupabase = true;
+          console.log('✅ Game History depuis Supabase: ' + data.length + ' scores');
+        } else {
+          console.warn('⚠️ Pas de données Supabase');
+        }
+      } catch (err) {
+        console.warn('⚠️ Erreur Supabase:', err);
       }
+      
+      // Si Supabase est vide, utiliser localStorage
+      if (gamesData.length === 0) {
+        try {
+          const localScores = JSON.parse(localStorage.getItem('gameScores')) || [];
+          gamesData = localScores.filter(s => s.name === username);
+          fromSupabase = false;
+          console.log('📱 Game History depuis localStorage: ' + gamesData.length + ' scores');
+        } catch (e) {
+          console.error('Erreur localStorage:', e);
+        }
+      }
+      
+      FIRST_displayGameHistory(username, gamesData, fromSupabase);
     };
 
-    function FIRST_displayGameHistory(username, games) {
+    function FIRST_displayGameHistory(username, games, fromSupabase = false) {
       const container = document.getElementById('gameHistoryContainer');
       const tbody = document.getElementById('gameHistoryBody');
       const titleElement = document.getElementById('gameHistoryTitle');
+      const sourceEmoji = fromSupabase ? '☁️' : '💻';
       
-      // Mettre le titre avec le prénom coloré
-      titleElement.innerHTML = `📊 <span style="color: #00A8E9; font-weight: 900;">${username}</span>'s Game History`;
+      // Mettre le titre avec le prénom coloré ET l'emoji de source
+      titleElement.innerHTML = `📊 <span style="color: #00A8E9; font-weight: 900;">${username}</span>'s Game History <span id="gameHistorySourceEmoji" style="font-size: 1.3rem; margin-left: 10px; cursor: pointer; transition: transform 0.2s; user-select: none;" title="Cliquez pour rafraîchir">${sourceEmoji}</span>`;
+      
+      // Ajouter le listener de refresh au click
+      const emojiSpan = document.getElementById('gameHistorySourceEmoji');
+      if (emojiSpan) {
+        emojiSpan.addEventListener('click', function() {
+          console.log('🔄 Rafraîchissement du Game History...');
+          window.FIRST_loadGameHistory(username);
+        });
+      }
       
       if (games && games.length > 0) {
         tbody.innerHTML = games.map((game, index) => {
-          const date = new Date(game.date || Date.now());
+          const date = new Date(game.date || game.created_at || Date.now());
           const day = String(date.getDate()).padStart(2, '0');
           const month = String(date.getMonth() + 1).padStart(2, '0');
           const year = String(date.getFullYear()).slice(-2);
@@ -2563,11 +2596,22 @@
           const mins = String(date.getMinutes()).padStart(2, '0');
           const secs = String(date.getSeconds()).padStart(2, '0');
           
+          // Couleur du grade
+          const gradeColors = {
+            'S': '#FFD700',
+            'A': '#10B981',
+            'B': '#00A8E9',
+            'C': '#FF9F43',
+            'D': '#FF5722',
+            'E': '#FF0000'
+          };
+          const gradeColor = gradeColors[game.grade] || '#0254A0';
+          
           return `
             <tr style="border-bottom: 1px solid #e0e0e0; background-color: #f9f9f9;">
               <td style="padding: 10px 12px; color: #333;">${day}/${month}/${year} ${hours}:${mins}:${secs}</td>
               <td style="padding: 10px 12px; text-align: center; color: #0254A0; font-weight: 700;">${game.score}</td>
-              <td style="padding: 10px 12px; text-align: center; color: #00A8E9; font-weight: 900;">#${index + 1}</td>
+              <td style="padding: 10px 12px; text-align: center; color: ${gradeColor}; font-weight: 900;">${game.grade || '#' + (index + 1)}</td>
             </tr>
           `;
         }).join('');
@@ -2878,6 +2922,14 @@
         canvas.addEventListener('click', function(e) {
           if (!gameActive || currentDefects.length === 0) return;
           
+          // ===== SPAM DETECTION SUR LE CANVAS =====
+          if (detectSpam('canvas-click')) {
+            console.log('🚫 SPAM DÉTECTÉ!');
+            e.preventDefault();
+            e.stopPropagation();
+            return;
+          }
+          
           const rect = canvas.getBoundingClientRect();
           const x = e.clientX - rect.left;
           const y = e.clientY - rect.top;
@@ -2886,7 +2938,8 @@
           for (let defect of currentDefects) {
             if (!foundDefects.includes(defect)) {
               const dist = Math.sqrt((x - defect.x) ** 2 + (y - defect.y) ** 2);
-              if (dist < 15) {
+              const hitRadius = mouseAreaRadius;
+              if (dist < hitRadius) {
                 foundDefects.push(defect);
                 FIRST_drawDefect(defect.x, defect.y);
                 
@@ -2902,7 +2955,7 @@
     });
     
     function FIRST_drawDefect(x, y) {
-      const canvas = document.getElementById('productCanvas');
+      const canvas = document.getElementById('productCanvas');        
       if (!canvas) return;
       
       const ctx = canvas.getContext('2d');
@@ -4854,6 +4907,19 @@ TYPE html>
             font-size: 0.95rem;
         }
 
+    #leaderboardPage .leaderboard-source {
+      text-align: center;
+      min-width: 40px;
+      padding: 0 10px;
+      font-size: 1.3rem;
+      cursor: pointer !important;
+      transition: transform 0.2s;
+      user-select: none;
+    }
+
+    #leaderboardPage .leaderboard-row:hover .leaderboard-source {
+      transform: scale(1.3) rotate(10deg);
+    }
     #leaderboardPage .leaderboard-date {
             color: #00A8E9;
             font-size: 0.75rem;
@@ -5066,6 +5132,15 @@ TYPE html>
     let foundDefects = [];
     let productStartTime = 0;
     let allProducts = [];
+    
+    // ===== MOUSE AREA RADIUS (NUMPAD +/-) =====
+    let mouseAreaRadius = 15;
+    let lastButtonClicked = null;
+    let clickCount = 0;
+    let clickCountTimer = null;
+    const SPAM_THRESHOLD = 10;
+    const SPAM_TIME_WINDOW = 1000;
+    let isSpamShowing = false;
     
     let gameStats = {
         responseTimes: [],
@@ -5839,6 +5914,7 @@ TYPE html>
     
     async function loadAndDisplayLeaderboard() {
       let leaderboardData = [];
+      let fromSupabase = false;
       
       // Essayer Supabase d'abord
       try {
@@ -5848,12 +5924,17 @@ TYPE html>
           .order('score', { ascending: false })
           .limit(12);
         
-        if (!error && data) {
+        if (!error && data && data.length > 0) {
           leaderboardData = data;
-          window.lastSupabaseSuccess = true;  // ✅ Supabase fonctionne!
+          fromSupabase = true;
+          window.lastSupabaseSuccess = true;
+          console.log('✅ Données Supabase chargées: ' + data.length + ' scores');
+        } else {
+          console.warn('⚠️ Pas de données Supabase');
+          window.lastSupabaseSuccess = false;
         }
       } catch (err) {
-        console.warn('⚠️ Supabase indisponible');
+        console.warn('⚠️ Erreur Supabase:', err);
         window.lastSupabaseSuccess = false;
       }
       
@@ -5861,7 +5942,9 @@ TYPE html>
       if (leaderboardData.length === 0) {
         try {
           leaderboardData = JSON.parse(localStorage.getItem('gameScores')) || [];
-          window.lastSupabaseSuccess = false;  // ❌ On utilise localStorage
+          fromSupabase = false;
+          window.lastSupabaseSuccess = false;
+          console.log('📱 Données localStorage chargées: ' + leaderboardData.length + ' scores');
         } catch (e) {
           console.error('Erreur localStorage:', e);
         }
@@ -5871,6 +5954,28 @@ TYPE html>
       const leaderboardPanel = document.querySelector('#leaderboardPage .right-panel');
       if (leaderboardPanel && leaderboardData.length > 0) {
         let html = '';
+        const sourceEmoji = fromSupabase ? '☁️' : '💻';
+        
+        // Ajouter un titre avec l'emoji de source
+        const titleElement = document.querySelector('#leaderboardPage .right-panel')?.previousElementSibling;
+        const leaderboardTitle = leaderboardPanel.parentElement?.querySelector('div[style*="LEADERBOARD"]');
+        
+        // Trouver et mettre à jour le titre
+        const titleDiv = Array.from(leaderboardPanel.parentElement?.querySelectorAll('div') || [])
+          .find(el => el.textContent.includes('LEADERBOARD'));
+        
+        if (titleDiv) {
+          titleDiv.innerHTML = `📊 LEADERBOARD TOP 20: <span style="font-size: 1.3rem; margin-left: 10px; cursor: pointer; transition: transform 0.2s;" title="Cliquez pour rafraîchir">${sourceEmoji}</span>`;
+          // Ajouter click listener sur l'emoji
+          const emojiSpan = titleDiv.querySelector('span');
+          if (emojiSpan) {
+            emojiSpan.addEventListener('click', function() {
+              console.log('🔄 Rafraîchissement via emoji...');
+              loadAndDisplayLeaderboard();
+            });
+          }
+        }
+        
         leaderboardData.slice(0, 12).forEach((entry, index) => {
           const isTop3 = index < 3;
           const medals = ['🥇', '🥈', '🥉', '🎖️'];
@@ -5880,28 +5985,131 @@ TYPE html>
           const date = new Date(entry.timestamp || entry.created_at);
           const dateStr = date.toLocaleDateString('fr-FR') + ' ' + date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
           
-          html += `<div class="leaderboard-row ${isTop3 ? 'top-3' : ''}">
+          // Déterminer la couleur du grade
+          const gradeColors = {
+            'S': '#FFD700',
+            'A': '#10B981',
+            'B': '#00A8E9',
+            'C': '#FF9F43',
+            'D': '#FF5722',
+            'E': '#FF0000'
+          };
+          const gradeColor = gradeColors[entry.grade] || '#FFF';
+          
+          html += `<div class="leaderboard-row ${isTop3 ? 'top-3' : ''}" data-index="${index}" style="cursor: pointer;">
             <div class="leaderboard-rank">#${index + 1}</div>
             <div class="leaderboard-medal">${medal}</div>
             <div class="leaderboard-name">${entry.name || 'Anonymous'}</div>
             <div class="leaderboard-score">${entry.score}</div>
-            <div class="leaderboard-grade">${entry.grade}</div>
+            <div class="leaderboard-grade" style="color: ${gradeColor};">${entry.grade}</div>
             <div class="leaderboard-date">${dateStr}</div>
           </div>`;
         });
         leaderboardPanel.innerHTML = html;
+        
+        // Ajouter event listeners pour le refresh au click sur les lignes
+        document.querySelectorAll('.leaderboard-row').forEach(row => {
+          row.addEventListener('click', function() {
+            console.log('🔄 Rafraîchissement du leaderboard...');
+            loadAndDisplayLeaderboard();
+          });
+        });
+      } else if (leaderboardPanel) {
+        leaderboardPanel.innerHTML = '<div style="text-align: center; color: #888; padding: 20px;">Aucun score enregistré</div>';
       }
     }
     
-    function calculateGradeFromScore(score) {
-      // Zones équidistantes basées sur score max de 2700
-      // 2700 ÷ 6 = 450 par zone
-      if (score >= 2250) return 'S';  // STYLISH! - 2250-2700
-      if (score >= 1800) return 'A';  // ABSOLUTE! - 1800-2249
-      if (score >= 1350) return 'B';  // BRAVO! - 1350-1799
-      if (score >= 900) return 'C';   // COOL! - 900-1349
-      if (score >= 450) return 'D';   // DULL! - 450-899
-      return 'E';                     // EMPTY! - 0-449
+    function showSpamWarning() {
+      if (isSpamShowing) return; // Éviter les appels multiples
+      isSpamShowing = true;
+      
+      const overlay = document.createElement('div');
+      overlay.id = 'spamWarning';
+      overlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 4rem;
+        color: #FF0000;
+        font-weight: 900;
+        text-shadow: 0 0 20px #FF0000, 0 0 40px #FF0000;
+        font-family: 'Courier New', monospace;
+        animation: spam-flicker 0.1s infinite;
+      `;
+      overlay.textContent = 'STOP SPAMMING !';
+      document.body.appendChild(overlay);
+
+      // Ajouter animation si pas déjà présente
+      if (!document.querySelector('style[data-spam-animation]')) {
+        const style = document.createElement('style');
+        style.setAttribute('data-spam-animation', 'true');
+        style.textContent = `
+          @keyframes spam-flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+          }
+        `;
+        document.head.appendChild(style);
+      }
+
+      setTimeout(() => {
+        overlay.remove();
+        isSpamShowing = false;
+        gameActive = false;
+        resetGame();
+        showScreen('home');
+      }, 3000);
+    }
+
+    function detectSpam(buttonId) {
+      // Ne détecter le spam que pendant le jeu
+      if (!gameActive) return false;
+      
+      if (isSpamShowing) return true;
+      
+      if (lastButtonClicked === buttonId) {
+        clickCount++;
+        if (clickCount >= SPAM_THRESHOLD) {
+          showSpamWarning();
+          lastButtonClicked = null;
+          clickCount = 0;
+          return true;
+        }
+      } else {
+        lastButtonClicked = buttonId;
+        clickCount = 1;
+      }
+
+      clearTimeout(clickCountTimer);
+      clickCountTimer = setTimeout(() => {
+        lastButtonClicked = null;
+        clickCount = 0;
+      }, SPAM_TIME_WINDOW);
+
+      return false;
+    }
+
+        function calculateGradeFromScore(score) {
+      // Nouveau barème
+      // S: 500+        ← Excellent (96% success = 675 ✓)
+      // A: 350-499     ← Very Good
+      // B: 200-349     ← Good
+      // C: 100-199     ← Average
+      // D: 50-99       ← Below Average
+      // E: 0-49        ← Poor
+      if (score >= 500) return 'S';  // Excellent
+      if (score >= 350) return 'A';  // Very Good
+      if (score >= 200) return 'B';  // Good
+      if (score >= 100) return 'C';  // Average
+      if (score >= 50) return 'D';   // Below Average
+      return 'E';                    // Poor
     }
     
     function calculateGrade(quality) {
@@ -6645,6 +6853,47 @@ TYPE html>
       });
     }
 
+  
+
+
+
+    // ===== BUTTON CLICK SPAM DETECTION =====
+
+
+
+    // ===== NUMPAD +/- POUR CONTRÔLER LA ZONE DE CLIC =====
+    document.addEventListener('keydown', function(e) {
+      if (!gameActive) return;
+      
+      // Numpad + ou = (pour augmenter) - accepter toutes les sources
+      if (e.key === '+' || e.key === '=' || e.key === 'Add') {
+        e.preventDefault();
+        mouseAreaRadius = Math.min(100, mouseAreaRadius + 2);
+        console.log('✅ Zone de clic AUGMENTÉE: ' + mouseAreaRadius + 'px');
+        return;
+      }
+      // Numpad - (pour diminuer)
+      if (e.key === '-' || e.key === 'Subtract') {
+        e.preventDefault();
+        mouseAreaRadius = Math.max(5, mouseAreaRadius - 2);
+        console.log('✅ Zone de clic DIMINUÉE: ' + mouseAreaRadius + 'px');
+        return;
+      }
+    });
+
+    // ===== SPAM DETECTION POUR LES BOUTONS =====
+    document.addEventListener('click', function(e) {
+      if (!gameActive) return;
+      
+      const button = e.target.closest('button');
+      if (button) {
+        const buttonId = button.id || button.textContent || button.className;
+        if (detectSpam(buttonId)) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      }
+    }, true);
   </script>
 </body>
 
