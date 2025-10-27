@@ -86,7 +86,7 @@
 
     @keyframes electric-pulse {
       0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.05); opacity: 0.9; }
+      50% { transform: scale(1.15); opacity: 0.95; }
     }
 
     @keyframes pulse {
@@ -513,8 +513,140 @@
       margin-top: 8px;
     }
 
-    .quit-btn {
-      padding: 12px 16px;
+    .rules-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .rules-modal.active {
+      display: flex;
+    }
+
+    .rules-content {
+      background: linear-gradient(135deg, #0254A0 0%, #00A8E9 100%);
+      border: 3px solid #FFD700;
+      border-radius: 15px;
+      padding: 30px;
+      max-width: 900px;
+      max-height: 90vh;
+      overflow-y: auto;
+      color: white;
+      box-shadow: 0 0 40px rgba(255, 215, 0, 0.6);
+    }
+
+    .rules-content h1 {
+      text-align: center;
+      font-size: 2.2rem;
+      margin-bottom: 20px;
+      color: #FFD700;
+      text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+    }
+
+    .rules-section {
+      margin-bottom: 25px;
+      padding: 15px;
+      background: rgba(0, 0, 0, 0.3);
+      border-left: 4px solid #FFD700;
+      border-radius: 8px;
+    }
+
+    .rules-section h2 {
+      color: #00D4FF;
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+    }
+
+    .rules-section p {
+      font-size: 1rem;
+      line-height: 1.6;
+      margin: 8px 0;
+    }
+
+    .scoring-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 15px 0;
+      background: rgba(0, 0, 0, 0.2);
+      border: 2px solid #FFD700;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .scoring-table th {
+      background: linear-gradient(90deg, #0254A0, #00A8E9);
+      color: #FFD700;
+      padding: 12px;
+      text-align: left;
+      font-weight: 900;
+      border-bottom: 2px solid #FFD700;
+    }
+
+    .scoring-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+      color: #fff;
+    }
+
+    .scoring-table tr:hover {
+      background: rgba(255, 215, 0, 0.1);
+    }
+
+    .grade-s { color: #FF1493; font-weight: 900; }
+    .grade-a { color: #00BFFF; font-weight: 900; }
+    .grade-b { color: #00FF00; font-weight: 900; }
+    .grade-c { color: #ADFF2F; font-weight: 900; }
+    .grade-d { color: #FFD700; font-weight: 900; }
+    .grade-e { color: #C0C0C0; font-weight: 900; }
+
+    .rules-buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      margin-top: 25px;
+    }
+
+    .rules-buttons button {
+      padding: 12px 30px;
+      font-size: 1rem;
+      font-weight: 900;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.3s;
+    }
+
+    .btn-start-game {
+      background: linear-gradient(135deg, #10B981, #059669);
+      color: white;
+      border: 2px solid #10B981;
+    }
+
+    .btn-start-game:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6);
+    }
+
+    .btn-close-rules {
+      background: rgba(255, 87, 22, 0.8);
+      color: white;
+      border: 2px solid #FF5716;
+    }
+
+    .btn-close-rules:hover {
+      background: rgba(255, 87, 22, 1);
+      transform: translateY(-2px);
+    }
       background: linear-gradient(135deg, #6B7280 0%, #4B5563 100%);
       color: white;
       border: none;
@@ -1977,7 +2109,7 @@
 
         <!-- OPTION 2: FAST -->
         <div style="flex: 1; background: linear-gradient(135deg, rgba(239,68,68,0.2) 0%, rgba(239,68,68,0.05) 100%); border: 2px solid #EF4444; border-radius: 12px; padding: 18px; text-align: center; box-shadow: 0 6px 15px rgba(239, 68, 68, 0.2);">
-          <div style="font-size: 1.8rem; margin-bottom: 10px; animation: spin 3s linear infinite;">⚡</div>
+          <div style="font-size: 1.8rem; margin-bottom: 10px; animation: spin 3s linear infinite;">🤩</div>
           <div style="font-size: 0.95rem; font-weight: 900; color: #EF4444; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;">FAST</div>
           <div style="font-size: 0.75rem; color: #FFFFFF; margin-bottom: 12px; line-height: 1.4;">Maximize output</div>
           <div style="background: rgba(239, 68, 68, 0.15); border-left: 3px solid #EF4444; padding: 10px; border-radius: 6px; text-align: left; font-size: 0.7rem;">
@@ -2036,7 +2168,7 @@
 
           <div style="background: rgba(239,68,68,0.25); border: 2px solid #EF4444; border-radius: 8px; padding: 12px;">
             <div style="text-align: center; margin-bottom: 10px;">
-              <div style="font-size: 2rem; margin-bottom: 4px;">⚡ 💨</div>
+              <div style="font-size: 2rem; margin-bottom: 4px;">🤩 💨</div>
               <div style="font-size: 0.85rem; font-weight: 900; color: #FFD700;">FAST & CARELESS</div>
             </div>
             <div style="font-size: 0.75rem; color: #FFFFFF; font-weight: 700; line-height: 1.8; text-shadow: 0 1px 3px rgba(0,0,0,0.5);">
@@ -3672,23 +3804,105 @@ TYPE html>
     .ranks-table tr:last-child { border-bottom: none; }
     .ranks-table td { padding: 1px 6px; vertical-align: middle; }
     .rank-letter-cell { width: 40px; text-align: center; }
-    .rank-letter { font-size: 2rem; font-weight: 900; font-style: italic; line-height: 1; opacity: 0.2; filter: brightness(0.4); cursor: pointer; }
+    .rank-letter { font-size: 2rem; font-weight: 900; font-style: italic; line-height: 1; opacity: 0.2; filter: brightness(0.4); cursor: pointer; transition: all 0.3s ease; }
     .rank-letter:hover { opacity: 1; filter: brightness(1.2); }
-    .rank-letter.rank-s { color: #FF1493; opacity: 1 !important; }
-    .rank-word-cell { font-size: 0.85rem; font-weight: 700; font-style: italic; opacity: 0.2; filter: brightness(0.4); }
-    .rank-word-cell.rank-s-word { opacity: 1; color: #FF1493; }
-    .rank-word-cell.rank-a-word { color: #00BFFF; }
-    .rank-word-cell.rank-b-word { color: #00FF00; }
-    .rank-word-cell.rank-c-word { color: #ADFF2F; }
-    .rank-word-cell.rank-d-word { color: #FFD700; }
-    .rank-word-cell.rank-e-word { color: #808080; }
+    .rank-letter.rank-s { color: #FF1493; }
+    .rank-letter.active-rank { opacity: 1 !important; filter: brightness(1.3) drop-shadow(0 0 8px currentColor) !important; }
+    .rank-letter.active-rank.rank-s { color: #FF1493; text-shadow: 0 0 15px rgba(255, 20, 147, 0.8); }
+    .rank-letter.active-rank.rank-a { color: #00BFFF; text-shadow: 0 0 15px rgba(0, 191, 255, 0.8); }
+    .rank-letter.active-rank.rank-b { color: #00FF00; text-shadow: 0 0 15px rgba(0, 255, 0, 0.8); }
+    .rank-letter.active-rank.rank-c { color: #ADFF2F; text-shadow: 0 0 15px rgba(173, 255, 47, 0.8); }
+    .rank-letter.active-rank.rank-d { color: #FFD700; text-shadow: 0 0 15px rgba(255, 215, 0, 0.8); }
+    .rank-letter.active-rank.rank-e { color: #C0C0C0; text-shadow: 0 0 15px rgba(192, 192, 192, 0.8); }
+    .rank-word-cell.rank-s-word { 
+      color: #FF1493; 
+    }
+    .rank-word-cell.rank-a-word { 
+      color: #00BFFF; 
+    }
+    .rank-word-cell.rank-b-word { 
+      color: #00FF00; 
+    }
+    .rank-word-cell.rank-c-word { 
+      color: #ADFF2F; 
+    }
+    .rank-word-cell.rank-d-word { 
+      color: #FFD700; 
+    }
+    .rank-word-cell.rank-e-word { 
+      color: #808080; 
+    }
+    .rank-word-cell.active-rank { 
+      opacity: 1 !important; 
+      filter: brightness(1.3) !important; 
+      font-weight: 900; 
+    }
 
-    .ranks-score-box { background: rgba(0, 0, 0, 0.4); border: 2px solid #FFD700; border-radius: 8px; padding: 8px; display: flex; flex-direction: column; gap: 4px; text-align: center; box-shadow: 0 0 15px rgba(255, 215, 0, 0.3); }
-    .player-name-score { color: #00BFFF; font-weight: 900; font-size: 0.9rem; }
-    .score-emoji { font-size: 1.5rem; }
-    .score-label { color: #FFD700; font-weight: 700; font-size: 0.85rem; }
-    .score-value { color: #10B981; font-weight: 900; font-size: 1.5rem; text-shadow: 0 0 8px rgba(16, 185, 129, 0.5); }
-    .score-ratio { color: #00D4FF; font-weight: 700; font-size: 0.8rem; }
+    .ranks-score-box { 
+      background: rgba(0, 0, 0, 0.4); 
+      border: 2px solid #FFD700; 
+      border-radius: 8px; 
+      padding: 12px 8px; 
+      display: flex; 
+      flex-direction: column; 
+      gap: 8px; 
+      text-align: center; 
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.3); 
+    }
+    .player-name-score { 
+      color: #00BFFF; 
+      font-weight: 900; 
+      font-size: 1rem; 
+    }
+    .score-emoji { 
+      font-size: 2.5rem; 
+      line-height: 1; 
+      margin: 4px 0; 
+    }
+    .score-label { 
+      color: #FFD700; 
+      font-weight: 900; 
+      font-size: 0.9rem; 
+      letter-spacing: 1px; 
+      text-transform: uppercase; 
+      transition: all 0.3s ease;
+    }
+    .score-label.rank-s { 
+      color: #FF1493; 
+      text-shadow: 0 0 15px rgba(255, 20, 147, 0.8); 
+    }
+    .score-label.rank-a { 
+      color: #00BFFF; 
+      text-shadow: 0 0 15px rgba(0, 191, 255, 0.8); 
+    }
+    .score-label.rank-b { 
+      color: #00FF00; 
+      text-shadow: 0 0 15px rgba(0, 255, 0, 0.8); 
+    }
+    .score-label.rank-c { 
+      color: #ADFF2F; 
+      text-shadow: 0 0 15px rgba(173, 255, 47, 0.8); 
+    }
+    .score-label.rank-d { 
+      color: #FFD700; 
+      text-shadow: 0 0 15px rgba(255, 215, 0, 0.8); 
+    }
+    .score-label.rank-e { 
+      color: #C0C0C0; 
+      text-shadow: 0 0 15px rgba(192, 192, 192, 0.8); 
+    }
+    .score-value { 
+      color: #10B981; 
+      font-weight: 900; 
+      font-size: 2rem; 
+      text-shadow: 0 0 8px rgba(16, 185, 129, 0.5); 
+      line-height: 1; 
+    }
+    .score-ratio { 
+      color: #00D4FF; 
+      font-weight: 700; 
+      font-size: 0.85rem; 
+    }
 
     .ranks-results-box { background: rgba(0, 0, 0, 0.4); border: 2px solid #FFD700; border-radius: 8px; padding: 8px; box-shadow: 0 0 15px rgba(255, 215, 0, 0.3); }
     .results-title { color: #FFD700; font-weight: 900; text-align: center; margin-bottom: 4px; font-size: 0.9rem; }
@@ -3698,18 +3912,83 @@ TYPE html>
     .result-emoji.success { color: #10B981; text-shadow: 0 0 5px rgba(16, 185, 129, 0.5); }
     .result-emoji.error { color: #EF4444; text-shadow: 0 0 5px rgba(239, 68, 68, 0.5); }
 
-    .right-panel { background: rgba(0, 0, 0, 0.2); border: 2px solid #00A8E9; border-radius: 8px; padding: 8px; overflow-y: auto; max-height: 350px; box-shadow: 0 0 15px rgba(0, 168, 233, 0.3); }
-    .leaderboard-row { display: flex; align-items: center; gap: 8px; padding: 6px 8px; background: rgba(0, 168, 233, 0.1); border-radius: 6px; margin-bottom: 4px; border-left: 3px solid #00A8E9; transition: all 0.3s; font-size: 0.85rem; }
-    .leaderboard-row:hover { background: rgba(0, 168, 233, 0.2); border-left-color: #FFD700; }
-    .leaderboard-row.top-3 { border-left-color: #FFD700; background: rgba(255, 215, 0, 0.1); }
-    .leaderboard-rank { color: #00BFFF; font-weight: 900; min-width: 30px; }
-    .leaderboard-medal { font-size: 1rem; min-width: 20px; text-align: center; }
-    .leaderboard-name { flex: 1; color: #fff; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .leaderboard-score { color: #10B981; font-weight: 900; min-width: 35px; text-align: right; }
-    .leaderboard-grade { color: #FFD700; font-weight: 900; min-width: 20px; text-align: center; }
-    .leaderboard-date { color: #00A8E9; font-size: 0.7rem; min-width: 70px; text-align: right; opacity: 0.8; }
+    .right-panel {
+            overflow-y: auto;
+            max-height: 600px;
+            flex: 1;
+        }
 
-    
+        .leaderboard-row {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            margin-bottom: 6px;
+            background: rgba(0, 168, 233, 0.15);
+            border-radius: 6px;
+            border: 1px solid rgba(0, 168, 233, 0.3);
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .leaderboard-row:hover {
+            background: rgba(0, 168, 233, 0.25);
+            border-color: rgba(255, 215, 0, 0.6);
+            box-shadow: 0 0 10px rgba(0, 168, 233, 0.4);
+        }
+
+        .leaderboard-row.top-3 {
+            background: rgba(255, 215, 0, 0.12);
+            border: 1px solid rgba(255, 215, 0, 0.4);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+        }
+
+        .leaderboard-rank {
+            color: #00BFFF;
+            font-weight: 900;
+            min-width: 35px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .leaderboard-medal {
+            font-size: 1.2rem;
+            min-width: 25px;
+            text-align: center;
+        }
+
+        .leaderboard-name {
+            flex: 1;
+            color: #fff;
+            font-weight: 600;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 0.95rem;
+        }
+
+        .leaderboard-score {
+            color: #10B981;
+            font-weight: 900;
+            min-width: 40px;
+            text-align: right;
+            font-size: 0.95rem;
+        }
+
+        .leaderboard-grade {
+            color: #FFD700;
+            font-weight: 900;
+            min-width: 25px;
+            text-align: center;
+            font-size: 0.95rem;
+        }
+
+        .leaderboard-date {
+            color: #00A8E9;
+            font-size: 0.75rem;
+            min-width: 80px;
+            text-align: right;
+            opacity: 0.8;
+        }
 
     /* ===== STYLES NEW3 LEADERBOARD (SCOPÉ) ===== */
 #leaderboardPage * {
@@ -3852,7 +4131,6 @@ TYPE html>
             color: #FF1493;
             filter: drop-shadow(0 0 2px #FF69B4) drop-shadow(0 0 1px #FF1493);
             animation: breathingOutline 3s ease-in-out infinite;
-            opacity: 1 !important;
         }
 
     #leaderboardPage .rank-word-cell {
@@ -3862,17 +4140,6 @@ TYPE html>
             transition: color 0.3s;
             opacity: 0.2;
             filter: brightness(0.4);
-        }
-
-    #leaderboardPage .rank-word-cell.rank-s-word {
-            opacity: 1;
-            filter: brightness(1);
-            color: #FF1493;
-        }
-
-    #leaderboardPage .ranks-table tr:hover .rank-word-cell {
-            opacity: 1;
-            filter: brightness(1.2);
         }
 
     #leaderboardPage .rank-word-cell.rank-s-word {
@@ -4212,7 +4479,7 @@ TYPE html>
   <!-- RULES OVERLAY -->
   <div class="rulesOverlay hidden" id="rulesOverlay">
     <div class="rulesContainer">
-      <div class="rulesTitle">⚡ Quality Inspector Simulator</div>
+      <div class="rulesTitle">🤩 Quality Inspector Simulator</div>
 
       <div class="rulesSection">
         <div class="rulesSectionTitle">🎯 YOUR MISSION</div>
@@ -4228,12 +4495,13 @@ TYPE html>
       </div>
 
       <div class="rulesSection">
-        <div class="rulesSectionTitle">🏆 WIN CONDITIONS</div>
+        <div class="rulesSectionTitle">🏆 SCORING RULES</div>
         <div class="rulesContent">
-          <div class="rulesStat">✓ Correct = <strong>More Points !</strong></div>
-          <div class="rulesStat">✗ Wrong = <strong>-50 Pts</strong></div>
-          <div class="rulesStat">🔥 Combo = <strong>Boost</strong></div>
-          <div class="rulesStat">🎯 Goal: <strong>Aim 100% Quality !</strong></div>
+          <div class="rulesStat">✅ Correct Answer: <strong>+10 Points</strong></div>
+          <div class="rulesStat">❌ Wrong Answer: <strong>-20 Points</strong></div>
+          <div class="rulesStat">🔥 Combo (5 Correct): <strong>+5, +10, +15, +20... Bonus</strong></div>
+          <div class="rulesStat">💎 Grades: <strong>S (2250+) / A (1800+) / B (1350+) / C (900+) / D (450+) / E</strong></div>
+          <div class="rulesStat">🎯 Max Score: <strong>2700 POINTS!</strong></div>
         </div>
       </div>
 
@@ -4250,7 +4518,7 @@ TYPE html>
       <img src="./img/COU.png" alt="COU Logo" style="height: 35px; filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.3));">
       <div class="headerTitle">EDF POWER SOLUTIONS</div>
     </div>
-    <div class="headerRight">⚡ QUALITY INSPECTOR SIMULATOR - Quality Week 2025</div>
+    <div class="headerRight">🤩 QUALITY INSPECTOR SIMULATOR - Quality Week 2025</div>
   </div>
 
   <!-- GAME STATUS BAR -->
@@ -4907,8 +5175,34 @@ TYPE html>
     }
     
     async function saveGameScoreAndShowLeaderboard(good, total, quality) {
-      const grade = calculateGrade(quality);
-      const score = Math.round(quality * 100);
+      // Nouveau système de scoring:
+      // - 10 points par bonne réponse
+      // - -20 par mauvaise (min 0)
+      // - Bonus combo: +5, +10, +15, +20... tous les 5
+      
+      let score = 0;
+      let currentCombo = 0;
+      
+      // Recalculer le score avec le nouveau système
+      // On va l'estimer basé sur good/total
+      // Score par bonne réponse
+      score = good * 10;
+      
+      // Pénalité par mauvaise réponse
+      let wrong = total - good;
+      score = Math.max(0, score - (wrong * 20));
+      
+      // Bonus pour les combos (on estime: toutes les 5 bonnes réponses)
+      let combos = Math.floor(good / 5);
+      for (let i = 1; i <= combos; i++) {
+        score += (i * 5);
+      }
+      
+      // Capper le score au max possible (2700)
+      score = Math.min(score, 2700);
+      
+      // Recalculer le grade selon les nouvelles zones
+      const grade = calculateGradeFromScore(score);
       const playerName = FIRST_playerName || 'Anonymous';
       
       console.log(`💾 Sauvegarde du score: ${playerName} - ${score} pts (${grade})`);
@@ -5010,7 +5304,7 @@ TYPE html>
     }
     
     function updatePlayerInfo(score) {
-      // Mapping des grades vers les textes complets
+      // Mapping des grades vers les textes complets et emojis
       const gradeTexts = {
         'S': 'STYLISH!',
         'A': 'ABSOLUTE!',
@@ -5020,31 +5314,49 @@ TYPE html>
         'E': 'EMPTY!'
       };
       
+      const gradeEmojis = {
+        'S': '👑',
+        'A': '⭐',
+        'B': '🎯',
+        'C': '💪',
+        'D': '👌',
+        'E': '🤔'
+      };
+      
       document.getElementById('playerNameScore').textContent = score.name;
       document.getElementById('scoreGrade').textContent = gradeTexts[score.grade] || score.grade;
       document.getElementById('scoreValue').textContent = score.score;
       document.getElementById('scoreRatio').textContent = `${score.good}/${score.total} = ${score.quality}%`;
       document.getElementById('resultsTotal').textContent = `${score.good}/${score.total}`;
       
+      // Ajouter l'emoji du grade
+      const scoreEmojiEl = document.querySelector('.score-emoji');
+      if (scoreEmojiEl) {
+        scoreEmojiEl.textContent = gradeEmojis[score.grade] || '🎮';
+      }
+      
+      // Colorier le scoreLabel (COOL!, STYLISH!, etc.) selon le grade
+      const scoreLabel = document.getElementById('scoreGrade');
+      if (scoreLabel) {
+        scoreLabel.classList.remove('rank-s', 'rank-a', 'rank-b', 'rank-c', 'rank-d', 'rank-e');
+        scoreLabel.classList.add('rank-' + score.grade.toLowerCase());
+      }
+      
       const rankMap = { 'S': 'rank-s', 'A': 'rank-a', 'B': 'rank-b', 'C': 'rank-c', 'D': 'rank-d', 'E': 'rank-e' };
       const rankClass = rankMap[score.grade];
       
-      // Retirer la classe 'active' de tous les rangs d'abord
+      // ÉTAPE 1: Retirer la classe 'active-rank' de TOUS les rangs
       document.querySelectorAll('#leaderboardPage .rank-letter').forEach(el => {
         el.classList.remove('active-rank');
-        el.style.opacity = '';
-        el.style.filter = '';
       });
       document.querySelectorAll('#leaderboardPage .rank-word-cell').forEach(el => {
         el.classList.remove('active-rank');
-        el.style.opacity = '';
-        el.style.filter = '';
       });
       
-      // Ajouter la classe 'active' au rang obtenu
+      // ÉTAPE 2: Ajouter la classe 'active-rank' au rang obtenu SEULEMENT
       if (rankClass) {
-        const rankLetter = document.querySelector(`#leaderboardPage .${rankClass}`);
-        const rankWord = document.querySelector(`#leaderboardPage .${rankClass}-word`);
+        const rankLetter = document.querySelector(`#leaderboardPage .rank-letter.${rankClass}`);
+        const rankWord = document.querySelector(`#leaderboardPage .rank-word-cell.${rankClass}-word`);
         if (rankLetter) {
           rankLetter.classList.add('active-rank');
         }
@@ -5120,6 +5432,17 @@ TYPE html>
         });
         leaderboardPanel.innerHTML = html;
       }
+    }
+    
+    function calculateGradeFromScore(score) {
+      // Zones équidistantes basées sur score max de 2700
+      // 2700 ÷ 6 = 450 par zone
+      if (score >= 2250) return 'S';  // STYLISH! - 2250-2700
+      if (score >= 1800) return 'A';  // ABSOLUTE! - 1800-2249
+      if (score >= 1350) return 'B';  // BRAVO! - 1350-1799
+      if (score >= 900) return 'C';   // COOL! - 900-1349
+      if (score >= 450) return 'D';   // DULL! - 450-899
+      return 'E';                     // EMPTY! - 0-449
     }
     
     function calculateGrade(quality) {
@@ -5426,7 +5749,7 @@ TYPE html>
     }
   </style>
 
-  <!-- LEADERBOARD PAGE -->
+    <!-- LEADERBOARD PAGE -->
   <div id="leaderboardPage" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #0254A0 0%, #00A8E9 100%); align-items: center; justify-content: center; z-index: 10000;">
     <div class="leaderboard-container">
         <div class="header-section">
