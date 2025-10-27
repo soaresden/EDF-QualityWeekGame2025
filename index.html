@@ -1647,8 +1647,8 @@
     }
 
     .rankTable {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      display: flex;
+      flex-direction: column;
       gap: 8px;
     }
 
@@ -2179,6 +2179,50 @@
       text-shadow: 0 0 30px rgba(239, 68, 68, 0.8);
       transform: translate(-50%, -50%) rotate(-25deg);
     }
+
+    /* Animations pour Scoring Rules */
+    .points-positive {
+      color: #10B981 !important;
+      font-weight: 900 !important;
+      animation: joyPulse 0.8s ease-in-out infinite;
+      text-shadow: 0 0 15px rgba(16, 185, 129, 0.8) !important;
+    }
+
+    @keyframes joyPulse {
+      0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
+      50% { transform: scale(1.15) rotate(2deg); opacity: 0.9; }
+    }
+
+    .points-negative {
+      color: #EF4444 !important;
+      font-weight: 900 !important;
+      animation: shakeFrown 0.5s ease-in-out infinite;
+      text-shadow: 0 0 15px rgba(239, 68, 68, 0.8) !important;
+    }
+
+    @keyframes shakeFrown {
+      0%, 100% { transform: translateX(0) rotate(0deg); opacity: 1; }
+      25% { transform: translateX(-8px) rotate(-3deg); opacity: 0.95; }
+      75% { transform: translateX(8px) rotate(3deg); opacity: 0.95; }
+    }
+
+    /* Grades styling */
+    .grade-letter {
+      font-weight: 900;
+      padding: 2px 6px;
+      border-radius: 4px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+      display: inline-block;
+      margin: 0 3px;
+      letter-spacing: 1px;
+    }
+
+    .grade-s { color: #FF1493; background: rgba(255, 20, 147, 0.2); box-shadow: 0 0 12px rgba(255, 20, 147, 0.5); }
+    .grade-a { color: #00BFFF; background: rgba(0, 191, 255, 0.2); box-shadow: 0 0 12px rgba(0, 191, 255, 0.5); }
+    .grade-b { color: #00FF00; background: rgba(0, 255, 0, 0.2); box-shadow: 0 0 12px rgba(0, 255, 0, 0.5); }
+    .grade-c { color: #ADFF2F; background: rgba(173, 255, 47, 0.2); box-shadow: 0 0 12px rgba(173, 255, 47, 0.5); }
+    .grade-d { color: #FFD700; background: rgba(255, 215, 0, 0.2); box-shadow: 0 0 12px rgba(255, 215, 0, 0.5); }
+    .grade-e { color: #E8E8E8; background: rgba(232, 232, 232, 0.2); box-shadow: 0 0 12px rgba(232, 232, 232, 0.5); }
   </style>
 </head>
 
@@ -2407,7 +2451,7 @@
       </table>
     </div>
 
-    <button id="startGameBtn" onclick="window.FIRST_startGame()" style="margin-top: 20px; padding: 14px 40px; font-size: 1.2rem; font-weight: 900; color: white; background: linear-gradient(135deg, #FF5716 0%, #E84E0F 100%); border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 10px 40px rgba(255,87,22,0.4); animation: pulse 2s infinite; text-transform: uppercase; letter-spacing: 1px; opacity: 0.5; transition: opacity 0.3s;">▶ OPEN INSPECTION</button>
+    <button id="startGameBtn" onclick="window.FIRST_startGame()" style="margin-top: 20px; padding: 14px 40px; font-size: 1.2rem; font-weight: 900; color: white; background: linear-gradient(135deg, #FF5716 0%, #E84E0F 100%); border: none; border-radius: 50px; cursor: not-allowed; box-shadow: 0 10px 40px rgba(255,87,22,0.2); text-transform: uppercase; letter-spacing: 1px; opacity: 0.4; transition: all 0.3s; pointer-events: auto;">▶ OPEN INSPECTION</button>
   </div>
 
   <!-- EASTER EGG -->
@@ -2538,9 +2582,11 @@
       window.FIRST_loadGameHistory(FIRST_playerName);
       
       const startBtn = document.getElementById('startGameBtn');
-      startBtn.disabled = false;
       startBtn.style.opacity = '1';
-      startBtn.style.cursor = 'pointer';window.FIRST_expandAllSections();
+      startBtn.style.cursor = 'pointer';
+      startBtn.style.boxShadow = '0 10px 40px rgba(255,87,22,0.4)';
+      startBtn.style.animation = 'pulse 2s infinite';
+      window.FIRST_expandAllSections();
       
       setTimeout(() => {
         const historyContainer = document.getElementById('gameHistoryContainer');
@@ -2560,8 +2606,10 @@
       FIRST_playerName = '';
       FIRST_playerNameValidated = false;
       
-      document.getElementById('startGameBtn').disabled = true;
-      document.getElementById('startGameBtn').style.opacity = '0.5';
+      document.getElementById('startGameBtn').style.opacity = '0.4';
+      document.getElementById('startGameBtn').style.cursor = 'not-allowed';
+      document.getElementById('startGameBtn').style.animation = 'none';
+      document.getElementById('startGameBtn').style.boxShadow = '0 10px 40px rgba(255,87,22,0.2)';
       
       // Replier les sections
       document.getElementById('rulesContent').classList.add('collapsed');
@@ -2574,6 +2622,19 @@
 
     window.FIRST_startGame = function() {
       if (!FIRST_playerNameValidated) {
+        // Créer un overlay translucide
+        const overlay = document.createElement('div');
+        overlay.style.cssText = `
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.7);
+          z-index: 9999;
+          animation: fadeIn 0.3s ease-out;
+        `;
+        
         // Créer un popup stylé
         const popup = document.createElement('div');
         popup.style.cssText = `
@@ -2584,21 +2645,21 @@
           background: linear-gradient(135deg, #0254A0 0%, #00A8E9 100%);
           border: 3px solid #FFD700;
           border-radius: 15px;
-          padding: 30px;
+          padding: 40px;
           text-align: center;
           z-index: 10000;
           box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
-          min-width: 300px;
+          min-width: 350px;
           animation: popupIn 0.3s ease-out;
         `;
         popup.innerHTML = `
-          <div style="font-size: 2rem; margin-bottom: 15px;">⚠️</div>
-          <div style="color: white; font-size: 1.2rem; font-weight: 900; margin-bottom: 15px;">WAIT!</div>
-          <div style="color: #FFD700; font-size: 1rem; font-weight: 700; margin-bottom: 20px;">Please enter your name first!</div>
-          <button onclick="this.parentElement.parentElement.remove()" style="padding: 12px 30px; background: #FFD700; color: #0254A0; border: none; border-radius: 8px; font-weight: 900; cursor: pointer; font-size: 1rem;">Got it!</button>
+          <div style="font-size: 3rem; margin-bottom: 20px; animation: bounce 0.6s ease-in-out infinite;">✋</div>
+          <div style="color: white; font-size: 1.4rem; font-weight: 900; margin-bottom: 10px;">HOLD UP!</div>
+          <div style="color: #FFD700; font-size: 1.1rem; font-weight: 700; margin-bottom: 25px; letter-spacing: 1px;">📝 PLEASE INPUT A NAME</div>
+          <button onclick="document.getElementById('playerNameInput').focus(); this.parentElement.parentElement.remove(); this.parentElement.parentElement.parentElement.remove();" style="padding: 12px 30px; background: #FFD700; color: #0254A0; border: none; border-radius: 8px; font-weight: 900; cursor: pointer; font-size: 1rem; transition: all 0.2s;">OK, GOT IT!</button>
         `;
         
-        // Ajouter l'animation au CSS
+        // Ajouter les animations au CSS
         if (!document.getElementById('popupInAnimation')) {
           const style = document.createElement('style');
           style.id = 'popupInAnimation';
@@ -2607,11 +2668,21 @@
               0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
               100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
             }
+            @keyframes fadeIn {
+              0% { opacity: 0; }
+              100% { opacity: 0.7; }
+            }
+            @keyframes bounce {
+              0%, 100% { transform: translateY(0); }
+              50% { transform: translateY(-20px); }
+            }
           `;
           document.head.appendChild(style);
         }
         
+        document.body.appendChild(overlay);
         document.body.appendChild(popup);
+        document.getElementById('playerNameInput').focus();
         return;
       }
       
@@ -2904,8 +2975,10 @@
       document.getElementById('playerNameInput').value = '';
       document.getElementById('clearNameBtn').style.display = 'none';
       document.getElementById('gameNumberBox').style.display = 'none';
-      document.getElementById('startGameBtn').disabled = true;
-      document.getElementById('startGameBtn').style.opacity = '0.5';
+      document.getElementById('startGameBtn').style.opacity = '0.4';
+      document.getElementById('startGameBtn').style.cursor = 'not-allowed';
+      document.getElementById('startGameBtn').style.animation = 'none';
+      document.getElementById('startGameBtn').style.boxShadow = '0 10px 40px rgba(255,87,22,0.2)';
       
       // Bien replier les sections
       document.getElementById('rulesContent').classList.add('collapsed');
@@ -4792,10 +4865,10 @@ TYPE html>
       <div class="rulesSection">
         <div class="rulesSectionTitle">🏆 SCORING RULES</div>
         <div class="rulesContent">
-          <div class="rulesStat">✅ Correct Answer: <strong>+10 Points</strong></div>
-          <div class="rulesStat">❌ Wrong Answer: <strong>-20 Points</strong></div>
+          <div class="rulesStat">✅ Correct Answer: <strong class="points-positive">+10 Points</strong></div>
+          <div class="rulesStat">❌ Wrong Answer: <strong class="points-negative">-20 Points</strong></div>
           <div class="rulesStat">🔥 Combo (5 Correct): <strong>+5, +10, +15, +20...</strong></div>
-          <div class="rulesStat">💎 Grades: <strong>S / A / B / C / D / E</strong></div>
+          <div class="rulesStat">💎 Grades: <strong><span class="grade-letter grade-s">S</span> / <span class="grade-letter grade-a">A</span> / <span class="grade-letter grade-b">B</span> / <span class="grade-letter grade-c">C</span> / <span class="grade-letter grade-d">D</span> / <span class="grade-letter grade-e">E</span></strong></div>
         </div>
       </div>
 
@@ -5859,8 +5932,10 @@ TYPE html>
       // Réinitialiser le bouton de démarrage de la page 1
       const startGameBtn = document.getElementById('startGameBtn');
       if (startGameBtn) {
-        startGameBtn.disabled = true;
-        startGameBtn.style.opacity = '0.5';
+        startGameBtn.style.opacity = '0.4';
+        startGameBtn.style.cursor = 'not-allowed';
+        startGameBtn.style.animation = 'none';
+        startGameBtn.style.boxShadow = '0 10px 40px rgba(255,87,22,0.2)';
       }
     }
 
