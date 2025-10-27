@@ -2470,6 +2470,7 @@
 
   <!-- EASTER EGG -->
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     // Configuration Supabase
@@ -2539,7 +2540,7 @@
           .from('leaderboard')
           .select('*')
           .eq('name', username)
-          .order('created_at', { ascending: false })
+          .order('created_at', { ascending: false })  // Récents d'abord
           .limit(20);
         
         if (!error && data && data.length > 0) {
@@ -2557,7 +2558,10 @@
       if (gamesData.length === 0) {
         try {
           const localScores = JSON.parse(localStorage.getItem('gameScores')) || [];
-          gamesData = localScores.filter(s => s.name === username);
+          // Filtrer par username et trier par date décroissant (récents d'abord)
+          gamesData = localScores
+            .filter(s => s.name === username)
+            .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
           fromSupabase = false;
           console.log('📱 Game History depuis localStorage: ' + gamesData.length + ' scores');
         } catch (e) {
@@ -2916,19 +2920,58 @@
     }
     
     // Gérer les clics sur le canvas pour trouver les défauts
+    // ===== SPAM DETECTION INTELLIGENTE =====
+    let lastMousePos = { x: 0, y: 0 };
+    let lastClickPos = { x: 0, y: 0 };
+    let clicksWithoutMovement = 0;
+    let lastClickTime = 0;
+    
+    document.addEventListener('mousemove', function(e) {
+      if (!gameActive) return;
+      lastMousePos = { x: e.clientX, y: e.clientY };
+    });
+    
     document.addEventListener('DOMContentLoaded', function() {
       const canvas = document.getElementById('productCanvas');
       if (canvas) {
         canvas.addEventListener('click', function(e) {
           if (!gameActive || currentDefects.length === 0) return;
           
-          // ===== SPAM DETECTION SUR LE CANVAS =====
-          if (detectSpam('canvas-click')) {
-            console.log('🚫 SPAM DÉTECTÉ!');
-            e.preventDefault();
-            e.stopPropagation();
-            return;
+          // ===== DÉTECTION DE SPAM INTELLIGENTE =====
+          const currentTime = Date.now();
+          const timeSinceLastClick = currentTime - lastClickTime;
+          const clickPos = { x: e.clientX, y: e.clientY };
+          
+          // Calculer la distance de mouvement depuis le dernier clic
+          const mouseDist = Math.sqrt(
+            Math.pow(clickPos.x - lastClickPos.x, 2) + 
+            Math.pow(clickPos.y - lastClickPos.y, 2)
+          );
+          
+          // Critères de spam:
+          // 1. Clics très rapides (< 100ms entre les clics)
+          // 2. SANS mouvement de la souris (< 30px)
+          const isRapidClick = timeSinceLastClick < 100;
+          const isStationary = mouseDist < 30;
+          
+          if (isRapidClick && isStationary) {
+            clicksWithoutMovement++;
+            console.log('🔴 Spam suspected: ' + clicksWithoutMovement + '/5');
+            
+            if (clicksWithoutMovement >= 5) {
+              console.log('🚫 SPAM DÉTECTÉ!');
+              showSpamWarning();
+              e.preventDefault();
+              e.stopPropagation();
+              clicksWithoutMovement = 0;
+              return;
+            }
+          } else {
+            clicksWithoutMovement = 0;
           }
+          
+          lastClickTime = currentTime;
+          lastClickPos = clickPos;
           
           const rect = canvas.getBoundingClientRect();
           const x = e.clientX - rect.left;
@@ -6478,6 +6521,17 @@ TYPE html>
       50% {
         transform: scale(1.05);
       }
+    
+    @keyframes slideIn {
+      0% {
+        opacity: 0;
+        transform: translateX(100px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
     }
   </style>
 
@@ -6566,13 +6620,13 @@ TYPE html>
                     <div>⏱️ Avg Time: <span id="avgTime">--</span></div>
                     <div>📊 Std Dev: <span id="stdDeviation">--</span></div>
                 </div>
-                <div style="background: rgba(0, 0, 0, 0.3); border: 2px solid #00A8E9; border-radius: 8px; padding: 12px; margin-bottom: 12px; height: 320px;">
+                <div style="background: rgba(0, 0, 0, 0.3); border: 2px solid #00A8E9; border-radius: 8px; padding: 12px; margin-bottom: 12px; height: 300px;">
                     <div style="color: #00D4FF; font-weight: 900; margin-bottom: 8px; font-size: 0.9rem;">📈 RESPONSE TIME (Correct Only)</div>
-                    <canvas id="responseTimeChart" width="100" height="50"></canvas>
+                    <canvas id="responseTimeChart"></canvas>
                 </div>
-                <div style="background: rgba(0, 0, 0, 0.3); border: 2px solid #FF6B00; border-radius: 8px; padding: 12px; margin-bottom: 12px; height: 320px;">
+                <div style="background: rgba(0, 0, 0, 0.3); border: 2px solid #FF6B00; border-radius: 8px; padding: 12px; margin-bottom: 12px; height: 300px;">
                     <div style="color: #FF6B00; font-weight: 900; margin-bottom: 8px; font-size: 0.9rem;">🔔 GAUSSIAN DISTRIBUTION (σ Spread)</div>
-                    <canvas id="gaussChart" width="100" height="50"></canvas>
+                    <canvas id="gaussChart"></canvas>
                 </div>
                 <div style="color: #FFD700; font-weight: 900; margin-bottom: 8px; font-size: 0.9rem;">📊 LEADERBOARD TOP 20:</div>
                 <div style="flex: 1; overflow-y: auto;">
@@ -6590,8 +6644,9 @@ TYPE html>
     </div>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js">
-    function drawGaussianChart() {
+  </body>
+
+</html>
       if (!gameStats.responseTimesCorrect || gameStats.responseTimesCorrect.length === 0) return;
       
       // Utiliser UNIQUEMENT les temps de réponse CORRECTS
@@ -6865,21 +6920,61 @@ TYPE html>
     document.addEventListener('keydown', function(e) {
       if (!gameActive) return;
       
-      // Numpad + ou = (pour augmenter) - accepter toutes les sources
-      if (e.key === '+' || e.key === '=' || e.key === 'Add') {
+      console.log('🔑 Key pressed:', e.key, 'Code:', e.code, 'Location:', e.location);
+      
+      // Numpad + ou = (pour augmenter)
+      const isPlusKey = e.key === '+' || e.key === '=' || e.key === 'Add' || 
+                        e.code === 'NumpadAdd' || e.code === 'Equal' || 
+                        (e.location === 3 && (e.key === '+' || e.key === '='));
+      
+      if (isPlusKey) {
         e.preventDefault();
         mouseAreaRadius = Math.min(100, mouseAreaRadius + 2);
         console.log('✅ Zone de clic AUGMENTÉE: ' + mouseAreaRadius + 'px');
+        showZoneFeedback('➕ Zone: ' + mouseAreaRadius + 'px');
         return;
       }
+      
       // Numpad - (pour diminuer)
-      if (e.key === '-' || e.key === 'Subtract') {
+      const isMinusKey = e.key === '-' || e.key === '_' || e.key === 'Subtract' || 
+                         e.code === 'NumpadSubtract' || e.code === 'Minus' ||
+                         (e.location === 3 && (e.key === '-' || e.key === '_'));
+      
+      if (isMinusKey) {
         e.preventDefault();
         mouseAreaRadius = Math.max(5, mouseAreaRadius - 2);
         console.log('✅ Zone de clic DIMINUÉE: ' + mouseAreaRadius + 'px');
+        showZoneFeedback('➖ Zone: ' + mouseAreaRadius + 'px');
         return;
       }
     });
+    
+    function showZoneFeedback(text) {
+      // Afficher un feedback temporaire
+      const existing = document.getElementById('zoneFeedback');
+      if (existing) existing.remove();
+      
+      const feedback = document.createElement('div');
+      feedback.id = 'zoneFeedback';
+      feedback.style.cssText = `
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        background: rgba(0, 168, 233, 0.9);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-weight: bold;
+        z-index: 5000;
+        font-size: 1rem;
+        box-shadow: 0 4px 12px rgba(0, 168, 233, 0.5);
+        animation: slideIn 0.3s ease-out;
+      `;
+      feedback.textContent = text;
+      document.body.appendChild(feedback);
+      
+      setTimeout(() => feedback.remove(), 1500);
+    }
 
     // ===== SPAM DETECTION POUR LES BOUTONS =====
     document.addEventListener('click', function(e) {
@@ -6894,6 +6989,64 @@ TYPE html>
         }
       }
     }, true);
+
+    function drawGaussianChart() {
+      if (!gameStats.responseTimesCorrect || gameStats.responseTimesCorrect.length === 0) return;
+      
+      const correctTimes = gameStats.responseTimesCorrect;
+      const mean = correctTimes.reduce((a, b) => a + b) / correctTimes.length;
+      const variance = correctTimes.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / correctTimes.length;
+      const stdDev = Math.sqrt(variance);
+      
+      const gaussPoints = [];
+      const xMin = Math.max(0, mean - 3 * stdDev);
+      const xMax = mean + 3 * stdDev;
+      const step = (xMax - xMin) / 100;
+      
+      for (let x = xMin; x <= xMax; x += step) {
+        const coefficient = 1 / (stdDev * Math.sqrt(2 * Math.PI));
+        const exponent = -Math.pow(x - mean, 2) / (2 * stdDev * stdDev);
+        const y = coefficient * Math.exp(exponent);
+        gaussPoints.push({ x: x.toFixed(2), y: y.toFixed(6) });
+      }
+      
+      const ctx = document.getElementById('gaussChart');
+      if (!ctx || !window.Chart) return;
+      
+      if (window.gaussChart) window.gaussChart.destroy();
+      
+      const maxY = 1 / (stdDev * Math.sqrt(2 * Math.PI));
+      
+      window.gaussChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          datasets: [
+            {
+              label: 'Distribution (μ = ' + mean.toFixed(2) + 's)',
+              data: gaussPoints,
+              borderColor: '#FF6B00',
+              borderWidth: 3,
+              backgroundColor: 'rgba(255, 107, 0, 0.15)',
+              fill: true,
+              pointRadius: 0,
+              tension: 0.4
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: true, labels: { color: '#FFD700', font: { weight: 'bold', size: 11 }, padding: 12 } },
+            tooltip: { backgroundColor: 'rgba(0, 0, 0, 0.8)', titleColor: '#FF6B00', bodyColor: '#10B981', borderColor: '#FF6B00', borderWidth: 1 }
+          },
+          scales: {
+            x: { type: 'linear', title: { display: true, text: 'Response Time (seconds)', color: '#FFD700', font: { weight: 'bold', size: 12 } }, ticks: { color: '#00D4FF' }, grid: { color: 'rgba(0, 168, 233, 0.1)' } },
+            y: { title: { display: true, text: 'Probability Density', color: '#FFD700', font: { weight: 'bold', size: 12 } }, ticks: { color: '#00D4FF' }, grid: { color: 'rgba(0, 168, 233, 0.1)' } }
+          }
+        }
+      });
+    }
   </script>
 </body>
 
