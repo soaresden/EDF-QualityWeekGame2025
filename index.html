@@ -5933,36 +5933,36 @@ TYPE html>
       return dist < 100; // Les défauts sont générés dans une zone de 80px, on accepte 100
     }
 
-    let gameScoreSaved = false;
+let gameScoreSaved = false; // ← Variable globale
 
-    window.quitGame = function() {
-      if (gameScoreSaved) return; // Empêcher les doublons
-      gameActive = false;
-      gameScoreSaved = true;
-      const quality = gameStats.inspected > 0 ? Math.round((gameStats.good / gameStats.inspected) * 100) : 0;
-      saveGameScoreAndShowLeaderboard(gameStats.good, gameStats.inspected, quality);
-    };
+window.quitGame = function() {
+  if (gameScoreSaved) return; // ← Empêcher les doublons
+  gameActive = false;
+  gameScoreSaved = true;
+  const quality = gameStats.inspected > 0 ? Math.round((gameStats.good / gameStats.inspected) * 100) : 0;
+  saveGameScoreAndShowLeaderboard(gameStats.good, gameStats.inspected, quality);
+};
 
-   function startTimer() {
+
+function startTimer() {
   const timerInterval = setInterval(() => {
     if (!gameActive) {
       clearInterval(timerInterval);
       return;
     }
-
     const elapsed = Date.now() - gameStartTime;
     const remaining = Math.max(0, 120 - Math.floor(elapsed / 1000));
-
     const mins = Math.floor(remaining / 60);
     const secs = remaining % 60;
     document.getElementById('timerDisplay').textContent = String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
 
     if (remaining <= 0) {
       clearInterval(timerInterval);
-      quitGame(); // Appelle la fonction pour terminer le jeu
+      quitGame(); // ← Terminer le jeu quand le timer atteint 0
     }
   }, 1000);
 }
+
 
 
 
@@ -6632,20 +6632,28 @@ TYPE html>
       divider.style.left = (kpiRect.left - 3) + 'px';
     }
 
-    function startGame() {
-      document.getElementById('rulesOverlay').classList.add('hidden');
-      gameActive = true;
-      gameStartTime = Date.now();
-      gameStats = {
-        responseTimes: [],
-        responseTimesCorrect: [],
-         inspected: 0, good: 0, wrong: 0, maxCombo: 0, totalTime: 0 };
-      
-      loadNextProduct();
-      updateKPI();
-      startTimer();
-      setupMagnifyingGlass();
-    }
+   function startGame() {
+  document.getElementById('rulesOverlay').classList.add('hidden');
+  gameActive = true;
+  gameStartTime = Date.now();
+  currentScore = 0; // ← Réinitialiser le score
+  updateScoreDisplay(); // ← Mettre à jour l'affichage
+  gameStats = {
+    responseTimes: [],
+    responseTimesCorrect: [],
+    inspected: 0,
+    good: 0,
+    wrong: 0,
+    maxCombo: 0,
+    totalTime: 0
+  };
+  correctCombo = 0; // ← Réinitialiser le combo
+  loadNextProduct();
+  updateKPI();
+  startTimer();
+  setupMagnifyingGlass();
+}
+
 
     function setupMagnifyingGlass() {
       const canvas = document.getElementById('productCanvas');
