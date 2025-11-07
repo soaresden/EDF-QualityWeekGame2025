@@ -5943,63 +5943,29 @@ TYPE html>
       saveGameScoreAndShowLeaderboard(gameStats.good, gameStats.inspected, quality);
     };
 
-    function startTimer() {
-      const timerInterval = setInterval(() => {
-        if (!gameActive) {
-          clearInterval(timerInterval);
-          return;
-        }
-
-        const elapsed = Date.now() - gameStartTime;
-        const remaining = Math.max(0, 120 - Math.floor(elapsed / 1000));
-        
-        const mins = Math.floor(remaining / 60);
-        const secs = remaining % 60;
-        document.getElementById('timerDisplay').textContent = String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
-        
-        // Update Time Elapsed in KPI avec décimales
-        const elapsedSecs = elapsed / 1000;
-        const elapsedMins = Math.floor(elapsedSecs / 60);
-        const displaySecs = (elapsedSecs % 60).toFixed(1);
-        document.getElementById('kpiTimer').textContent = String(elapsedMins).padStart(2, '0') + ':' + String(parseFloat(displaySecs)).padStart(4, '0');
-        
-        // Update Avg Time en live avec décimales
-        if (gameStats.inspected > 0) {
-          const totalProductTime = gameStats.totalTime + ((Date.now() - productStartTime) / 1000);
-          const avgTime = (totalProductTime / gameStats.inspected).toFixed(1);
-          const timeEl = document.getElementById('kpiAvgTime');
-          timeEl.textContent = avgTime + 's';
-          
-          // Average Time: Vert -> Orange -> Rouge -> Noir
-          const avgNum = parseFloat(avgTime);
-          if (avgNum <= 5) {
-            timeEl.style.color = '#10B981';
-            timeEl.style.textShadow = '0 0 8px rgba(16, 185, 129, 0.5)';
-          } else if (avgNum <= 7) {
-            timeEl.style.color = '#7BC92E';
-            timeEl.style.textShadow = '0 0 8px rgba(123, 201, 46, 0.5)';
-          } else if (avgNum <= 10) {
-            timeEl.style.color = '#FFA500';
-            timeEl.style.textShadow = '0 0 8px rgba(255, 165, 0, 0.5)';
-          } else if (avgNum <= 15) {
-            timeEl.style.color = '#FF5716';
-            timeEl.style.textShadow = '0 0 8px rgba(255, 87, 22, 0.5)';
-          } else {
-            timeEl.style.color = '#333';
-            timeEl.style.textShadow = '0 0 8px rgba(51, 51, 51, 0.5)';
-          }
-        }
-        
-        const fillPercent = (remaining / 120) * 100;
-        document.getElementById('timerFill').style.width = fillPercent + '%';
-
-        if (remaining <= 0) {
-          gameActive = false;
-          clearInterval(timerInterval);
-          endGame();
-        }
-      }, 100);
+   function startTimer() {
+  const timerInterval = setInterval(() => {
+    if (!gameActive) {
+      clearInterval(timerInterval);
+      return;
     }
+
+    const elapsed = Date.now() - gameStartTime;
+    const remaining = Math.max(0, 120 - Math.floor(elapsed / 1000));
+
+    const mins = Math.floor(remaining / 60);
+    const secs = remaining % 60;
+    document.getElementById('timerDisplay').textContent = String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+
+    if (remaining <= 0) {
+      clearInterval(timerInterval);
+      quitGame(); // Appelle la fonction pour terminer le jeu
+    }
+  }, 1000);
+}
+
+
+
 
     function endGame() {
       if (gameScoreSaved) return; // Empêcher les doublons
