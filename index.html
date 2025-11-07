@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.25, viewport-fit=cover, user-scalable=yes">
@@ -2140,6 +2140,110 @@
       50% { opacity: 0.7; }
     }
 
+    /* ===== SCORE & GRADE SYSTEM ===== */
+    .scoreGradeContainer {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      padding: 10px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 12px;
+      border: 2px solid rgba(255, 215, 0, 0.3);
+    }
+
+    #kpiScore {
+      font-weight: 900;
+      font-size: 2rem;
+      color: #FFD700;
+      text-shadow: 0 0 20px rgba(255, 215, 0, 1), 0 0 40px rgba(255, 215, 0, 0.6);
+      animation: scoreGlow 2s ease-in-out infinite;
+      letter-spacing: 2px;
+      font-family: 'Courier New', monospace;
+    }
+
+    @keyframes scoreGlow {
+      0%, 100% { 
+        transform: scale(1);
+        text-shadow: 0 0 20px rgba(255, 215, 0, 1), 0 0 40px rgba(255, 215, 0, 0.6);
+      }
+      50% { 
+        transform: scale(1.05);
+        text-shadow: 0 0 30px rgba(255, 215, 0, 1), 0 0 60px rgba(255, 215, 0, 0.8);
+      }
+    }
+
+    #kpiGrade {
+      font-weight: 900;
+      font-size: 3rem;
+      text-shadow: 0 0 20px currentColor;
+      animation: gradeFloat 3s ease-in-out infinite;
+      font-family: 'Poppins', sans-serif;
+      letter-spacing: 4px;
+    }
+
+    @keyframes gradeFloat {
+      0%, 100% { transform: translateY(0px) rotate(-2deg); }
+      50% { transform: translateY(-5px) rotate(2deg); }
+    }
+
+    /* Grade Colors - Using existing rank colors */
+    .grade-S { color: #FFD700; text-shadow: 0 0 25px #FFD700, 0 0 50px #FFD700; }
+    .grade-A { color: #FF6B00; text-shadow: 0 0 25px #FF6B00, 0 0 50px #FF6B00; }
+    .grade-B { color: #FF5716; text-shadow: 0 0 25px #FF5716, 0 0 50px #FF5716; }
+    .grade-C { color: #10B981; text-shadow: 0 0 25px #10B981, 0 0 50px #10B981; }
+    .grade-D { color: #00A8E9; text-shadow: 0 0 25px #00A8E9, 0 0 50px #00A8E9; }
+    .grade-E { color: #EF4444; text-shadow: 0 0 25px #EF4444, 0 0 50px #EF4444; }
+
+    /* Combo Bar */
+    .comboBarContainer {
+      width: 100%;
+      margin-top: 8px;
+    }
+
+    .comboBarLabel {
+      font-size: 0.7rem;
+      color: #FFD700;
+      text-transform: uppercase;
+      font-weight: bold;
+      margin-bottom: 4px;
+      text-align: center;
+      letter-spacing: 1px;
+    }
+
+    .comboBarBackground {
+      width: 100%;
+      height: 20px;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 10px;
+      overflow: hidden;
+      border: 2px solid rgba(255, 215, 0, 0.3);
+      position: relative;
+    }
+
+    .comboBarFill {
+      height: 100%;
+      background: linear-gradient(90deg, #FF0080 0%, #FF69B4 50%, #FF0080 100%);
+      background-size: 200% 100%;
+      animation: comboFlow 2s linear infinite;
+      transition: width 0.3s ease;
+      box-shadow: 0 0 20px rgba(255, 0, 128, 0.8), inset 0 1px 2px rgba(255, 255, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 900;
+      font-size: 0.8rem;
+      text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+    }
+
+    @keyframes comboFlow {
+      0% { background-position: 0% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    /* ===== END SCORE & GRADE SYSTEM ===== */
+
     #kpiStatus {
       font-size: 1.2rem;
       animation: tremble 0.6s ease-in-out infinite, pulse 1.2s ease-in-out infinite;
@@ -4035,6 +4139,110 @@ TYPE html>
       50% { opacity: 0.7; }
     }
 
+    /* ===== SCORE & GRADE SYSTEM ===== */
+    .scoreGradeContainer {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      padding: 10px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 12px;
+      border: 2px solid rgba(255, 215, 0, 0.3);
+    }
+
+    #kpiScore {
+      font-weight: 900;
+      font-size: 2rem;
+      color: #FFD700;
+      text-shadow: 0 0 20px rgba(255, 215, 0, 1), 0 0 40px rgba(255, 215, 0, 0.6);
+      animation: scoreGlow 2s ease-in-out infinite;
+      letter-spacing: 2px;
+      font-family: 'Courier New', monospace;
+    }
+
+    @keyframes scoreGlow {
+      0%, 100% { 
+        transform: scale(1);
+        text-shadow: 0 0 20px rgba(255, 215, 0, 1), 0 0 40px rgba(255, 215, 0, 0.6);
+      }
+      50% { 
+        transform: scale(1.05);
+        text-shadow: 0 0 30px rgba(255, 215, 0, 1), 0 0 60px rgba(255, 215, 0, 0.8);
+      }
+    }
+
+    #kpiGrade {
+      font-weight: 900;
+      font-size: 3rem;
+      text-shadow: 0 0 20px currentColor;
+      animation: gradeFloat 3s ease-in-out infinite;
+      font-family: 'Poppins', sans-serif;
+      letter-spacing: 4px;
+    }
+
+    @keyframes gradeFloat {
+      0%, 100% { transform: translateY(0px) rotate(-2deg); }
+      50% { transform: translateY(-5px) rotate(2deg); }
+    }
+
+    /* Grade Colors - Using existing rank colors */
+    .grade-S { color: #FFD700; text-shadow: 0 0 25px #FFD700, 0 0 50px #FFD700; }
+    .grade-A { color: #FF6B00; text-shadow: 0 0 25px #FF6B00, 0 0 50px #FF6B00; }
+    .grade-B { color: #FF5716; text-shadow: 0 0 25px #FF5716, 0 0 50px #FF5716; }
+    .grade-C { color: #10B981; text-shadow: 0 0 25px #10B981, 0 0 50px #10B981; }
+    .grade-D { color: #00A8E9; text-shadow: 0 0 25px #00A8E9, 0 0 50px #00A8E9; }
+    .grade-E { color: #EF4444; text-shadow: 0 0 25px #EF4444, 0 0 50px #EF4444; }
+
+    /* Combo Bar */
+    .comboBarContainer {
+      width: 100%;
+      margin-top: 8px;
+    }
+
+    .comboBarLabel {
+      font-size: 0.7rem;
+      color: #FFD700;
+      text-transform: uppercase;
+      font-weight: bold;
+      margin-bottom: 4px;
+      text-align: center;
+      letter-spacing: 1px;
+    }
+
+    .comboBarBackground {
+      width: 100%;
+      height: 20px;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 10px;
+      overflow: hidden;
+      border: 2px solid rgba(255, 215, 0, 0.3);
+      position: relative;
+    }
+
+    .comboBarFill {
+      height: 100%;
+      background: linear-gradient(90deg, #FF0080 0%, #FF69B4 50%, #FF0080 100%);
+      background-size: 200% 100%;
+      animation: comboFlow 2s linear infinite;
+      transition: width 0.3s ease;
+      box-shadow: 0 0 20px rgba(255, 0, 128, 0.8), inset 0 1px 2px rgba(255, 255, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 900;
+      font-size: 0.8rem;
+      text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+    }
+
+    @keyframes comboFlow {
+      0% { background-position: 0% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    /* ===== END SCORE & GRADE SYSTEM ===== */
+
     #kpiStatus {
       font-size: 1.2rem;
       animation: tremble 0.6s ease-in-out infinite, pulse 1.2s ease-in-out infinite;
@@ -5062,37 +5270,37 @@ TYPE html>
           <div class="rankRow rank-s" style="display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
             <span class="rankLetter" style="min-width: 20px;">👑</span>
             <strong style="min-width: 15px;">S</strong>
-            <span style="min-width: 85px; text-align: center; color: #00D4FF;">≥ 500</span>
+            <span style="min-width: 85px; text-align: center; color: #00D4FF;">2250-2700</span>
             <span style="color: #FF1493; font-weight: 900; flex-grow: 1; text-align: right;">STYLISH!</span>
           </div>
           <div class="rankRow rank-a" style="display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
             <span class="rankLetter" style="min-width: 20px;">⭐</span>
             <strong style="min-width: 15px;">A</strong>
-            <span style="min-width: 85px; text-align: center; color: #00D4FF;">400-499</span>
+            <span style="min-width: 85px; text-align: center; color: #00D4FF;">1800-2249</span>
             <span style="color: #00A8E9; font-weight: 900; flex-grow: 1; text-align: right;">ABSOLUTE!</span>
           </div>
           <div class="rankRow rank-b" style="display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
             <span class="rankLetter" style="min-width: 20px;">🎯</span>
             <strong style="min-width: 15px;">B</strong>
-            <span style="min-width: 85px; text-align: center; color: #00D4FF;">300-399</span>
+            <span style="min-width: 85px; text-align: center; color: #00D4FF;">1350-1799</span>
             <span style="color: #10B981; font-weight: 900; flex-grow: 1; text-align: right;">BRAVO!</span>
           </div>
           <div class="rankRow rank-c" style="display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
             <span class="rankLetter" style="min-width: 20px;">💪</span>
             <strong style="min-width: 15px;">C</strong>
-            <span style="min-width: 85px; text-align: center; color: #00D4FF;">200-299</span>
+            <span style="min-width: 85px; text-align: center; color: #00D4FF;">900-1349</span>
             <span style="color: #ADFF2F; font-weight: 900; flex-grow: 1; text-align: right;">COOL!</span>
           </div>
           <div class="rankRow rank-d" style="display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
             <span class="rankLetter" style="min-width: 20px;">👌</span>
             <strong style="min-width: 15px;">D</strong>
-            <span style="min-width: 85px; text-align: center; color: #00D4FF;">100-199</span>
+            <span style="min-width: 85px; text-align: center; color: #00D4FF;">450-899</span>
             <span style="color: #FFD700; font-weight: 900; flex-grow: 1; text-align: right;">DULL!</span>
           </div>
           <div class="rankRow rank-e" style="display: flex; align-items: center; gap: 12px; padding: 10px 0;">
             <span class="rankLetter" style="min-width: 20px;">🤔</span>
             <strong style="min-width: 15px;">E</strong>
-            <span style="min-width: 85px; text-align: center; color: #00D4FF;">0-99</span>
+            <span style="min-width: 85px; text-align: center; color: #00D4FF;">0-449</span>
             <span style="color: #E8E8E8; font-weight: 900; flex-grow: 1; text-align: right;">EMPTY!</span>
           </div>
         </div>
@@ -5207,14 +5415,22 @@ TYPE html>
           <div class="kpiValue" id="kpiTimer">2:00</div>
         </div>
 
+        <!-- Score & Grade Display -->
         <div class="kpiBlock">
-          <div class="kpiLabel">Combo</div>
-          <div class="kpiValue" id="kpiCombo">0</div>
-        </div>
-
-        <div class="kpiBlock">
-          <div class="kpiLabel">Avg Time</div>
-          <div class="kpiValue" id="kpiAvgTime">0s</div>
+          <div class="kpiLabel">Score & Grade</div>
+          <div class="scoreGradeContainer">
+            <div id="kpiScore">0</div>
+            <div id="kpiGrade" class="grade-E">E</div>
+          </div>
+          <!-- Combo Bar -->
+          <div class="comboBarContainer">
+            <div class="comboBarLabel">🔥 COMBO</div>
+            <div class="comboBarBackground">
+              <div class="comboBarFill" id="comboBarFill" style="width: 0%;">
+                <span id="comboCount">0</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -5223,6 +5439,56 @@ TYPE html>
 
   <script>
     let gameActive = false;
+    let currentScore = 0;  // Track score in real-time
+
+    // ===== SCORE & GRADE CALCULATION =====
+    function getComboBonus(combo) {
+      if (combo < 5) return 0;
+      if (combo < 10) return 5;
+      if (combo < 15) return 10;
+      if (combo < 20) return 15;
+      return Math.floor((combo - 20) / 5) * 5 + 20;
+    }
+
+    function getGradeFromScore(score) {
+      if (score >= 500) return { letter: 'S', class: 'grade-S' };
+      if (score >= 400) return { letter: 'A', class: 'grade-A' };
+      if (score >= 300) return { letter: 'B', class: 'grade-B' };
+      if (score >= 200) return { letter: 'C', class: 'grade-C' };
+      if (score >= 100) return { letter: 'D', class: 'grade-D' };
+      return { letter: 'E', class: 'grade-E' };
+    }
+
+    function updateScoreDisplay() {
+      const scoreEl = document.getElementById('kpiScore');
+      const gradeEl = document.getElementById('kpiGrade');
+      
+      if (scoreEl) {
+        scoreEl.textContent = Math.floor(currentScore);
+      }
+      
+      if (gradeEl) {
+        const grade = getGradeFromScore(currentScore);
+        gradeEl.textContent = grade.letter;
+        gradeEl.className = grade.class;
+      }
+    }
+
+    function updateComboBar() {
+      const maxCombo = 20;
+      const percentage = Math.min(100, (correctCombo / maxCombo) * 100);
+      const fillEl = document.getElementById('comboBarFill');
+      const countEl = document.getElementById('comboCount');
+      
+      if (fillEl) {
+        fillEl.style.width = percentage + '%';
+      }
+      if (countEl) {
+        countEl.textContent = correctCombo;
+      }
+    }
+
+
     let gameStartTime = 0;
     let correctCombo = 0;
     let currentProduct = null;
@@ -5310,55 +5576,9 @@ TYPE html>
         qualityEl.style.textShadow = '0 0 8px rgba(239, 68, 68, 0.5)';
       }
 
-      document.getElementById('kpiCombo').textContent = gameStats.maxCombo;
-      
-      // Combo: change couleur selon valeur
-      const comboEl = document.getElementById('kpiCombo');
-      if (gameStats.maxCombo >= 10) {
-        comboEl.style.color = '#8B0000';
-        comboEl.style.textShadow = '0 0 10px rgba(139, 0, 0, 0.8)';
-      } else if (gameStats.maxCombo >= 7) {
-        comboEl.style.color = '#DC2626';
-        comboEl.style.textShadow = '0 0 8px rgba(220, 38, 38, 0.6)';
-      } else if (gameStats.maxCombo >= 4) {
-        comboEl.style.color = '#FF5716';
-        comboEl.style.textShadow = '0 0 8px rgba(255, 87, 22, 0.5)';
-      } else {
-        comboEl.style.color = '#10B981';
-        comboEl.style.textShadow = '0 0 8px rgba(16, 185, 129, 0.5)';
-      }
-      
-      const avgTime = gameStats.inspected > 0 ? Math.round(gameStats.totalTime / gameStats.inspected) : 0;
-      const timeEl = document.getElementById('kpiAvgTime');
-      timeEl.textContent = avgTime + 's';
-      
-      // Average Time: Vert -> Orange -> Rouge -> Noir avec fond adapté
-      if (avgTime <= 5) {
-        timeEl.style.color = '#10B981';
-        timeEl.style.textShadow = '0 0 8px rgba(16, 185, 129, 0.5)';
-        timeEl.style.background = 'rgba(16, 185, 129, 0.15)';
-        timeEl.style.borderColor = 'rgba(16, 185, 129, 0.4)';
-      } else if (avgTime <= 7) {
-        timeEl.style.color = '#7BC92E';
-        timeEl.style.textShadow = '0 0 8px rgba(123, 201, 46, 0.5)';
-        timeEl.style.background = 'rgba(123, 201, 46, 0.15)';
-        timeEl.style.borderColor = 'rgba(123, 201, 46, 0.4)';
-      } else if (avgTime <= 10) {
-        timeEl.style.color = '#FFA500';
-        timeEl.style.textShadow = '0 0 8px rgba(255, 165, 0, 0.5)';
-        timeEl.style.background = 'rgba(255, 165, 0, 0.15)';
-        timeEl.style.borderColor = 'rgba(255, 165, 0, 0.4)';
-      } else if (avgTime <= 15) {
-        timeEl.style.color = '#FF5716';
-        timeEl.style.textShadow = '0 0 8px rgba(255, 87, 22, 0.5)';
-        timeEl.style.background = 'rgba(255, 87, 22, 0.15)';
-        timeEl.style.borderColor = 'rgba(255, 87, 22, 0.4)';
-      } else {
-        timeEl.style.color = '#333';
-        timeEl.style.textShadow = '0 0 8px rgba(51, 51, 51, 0.5)';
-        timeEl.style.background = 'rgba(51, 51, 51, 0.15)';
-        timeEl.style.borderColor = 'rgba(51, 51, 51, 0.4)';
-      }
+      // Update Score and Grade
+      updateScoreDisplay();
+      updateComboBar();
 
       const quality_pct = gameStats.inspected > 0 ? Math.round((gameStats.good / gameStats.inspected) * 100) : 0;
       if (quality_pct >= 90) document.getElementById('kpiStatus').textContent = '😍';
@@ -5686,9 +5906,16 @@ TYPE html>
         correctCombo++;
         if (correctCombo > gameStats.maxCombo) gameStats.maxCombo = correctCombo;
         gameStats.good++;
+        
+        // Add score: +10 base + combo bonus
+        const comboBonus = getComboBonus(correctCombo);
+        currentScore += (10 + comboBonus);
       } else {
         correctCombo = 0;
         gameStats.wrong++;
+        
+        // Subtract score: -20 for wrong
+        currentScore = Math.max(0, currentScore - 20);
       }
 
       showStamp(isCorrect);
@@ -6655,37 +6882,37 @@ TYPE html>
                         <div class="rank-row rank-s-row">
                             <span class="rank-emoji">👑</span>
                             <span class="rank-letter rank-s">S</span>
-                            <span class="rank-range">≥ 500</span>
+                            <span class="rank-range">2250-2700</span>
                             <span class="rank-word rank-s-word">STYLISH!</span>
                         </div>
                         <div class="rank-row rank-a-row">
                             <span class="rank-emoji">⭐</span>
                             <span class="rank-letter rank-a">A</span>
-                            <span class="rank-range">400-499</span>
+                            <span class="rank-range">1800-2249</span>
                             <span class="rank-word rank-a-word">ABSOLUTE!</span>
                         </div>
                         <div class="rank-row rank-b-row">
                             <span class="rank-emoji">🎯</span>
                             <span class="rank-letter rank-b">B</span>
-                            <span class="rank-range">300-399</span>
+                            <span class="rank-range">1350-1799</span>
                             <span class="rank-word rank-b-word">BRAVO!</span>
                         </div>
                         <div class="rank-row rank-c-row">
                             <span class="rank-emoji">💪</span>
                             <span class="rank-letter rank-c">C</span>
-                            <span class="rank-range">200-299</span>
+                            <span class="rank-range">900-1349</span>
                             <span class="rank-word rank-c-word">COOL!</span>
                         </div>
                         <div class="rank-row rank-d-row">
                             <span class="rank-emoji">👌</span>
                             <span class="rank-letter rank-d">D</span>
-                            <span class="rank-range">100-199</span>
+                            <span class="rank-range">450-899</span>
                             <span class="rank-word rank-d-word">DULL!</span>
                         </div>
                         <div class="rank-row rank-e-row">
                             <span class="rank-emoji">🤔</span>
                             <span class="rank-letter rank-e">E</span>
-                            <span class="rank-range">0-99</span>
+                            <span class="rank-range">0-449</span>
                             <span class="rank-word rank-e-word">EMPTY!</span>
                         </div>
                     </div>
